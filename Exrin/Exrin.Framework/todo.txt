@@ -1,0 +1,352 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Framework
+{
+    /// <summary>
+    /// This is myself going nuts on architectural frameworks to see what comes of it
+    /// Most likely this will be completely over architected nonsense
+    /// 
+    /// Validation
+    /// Error Handling
+    /// Background threading so it doesn't lock the UI
+    /// Visual Notification of progress
+    /// App Insights or Logging
+    /// Timeout callback
+    /// Security
+    /// Device Compatibility
+    /// Completed
+    /// 
+    /// 
+    /// 
+    /// </summary>
+
+
+    // TODO: Next I need to do one that all functions from a Model will call.
+    // Validate, Security, Device Compatability
+
+    //TODO: My NavigationController also needs to go into a NuGet Package framework
+
+    public class Operation
+    {
+        public Func<Task> Function { get; set; }
+        public Func<Task> Rollback { get; set; }
+        public bool ChainedRollback { get; set; } = true;
+    }
+
+    public interface IApplicationInsights
+    {
+        void TrackEvent(string objectName, string message);
+    }
+
+    public static class OperationService
+    {
+        private static Dictionary<object, bool> _status = new Dictionary<object, bool>();
+
+
+        public class BaseViewModel
+        {
+
+
+
+        }
+
+        internal class LoginViewModel : BaseViewModel
+        {
+
+
+        }
+
+        internal class LoginModel
+        {
+
+
+
+        }
+
+
+        public class BaseExecute : IViewModelExecute
+        {
+            public BaseExecute(IApplicationInsights insights)
+            {
+                Insights = insights;
+            }
+
+            public List<Operation> Operations { get; set; } = new List<Operation>();
+
+            public virtual Task NotifyOfActivity() { return Task.FromResult(0); }
+
+            public virtual Task NotifyActivityFinished() { return Task.FromResult(0); }
+
+            public virtual Task<bool> HandleUnhandledException() { return Task.FromResult(false); }
+
+            public virtual Task HandleTimeout() { return Task.FromResult(0); }
+
+            public virtual Task Completed() { return Task.FromResult(0); }
+
+            public IApplicationInsights Insights { get; private set; } = null;
+
+            public int TimeoutMilliseconds { get; set; } = 0;
+
+            public ExecutionResult ExecutionResult { get; set; } = new ExecutionResult();
+
+        }
+
+        public class ExecutionResult
+        {
+            public ResultType ResultAction { get; set; }
+            public object Arguments { get; set; }
+
+
+        }
+
+        public enum ResultType
+        {
+            None = 0,
+            Navigation = 1,
+            Display = 2
+        }
+
+        // GOAL: Very unit testable
+        // Enforce conventions throughout the app
+        // Performance and reliability as key functions
+        // Thread reliability
+
+
+
+        // OUTPUT:
+        // TESTABLE: // Navigation, DisplayAlert, Property{Binding} Change or Nothing
+        // Notify Activities - dont need to be tested as they are base assigned
+
+
+        // INPUT:
+        // Operations and Rollback
+
+
+
+
+
+        /// <summary>
+        /// This is meant to be highly unit testable
+        /// </summary>
+        internal class LoginExecute : BaseExecute
+        {
+            private readonly LoginViewModel _viewModel = null;
+            private readonly LoginModel _loginModel = null;
+
+            public LoginExecute(LoginViewModel viewModel, LoginModel loginModel, IApplicationInsights insights) : base(insights)
+            {
+                _viewModel = viewModel;
+                _loginModel = loginModel;
+
+                Operations.Add(new Operation() { Function = Login, Rollback = LoginRollback });
+
+            }
+
+            // PURPOSE TO AT LEAST SEND A SIGNAL BACK TO SUCCESSFUL LOGIN OR NOT
+            // THESE WILL BE PROPERTIES ON THE VIEWMODEL WITH BEHAVIORS
+            // INTEGRATION TEST WITH PROPERTY SWITCH TEST. BUT CAN I? COULD CALL DIFFERENT FUNCTIONS?
+            public Task Login()
+            {
+                // WARNING - HARD TO UNIT TEST DUE TO RESULT IN MODEL
+                // INTEGRATION TEST
+                //_loginModel.Authenticate();
+                ExecutionResult.ResultAction = ResultType.Navigation;
+                return Task.FromResult(0);
+            }
+
+            // TODO: Need to implement a navigation service that performs the stack switch
+            // But doesn't rely on the Xamarin Forms Navigation Page.
+
+            public Task LoginRollback()
+            {
+                return Task.FromResult(0);
+            }
+
+
+            public override Task Completed() // SHOULD I CHANGE THIS TO JUST A FUNCTION TO SWITCH NAVIGATION STACK / PAGE?
+            {
+                // WARNING - HARD TO UNIT TEST RESULT DUE TO EXTERNAL DEPENDENCY
+                // Do Navigation Here
+                //_viewModel.NavigationService
+
+                return base.Completed();
+            }
+        }
+
+        public interface IExecutionComplete
+        {
+            ExecutionResult Result { get; set; }
+
+            Task HandleResult();
+        }
+
+        public interface IViewModelExecute
+        {
+            List<Operation> Operations { get; set; }
+            Task NotifyOfActivity();
+            Task NotifyActivityFinished();
+            Task<bool> HandleUnhandledException();
+            Task HandleTimeout();
+            Task Completed();
+            IApplicationInsights Insights { get; }
+            int TimeoutMilliseconds { get; set; }
+        }
+
+        public static Task ViewModelExecute(this IExecutionComplete sender, IViewModelExecute execute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender,
+                                    operations: execute.Operations,
+                                    completed: execute.Completed,
+                                    handleTimeout: execute.HandleTimeout,
+                                    handleUnhandledException: execute.HandleUnhandledException,
+                                    insights: execute.Insights,
+                                    notifyActivityFinished: execute.NotifyActivityFinished,
+                                    notifyOfActivity: execute.NotifyOfActivity,
+                                    timeoutMilliseconds: execute.TimeoutMilliseconds,
+                                    name: name);
+        }
+
+
+        // GOOD: EASY TO UNIT TEST VIEWMODELEXECUTE
+
+        private static async Task ViewModelExecute(IExecutionComplete sender,
+            List<Operation> operations,
+            Func<Task> notifyOfActivity = null,
+            Func<Task> notifyActivityFinished = null,
+            Func<Task<bool>> handleUnhandledException = null,
+            Func<Task> handleTimeout = null,
+            int timeoutMilliseconds = 0,
+            Func<Task> completed = null,
+            IApplicationInsights insights = null,
+            string name = ""
+            )
+        {
+            // If current executing, ignore the latest request
+            lock (sender)
+            {
+                if (!_status.ContainsKey(sender))
+                    _status.Add(sender, true);
+                else if (_status[sender])
+                    return;
+                else
+                    _status[sender] = true;
+            }
+
+            try
+            {
+                if (insights != null)
+                    insights.TrackEvent(name, $"User activated {name}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
+            }
+
+            List<Func<Task>> rollbacks = new List<Func<Task>>();
+            bool transactionRunning = false;
+
+            // Setup Cancellation of Tasks if long running
+            var task = new CancellationTokenSource();
+
+            if (timeoutMilliseconds > 0)
+            {
+                if (handleTimeout != null)
+                    task.Token.Register(async () => { await handleTimeout(); });
+                else if (handleUnhandledException != null)
+                    task.Token.Register(async () => { await handleUnhandledException(); });
+                else
+                    throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
+
+                task.CancelAfter(timeoutMilliseconds);
+            }
+
+            try
+            {
+                if (notifyOfActivity == null)
+                    throw new Exception($"{nameof(notifyOfActivity)} is null: You must notify the user that something is happening");
+
+                await notifyOfActivity();
+
+                // Transaction Block
+                transactionRunning = true;
+
+                foreach (var operation in operations)
+                {
+                    rollbacks.Add(operation.Rollback);
+
+                    if (operation.Function != null)
+                        await await RunOnBackgroundThreadAsync(operation.Function, task.Token); // But wait for it to finish
+
+                    if (!operation.ChainedRollback)
+                        rollbacks.Remove(operation.Rollback);
+                }
+
+                rollbacks.Clear();
+                transactionRunning = false;
+                // End of Transaction Block
+
+                if (notifyActivityFinished == null)
+                    throw new Exception($"{nameof(notifyActivityFinished)} is null: You need to specify what happens when the operations finish");
+
+                await notifyActivityFinished();
+
+                if (completed != null)
+                    await completed();
+            }
+            catch
+            {
+                if (handleUnhandledException == null)
+                    throw;
+
+                var handled = await handleUnhandledException();
+                if (!handled)
+                    throw;
+            }
+            finally
+            {
+                try
+                {
+                    if (transactionRunning)
+                    {
+                        rollbacks.Reverse(); // Do rollbacks in reverse order
+                        foreach (var rollback in rollbacks)
+                            await rollback();
+                    }
+
+                    await sender.HandleResult();
+                }
+                finally
+                {
+                    _status.Remove(sender);
+                }
+
+            }
+        }
+
+        public static Task<T> RunOnBackgroundThreadAsync<T>(Func<T> a, CancellationToken cancellationToken)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var result = await Task.Run(a, cancellationToken);
+                    tcs.SetResult(result);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }, cancellationToken);
+            return tcs.Task;
+        }
+
+    }
+}
