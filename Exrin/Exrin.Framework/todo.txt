@@ -330,23 +330,7 @@ namespace Framework
             }
         }
 
-        public static Task<T> RunOnBackgroundThreadAsync<T>(Func<T> a, CancellationToken cancellationToken)
-        {
-            var tcs = new TaskCompletionSource<T>();
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var result = await Task.Run(a, cancellationToken);
-                    tcs.SetResult(result);
-                }
-                catch (Exception ex)
-                {
-                    tcs.SetException(ex);
-                }
-            }, cancellationToken);
-            return tcs.Task;
-        }
+       
 
     }
 }

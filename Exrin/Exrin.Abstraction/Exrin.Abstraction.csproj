@@ -38,9 +38,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IApplicationInsights.cs" />
+    <Compile Include="IExecutionComplete.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
