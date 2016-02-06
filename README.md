@@ -12,3 +12,5 @@ If you have a larger team, enforcing standards also becomes difficult, the less 
 This framework is designed to be used with any other MVVM framework and will be designed to work regardless of Xamarin Version (though still working some of those details out).
 
 This is still very much conceptual at the moment and the project may just end in tears, but an attempt will be made.
+
+Main goal is to make this really easy to implement, understand and use, otherwise this project will fail. If it ends up like the Microsoft Enterprise Libraries then I know I have failed.
