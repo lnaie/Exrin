@@ -31,20 +31,6 @@ namespace Framework
     // TODO: Next I need to do one that all functions from a Model will call.
     // Validate, Security, Device Compatability
 
-    //TODO: My NavigationController also needs to go into a NuGet Package framework
-
-    public class Operation
-    {
-        public Func<Task> Function { get; set; }
-        public Func<Task> Rollback { get; set; }
-        public bool ChainedRollback { get; set; } = true;
-    }
-
-    public interface IApplicationInsights
-    {
-        void TrackEvent(string objectName, string message);
-    }
-
     public static class OperationService
     {
         private static Dictionary<object, bool> _status = new Dictionary<object, bool>();
@@ -98,20 +84,7 @@ namespace Framework
 
         }
 
-        public class ExecutionResult
-        {
-            public ResultType ResultAction { get; set; }
-            public object Arguments { get; set; }
 
-
-        }
-
-        public enum ResultType
-        {
-            None = 0,
-            Navigation = 1,
-            Display = 2
-        }
 
         // GOAL: Very unit testable
         // Enforce conventions throughout the app
@@ -180,157 +153,25 @@ namespace Framework
             }
         }
 
-        public interface IExecutionComplete
-        {
-            ExecutionResult Result { get; set; }
+     
+// MUSTS
 
-            Task HandleResult();
-        }
+// Any MVVM Framework, Any DI Service
 
-        public interface IViewModelExecute
-        {
-            List<Operation> Operations { get; set; }
-            Task NotifyOfActivity();
-            Task NotifyActivityFinished();
-            Task<bool> HandleUnhandledException();
-            Task HandleTimeout();
-            Task Completed();
-            IApplicationInsights Insights { get; }
-            int TimeoutMilliseconds { get; set; }
-        }
-
-        public static Task ViewModelExecute(this IExecutionComplete sender, IViewModelExecute execute, [CallerMemberName] string name = "")
-        {
-            return ViewModelExecute(sender,
-                                    operations: execute.Operations,
-                                    completed: execute.Completed,
-                                    handleTimeout: execute.HandleTimeout,
-                                    handleUnhandledException: execute.HandleUnhandledException,
-                                    insights: execute.Insights,
-                                    notifyActivityFinished: execute.NotifyActivityFinished,
-                                    notifyOfActivity: execute.NotifyOfActivity,
-                                    timeoutMilliseconds: execute.TimeoutMilliseconds,
-                                    name: name);
-        }
+// This project must have 0 dependencies
 
 
-        // GOOD: EASY TO UNIT TEST VIEWMODELEXECUTE
 
-        private static async Task ViewModelExecute(IExecutionComplete sender,
-            List<Operation> operations,
-            Func<Task> notifyOfActivity = null,
-            Func<Task> notifyActivityFinished = null,
-            Func<Task<bool>> handleUnhandledException = null,
-            Func<Task> handleTimeout = null,
-            int timeoutMilliseconds = 0,
-            Func<Task> completed = null,
-            IApplicationInsights insights = null,
-            string name = ""
-            )
-        {
-            // If current executing, ignore the latest request
-            lock (sender)
-            {
-                if (!_status.ContainsKey(sender))
-                    _status.Add(sender, true);
-                else if (_status[sender])
-                    return;
-                else
-                    _status[sender] = true;
-            }
+// IDEAS
 
-            try
-            {
-                if (insights != null)
-                    insights.TrackEvent(name, $"User activated {name}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
-            }
+// Remove Operation and Rollback (put them in the Model, not ViewModel) - ViewModel should be REALLY simple, just a relay. But it could need to rollback any state changes to the UI?
 
-            List<Func<Task>> rollbacks = new List<Func<Task>>();
-            bool transactionRunning = false;
+// Retry Helper Function with Policy
 
-            // Setup Cancellation of Tasks if long running
-            var task = new CancellationTokenSource();
+// Run on UI Thread helper - without XF dependency
 
-            if (timeoutMilliseconds > 0)
-            {
-                if (handleTimeout != null)
-                    task.Token.Register(async () => { await handleTimeout(); });
-                else if (handleUnhandledException != null)
-                    task.Token.Register(async () => { await handleUnhandledException(); });
-                else
-                    throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
+// Model Execute
 
-                task.CancelAfter(timeoutMilliseconds);
-            }
+// Record Page State
 
-            try
-            {
-                if (notifyOfActivity == null)
-                    throw new Exception($"{nameof(notifyOfActivity)} is null: You must notify the user that something is happening");
-
-                await notifyOfActivity();
-
-                // Transaction Block
-                transactionRunning = true;
-
-                foreach (var operation in operations)
-                {
-                    rollbacks.Add(operation.Rollback);
-
-                    if (operation.Function != null)
-                        await await RunOnBackgroundThreadAsync(operation.Function, task.Token); // But wait for it to finish
-
-                    if (!operation.ChainedRollback)
-                        rollbacks.Remove(operation.Rollback);
-                }
-
-                rollbacks.Clear();
-                transactionRunning = false;
-                // End of Transaction Block
-
-                if (notifyActivityFinished == null)
-                    throw new Exception($"{nameof(notifyActivityFinished)} is null: You need to specify what happens when the operations finish");
-
-                await notifyActivityFinished();
-
-                if (completed != null)
-                    await completed();
-            }
-            catch
-            {
-                if (handleUnhandledException == null)
-                    throw;
-
-                var handled = await handleUnhandledException();
-                if (!handled)
-                    throw;
-            }
-            finally
-            {
-                try
-                {
-                    if (transactionRunning)
-                    {
-                        rollbacks.Reverse(); // Do rollbacks in reverse order
-                        foreach (var rollback in rollbacks)
-                            await rollback();
-                    }
-
-                    await sender.HandleResult();
-                }
-                finally
-                {
-                    _status.Remove(sender);
-                }
-
-            }
-        }
-
-       
-
-    }
-}
+// Enhance Page Cleanup (ViewModel to Page dispose at the same time)

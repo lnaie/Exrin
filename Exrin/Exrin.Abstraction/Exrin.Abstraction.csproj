@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="IApplicationInsights.cs" />
     <Compile Include="IExecutionComplete.cs" />
+    <Compile Include="IExecutionResult.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

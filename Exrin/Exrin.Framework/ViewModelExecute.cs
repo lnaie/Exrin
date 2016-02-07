@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-
-
-    public static class Execution
+    public static partial class Execution
     {
         public static Task ViewModelExecute(this IExecutionComplete sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
@@ -34,7 +32,7 @@ namespace Exrin.Framework
                  List<IOperation> operations,
                  Func<Task> notifyOfActivity = null,
                  Func<Task> notifyActivityFinished = null,
-                 Func<Task<bool>> handleUnhandledException = null,
+                 Func<Exception, Task<bool>> handleUnhandledException = null,
                  Func<Task> handleTimeout = null,
                  int timeoutMilliseconds = 0,
                  Func<Task> setResult = null,
@@ -78,7 +76,7 @@ namespace Exrin.Framework
                 if (handleTimeout != null)
                     task.Token.Register(async () => { await handleTimeout(); });
                 else if (handleUnhandledException != null)
-                    task.Token.Register(async () => { await handleUnhandledException(); });
+                    task.Token.Register(async () => { await handleUnhandledException(new TimeoutException()); });
                 else
                     throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
 
@@ -99,8 +97,9 @@ namespace Exrin.Framework
                 {
                     rollbacks.Add(operation.Rollback);
 
-                    if (operation.Function != null)
-                        await Task.Run(operation.Function, task.Token); // Background Thread
+                        if (operation.Function != null)
+                            await Task.Run(operation.Function, task.Token); // Background Thread
+                  
 
                     if (!operation.ChainedRollback)
                         rollbacks.Remove(operation.Rollback);
@@ -109,21 +108,16 @@ namespace Exrin.Framework
                 rollbacks.Clear();
                 transactionRunning = false;
                 // End of Transaction Block
-
-                if (notifyActivityFinished == null)
-                    throw new Exception($"{nameof(notifyActivityFinished)} is null: You need to specify what happens when the operations finish");
-
-                await notifyActivityFinished();
-
+                               
                 if (setResult != null)
                     await setResult();
             }
-            catch
+            catch (Exception e)
             {
                 if (handleUnhandledException == null)
                     throw;
 
-                var handled = await handleUnhandledException();
+                var handled = await handleUnhandledException(e);
                 if (!handled)
                     throw;
             }
@@ -142,7 +136,23 @@ namespace Exrin.Framework
                 }
                 finally
                 {
-                    _status.Remove(sender);
+                    if (notifyActivityFinished == null)
+                        throw new Exception($"{nameof(notifyActivityFinished)} is null: You need to specify what happens when the operations finish");
+
+                    try
+                    {
+                        await notifyActivityFinished();
+                    }
+                    catch(Exception e)
+                    {
+                        var handled = await handleUnhandledException(e);
+                        if (!handled)
+                            throw;
+                    }
+                    finally
+                    {
+                        _status.Remove(sender);
+                    }
                 }
 
             }

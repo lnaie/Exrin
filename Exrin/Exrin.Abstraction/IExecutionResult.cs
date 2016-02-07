@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IExecutionComplete
+    public interface IExecutionResult
     {
-
-        IExecutionResult Result { get; set; }
-
-        Task HandleResult();
-
+        ResultType ResultAction { get; set; }
+        object Arguments { get; set; }
     }
 }

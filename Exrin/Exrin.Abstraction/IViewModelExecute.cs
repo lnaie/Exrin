@@ -29,7 +29,7 @@ namespace Exrin.Abstraction
         /// Notify the user and handle any exception that was not expected
         /// </summary>
         /// <returns></returns>
-        Task<bool> HandleUnhandledException();
+        Task<bool> HandleUnhandledException(Exception e);
         /// <summary>
         /// If the operations are taking too long, they will be cancelled and a rollback will occur. Notify the user and handle anything associated with an operation timeout.
         /// </summary>
