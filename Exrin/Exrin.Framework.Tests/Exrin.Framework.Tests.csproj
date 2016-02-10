@@ -67,6 +67,16 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj">
+      <Project>{f7d56290-97b4-4636-abca-8323c886a7e0}</Project>
+      <Name>Exrin.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Exrin.Framework\Exrin.Framework.csproj">
+      <Project>{8947ad64-e787-4a00-9d6b-8e514133ad63}</Project>
+      <Name>Exrin.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

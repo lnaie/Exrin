@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exrin.Framework
+namespace Exrin.Abstraction
 {
-    public static partial class Execution
+    public interface IResult
     {
-
-
     }
 }

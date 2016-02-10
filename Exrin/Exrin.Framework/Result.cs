@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class NavigationService
+    public class Result
     {
+
+
+
     }
 }

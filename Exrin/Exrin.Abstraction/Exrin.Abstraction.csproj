@@ -41,6 +41,7 @@
     <Compile Include="IExecutionComplete.cs" />
     <Compile Include="IExecutionResult.cs" />
     <Compile Include="IOperation.cs" />
+    <Compile Include="IResult.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />
