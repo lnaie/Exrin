@@ -160,6 +160,9 @@ namespace Framework
 
 // This project must have 0 dependencies
 
+// Allow rapid development, isolate, break and enhance as quick as possible.
+
+// Disposal of resource to avoid memory leaks - a way to tag something to shut it down.
 
 
 // IDEAS

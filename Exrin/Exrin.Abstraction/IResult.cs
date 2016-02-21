@@ -8,5 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface IResult
     {
+        ResultType ResultAction { get; set; }
+        object Arguments { get; set; }
     }
 }

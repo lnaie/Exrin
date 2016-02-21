@@ -11,8 +11,8 @@ namespace Exrin.Framework
     {
         public bool ChainedRollback { get; set; } = true;
 
-        public Func<Result, Task> Function { get; set; } = null;
+        public Func<IResult, Task> Function { get; set; } = null;
 
-        public Func<Result, Task> Rollback { get; set; } = null;
+        public Func<IResult, Task> Rollback { get; set; } = null;
     }
 }

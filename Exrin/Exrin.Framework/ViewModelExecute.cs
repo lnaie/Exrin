@@ -12,11 +12,10 @@ namespace Exrin.Framework
 {
     public static partial class Execution
     {
-        public static Task ViewModelExecute(this IExecutionComplete sender, IViewModelExecute execute, [CallerMemberName] string name = "")
+        public static Task ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
             return ViewModelExecute(sender,
                                     operations: execute.Operations,
-                                    setResult: execute.SetResult,
                                     handleTimeout: execute.HandleTimeout,
                                     handleUnhandledException: execute.HandleUnhandledException,
                                     insights: execute.Insights,
@@ -28,14 +27,13 @@ namespace Exrin.Framework
 
         private readonly static Dictionary<object, bool> _status = new Dictionary<object, bool>();
 
-        private static async Task ViewModelExecute(IExecutionComplete sender,
+        private static async Task ViewModelExecute(IExecution sender,
                  List<IOperation> operations,
                  Func<Task> notifyOfActivity = null,
                  Func<Task> notifyActivityFinished = null,
                  Func<Exception, Task<bool>> handleUnhandledException = null,
                  Func<Task> handleTimeout = null,
                  int timeoutMilliseconds = 0,
-                 Func<Task> setResult = null,
                  IApplicationInsights insights = null,
                  string name = ""
                  )
@@ -51,6 +49,11 @@ namespace Exrin.Framework
                     _status[sender] = true;
             }
 
+            if (sender == null)
+                throw new Exception($"The IExecution sender can not be null");
+
+            sender.Result = null;
+
             // Background thread
             Task insight = Task.Run(() =>
             {
@@ -65,7 +68,7 @@ namespace Exrin.Framework
                 }
             });
 
-            List<Func<Task>> rollbacks = new List<Func<Task>>();
+            List<Func<IResult, Task>> rollbacks = new List<Func<IResult, Task>>();
             bool transactionRunning = false;
 
             // Setup Cancellation of Tasks if long running
@@ -83,6 +86,8 @@ namespace Exrin.Framework
                 task.CancelAfter(timeoutMilliseconds);
             }
 
+            IResult result = null;
+
             try
             {
                 if (notifyOfActivity == null)
@@ -97,10 +102,12 @@ namespace Exrin.Framework
                 {
                     rollbacks.Add(operation.Rollback);
 
-                        if (operation.Function != null)
-                            await Task.Run(operation.Function, task.Token); // Background Thread
-                  
+                    if (result == null)
+                        result = new Result(); // Ensures always an instance
 
+                    if (operation.Function != null)
+                        await Task.Run(async () => { await operation.Function(result); }, task.Token); // Background Thread
+                    
                     if (!operation.ChainedRollback)
                         rollbacks.Remove(operation.Rollback);
                 }
@@ -108,9 +115,8 @@ namespace Exrin.Framework
                 rollbacks.Clear();
                 transactionRunning = false;
                 // End of Transaction Block
-                               
-                if (setResult != null)
-                    await setResult();
+
+
             }
             catch (Exception e)
             {
@@ -129,10 +135,19 @@ namespace Exrin.Framework
                     {
                         rollbacks.Reverse(); // Do rollbacks in reverse order
                         foreach (var rollback in rollbacks)
-                            await rollback();
+                        {
+                            if (result == null)
+                                result = new Result();
+
+                            await rollback(result);
+                        }
                     }
 
-                    await sender.HandleResult();
+                    // Set final result
+                    sender.Result = result;
+
+                    // Handle the result
+                    await Task.Run(async () => await sender.HandleResult());
                 }
                 finally
                 {
@@ -143,7 +158,7 @@ namespace Exrin.Framework
                     {
                         await notifyActivityFinished();
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         var handled = await handleUnhandledException(e);
                         if (!handled)

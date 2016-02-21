@@ -35,11 +35,7 @@ namespace Exrin.Abstraction
         /// </summary>
         /// <returns></returns>
         Task HandleTimeout();
-        /// <summary>
-        /// When all operations are completed, this is called. Set the ExecutionResult for completion.
-        /// </summary>
-        /// <returns></returns>
-        Task SetResult();
+    
         /// <summary>
         /// A reference to the Insights object to allow the framework to record any events
         /// </summary>
