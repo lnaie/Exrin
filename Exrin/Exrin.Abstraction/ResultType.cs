@@ -13,6 +13,7 @@ namespace Exrin.Abstraction
     {
         None = 0,
         Navigation = 1,
-        Display = 2
+        Display = 2,
+        Error = 4
     }
 }

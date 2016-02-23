@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public static partial class Execution
+    public static partial class Process
     {
         public static Task ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
             return ViewModelExecute(sender,
                                     operations: execute.Operations,
-                                    handleTimeout: execute.HandleTimeout,
-                                    handleUnhandledException: execute.HandleUnhandledException,
-                                    insights: execute.Insights,
-                                    notifyActivityFinished: execute.NotifyActivityFinished,
-                                    notifyOfActivity: execute.NotifyOfActivity,
+                                    handleTimeout: sender.HandleTimeout,
+                                    handleUnhandledException: sender.HandleUnhandledException,
+                                    insights: sender.Insights,
+                                    notifyActivityFinished: sender.NotifyActivityFinished,
+                                    notifyOfActivity: sender.NotifyOfActivity,
                                     timeoutMilliseconds: execute.TimeoutMilliseconds,
                                     name: name);
         }
