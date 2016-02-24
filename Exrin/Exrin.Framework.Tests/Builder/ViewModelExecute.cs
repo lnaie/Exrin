@@ -1,4 +1,5 @@
 ﻿using Exrin.Abstraction;
+using Exrin.Framework.Tests.ViewModelExecute.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Exrin.Framework.Tests.Builder
         
         public IViewModelExecute BuildNew()
         {
-            return 
+            return new TestViewModelExecute();
         }
 
     }

@@ -18,7 +18,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute
         public async Task Test()
         {
             // Interface and Project based bindings
-
+           
             // Dialog, Navigation Service, 
 
             var builder = new ExecutionBuilder();
@@ -34,28 +34,9 @@ namespace Exrin.Framework.Tests.ViewModelExecute
             IErrorHandlingService errorHandlingService = new ErrorHandlingService();
             IDisplayService displayService = new DisplayService();
 
-            //TODO: Need to handle complex result arguments (or make sure its left open for others to modify)
-            Func<IResult, Task> handleResult = async (result) =>
-            {
-                switch (result.ResultAction)
-                {
-                    case ResultType.Navigation:
-                        await navigationService.Navigate(Convert.ToString(result.Arguments));
-                        break;
-                    case ResultType.Error:
-                        await errorHandlingService.ReportError(result.Arguments as Exception);
-                        break;
-                    case ResultType.Display:
-                        await displayService.ShowDialog(result.Arguments as string);
-                        break;
-                }
+            Handler h = new Handler(navigationService, errorHandlingService, displayService);
 
-            };
-
-            Func<Task> handleTimeout = async () =>
-            {
-                await displayService.ShowDialog("Timeout occurred");
-            };
+           
 
             Func<Exception, Task<bool>> handleUnhandledException = async (exception) =>
             {
@@ -77,8 +58,10 @@ namespace Exrin.Framework.Tests.ViewModelExecute
             
             // ** END ** BaseViewModel Code
 
-            execution.HandleResult = handleResult;
-            execution.HandleTimeout = handleTimeout;
+            // Why should I do these assignments, set it up in the framework
+            execution.HandleResult = h.HandleResult();
+            execution.HandleTimeout = h.HandleTimeout();
+
             execution.HandleUnhandledException = handleUnhandledException;
             execution.NotifyActivityFinished = notifyOfActivityFinished;
             execution.NotifyOfActivity = notifyOfActivity;
