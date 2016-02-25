@@ -23,51 +23,16 @@ namespace Exrin.Framework.Tests.ViewModelExecute
 
             var builder = new ExecutionBuilder();
 
-            // Should be built top level view model
-            var execution = builder.BuildNew();
-
-            // ** START ** All of this is BaseViewModel Code
-
-            //TODO: See if there is a way to house the dialog service and navigation service within the framework
-            // Helper Functions
             INavigationService navigationService = new NavigationService();
             IErrorHandlingService errorHandlingService = new ErrorHandlingService();
             IDisplayService displayService = new DisplayService();
 
-            Handler h = new Handler(navigationService, errorHandlingService, displayService);
-
-           
-
-            Func<Exception, Task<bool>> handleUnhandledException = async (exception) =>
-            {
-                await errorHandlingService.ReportError(exception);
-                await displayService.ShowDialog("Error occurred");
-
-                return true;
-            };
-
-            Func<Task> notifyOfActivityFinished = () =>
-            {
-                return Task.Run(() => { IsBusy = false; });
-            };
-
-            Func<Task> notifyOfActivity = () =>
-            {
-                return Task.Run(() => { IsBusy = true; });
-            };
+            Handler handler = new Handler(navigationService, errorHandlingService, displayService);
             
-            // ** END ** BaseViewModel Code
+            // Should be built top level view model
+            var execution = builder.BuildNew(handler);
 
-            // Why should I do these assignments, set it up in the framework
-            execution.HandleResult = h.HandleResult();
-            execution.HandleTimeout = h.HandleTimeout();
-
-            execution.HandleUnhandledException = handleUnhandledException;
-            execution.NotifyActivityFinished = notifyOfActivityFinished;
-            execution.NotifyOfActivity = notifyOfActivity;
-            
-
-            // Operation should be in separate easily testable class
+            // Need easier way to add and build operations to ViewModel
             var operation = new TestViewModelExecute()
             {
                 Operations = new List<IOperation>() { new TestOperation() },

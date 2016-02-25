@@ -9,7 +9,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
 {
     public class TestOperation : IOperation
     {
-        public bool ChainedRollback { get; set; } = false;
+        public bool ChainedRollback { get; } = false;
 
         public Func<IResult, Task> Function { get
             {
@@ -23,6 +23,6 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
             }
         } 
 
-        public Func<IResult, Task> Rollback { get; set; }
+        public Func<IResult, Task> Rollback { get; }
     }
 }

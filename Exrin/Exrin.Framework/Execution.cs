@@ -15,10 +15,10 @@ namespace Exrin.Framework
         
         public Execution()
         {
-            HandleResult = async () => { await Task.Delay(1); };
+            HandleResult = async (result) => { await Task.Delay(1); };
         }
 
-        public Func<Task> HandleResult { get; set; }
+        public Func<IResult, Task> HandleResult { get; set; }
 
         public Func<Task> HandleTimeout { get; set; }
 

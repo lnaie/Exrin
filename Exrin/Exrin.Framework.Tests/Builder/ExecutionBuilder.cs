@@ -10,9 +10,17 @@ namespace Exrin.Framework.Tests.Builder
     public class ExecutionBuilder
     {
 
-        public IExecution BuildNew()
+        public IExecution BuildNew(Handler handler)
         {
-            return new Execution();
+            var execution = new Execution();
+
+            execution.HandleResult = handler.HandleResult();
+            execution.HandleTimeout = handler.HandleTimeout();
+            execution.HandleUnhandledException = handler.HandleUnhandledException();
+            execution.NotifyActivityFinished = handler.NotifyOfActivityFinished();
+            execution.NotifyOfActivity = handler.NotifyOfActivity();
+
+            return execution;
         }
 
     }
