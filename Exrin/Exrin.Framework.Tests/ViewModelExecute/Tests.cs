@@ -29,6 +29,11 @@ namespace Exrin.Framework.Tests.ViewModelExecute
 
             Handler handler = new Handler(navigationService, errorHandlingService, displayService);
             
+            // TODO: Package this up and send to sample projects to get it developed from scratch.
+
+            // This below needs to be as light as possible
+            // And Operations Need to be easily testable
+
             // Should be built top level view model
             var execution = builder.BuildNew(handler);
 
