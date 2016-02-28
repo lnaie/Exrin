@@ -23,6 +23,36 @@ namespace Exrin.Framework
 
         }
 
+        public Func<Exception, Task<bool>> HandleUnhandledException()
+        {
+
+            return async (exception) =>
+            {
+                await _errorHandlingService.ReportError(exception);
+                await _displayService.ShowDialog("Error occurred");
+                return true;
+            };
+
+        }
+
+        public Func<Task> NotifyOfActivityFinished()
+        {
+            return () =>
+                {
+                    return Task.FromResult(0);
+                    //return Task.Run(() => { IsBusy = false; });
+                };
+        }
+
+        public Func<Task> NotifyOfActivity()
+        {
+            return () =>
+                {
+                    return Task.FromResult(0);
+                    //return Task.Run(() => { IsBusy = true; });
+                };
+        }
+
         public Func<Task> HandleTimeout()
         {
             return async () =>
