@@ -147,7 +147,7 @@ namespace Exrin.Framework
                     sender.Result = result;
 
                     // Handle the result
-                    await Task.Run(async () => await sender.HandleResult());
+                    await Task.Run(async () => await sender.HandleResult(sender.Result)); //TODO: why am I passing this in again?
                 }
                 finally
                 {

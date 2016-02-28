@@ -35,15 +35,16 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Folder Include="Navigation\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IApplicationInsights.cs" />
     <Compile Include="IDisplayService.cs" />
     <Compile Include="IErrorHandlingService.cs" />
     <Compile Include="IExecution.cs" />
+    <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="IOperation.cs" />
+    <Compile Include="IPageService.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IDisplayService
+    public interface INavigationPage
     {
-        void Init(INavigationPage page);
-        Task ShowDialog(string message);
+
+        bool CanGoBack();
+
+        Task PushAsync(object page);
+
+        Task PopAsync();
+
 
     }
 }

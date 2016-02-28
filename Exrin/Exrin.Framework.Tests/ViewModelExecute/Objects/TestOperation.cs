@@ -21,6 +21,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
                 };
 
             }
+            set { }
         } 
 
         public Func<IResult, Task> Rollback { get; set; }
