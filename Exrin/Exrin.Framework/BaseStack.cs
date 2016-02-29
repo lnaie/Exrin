@@ -10,7 +10,7 @@ namespace Exrin.Framework
         
     public class BaseStack
     {
-        private readonly INavigationPage _container = null;
+        protected INavigationPage _container = null;
         protected INavigationService _navigationService = null;
         private IDisplayService _displayService = null;
         protected IPageService _pageService = null;
@@ -27,7 +27,7 @@ namespace Exrin.Framework
         /// <summary>
         /// Will register appropriate Services for Dependency Injection.
         /// </summary>
-        public async Task InitializeServices(object navigationArgs = null)
+        public async Task Init(object navigationArgs = null)
         {
 
             _navigationService.Init(_container);

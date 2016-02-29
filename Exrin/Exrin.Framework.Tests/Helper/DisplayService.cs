@@ -9,6 +9,11 @@ namespace Exrin.Framework.Tests.Helper
 {
     public class DisplayService : IDisplayService
     {
+        public void Init(INavigationPage page)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task ShowDialog(string message)
         {
             throw new NotImplementedException();

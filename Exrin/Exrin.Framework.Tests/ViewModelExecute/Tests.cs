@@ -23,7 +23,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute
 
             var builder = new ExecutionBuilder();
 
-            INavigationService navigationService = new NavigationService();
+            INavigationService navigationService = new NavigationService(new PageService());
             IErrorHandlingService errorHandlingService = new ErrorHandlingService();
             IDisplayService displayService = new DisplayService();
 

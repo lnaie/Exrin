@@ -9,6 +9,8 @@ namespace Exrin.Abstraction
     public interface INavigationPage
     {
 
+        object Page { get; }
+
         bool CanGoBack();
 
         Task PushAsync(object page);
