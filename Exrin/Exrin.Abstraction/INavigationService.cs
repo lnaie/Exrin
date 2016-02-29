@@ -16,5 +16,7 @@ namespace Exrin.Abstraction
 
         Task GoBack();
 
+        void Map(string pageKey, Type pageType);
+
     }
 }

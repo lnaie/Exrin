@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IPageService
+    public interface IPage
     {
-
-        void Map(Type pageType, Type viewModelType);
-
-        Task<object> Build(Type pageType, object parameter);
-
+        object BindingContext { get; set; }
     }
 }

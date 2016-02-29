@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IPageService
+    public interface IViewModel
     {
 
-        void Map(Type pageType, Type viewModelType);
-
-        Task<object> Build(Type pageType, object parameter);
+        Task OnNavigated(object args);
 
     }
 }
