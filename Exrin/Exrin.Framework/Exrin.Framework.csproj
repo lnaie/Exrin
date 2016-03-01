@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AsyncLock.cs" />
     <Compile Include="BaseStack.cs" />
+    <Compile Include="DisplayService.cs" />
     <Compile Include="Execution.cs" />
     <Compile Include="Handler.cs" />
     <Compile Include="NavigationService.cs" />
