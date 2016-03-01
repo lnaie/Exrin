@@ -47,6 +47,7 @@
     <Compile Include="IPage.cs" />
     <Compile Include="IPageService.cs" />
     <Compile Include="IResult.cs" />
+    <Compile Include="IStack.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
