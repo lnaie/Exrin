@@ -5,7 +5,9 @@ Enterprise Xamarin Forms Framework
 
 This is a project I keep thinking about, attempt, relent, then try again. After a few weeks and lots of scribbled notes I though its time to give it a proper shot. This is from my learnings of 4 enterprise level projects over 1.5 years. (6 months, 9 months, 3 months, and one in progress). And also 3 other XF consumer applications I did for others after work and weekends. And also on my learnings of writing the xarch-starter project.
 
-This is not another MVVM framework, it sits on top of any MVVM framework. Something I will test. And its no where near complete yet, its completely broken at the moment so if you stumble across here check back later. :)
+**And its no where near complete yet, its completely broken at the moment so if you stumble across here check back later. :)**
+
+This is not another MVVM framework, it sits on top of any MVVM framework. Something I will test. 
 
 Enterprise or high quality xamarin apps require a lot of code just to ensure errors are handled correctly, application insights are recorded, transactions, easily unit testable and the app stays responsive and always actionable to the user.
 
