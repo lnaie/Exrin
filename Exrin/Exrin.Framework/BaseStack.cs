@@ -10,10 +10,10 @@ namespace Exrin.Framework
         
     public class BaseStack: IStack
     {
-        //protected INavigationPage _container = null;
-        protected INavigationService _navigationService = null;
-        private IDisplayService _displayService = null;
-        protected IPageService _pageService = null;
+        protected readonly INavigationService _navigationService = null;
+        private readonly IDisplayService _displayService = null;
+        protected readonly IPageService _pageService = null;
+
 
         public BaseStack(INavigationService navigationService, IDisplayService dialogService, IPageService pageService)
         {
@@ -25,9 +25,15 @@ namespace Exrin.Framework
             MapViewModels();
         }
 
+        public INavigationPage Container { get; private set; }
+
+        public StackStatus Status { get; set; } = StackStatus.Stopped;
+
         public async Task StartNavigation(object args = null)
         {
             await _navigationService.Navigate(NavigationStartPageKey, args);
+
+            Status = StackStatus.Started;
         }
 
         /// <summary>
@@ -35,6 +41,8 @@ namespace Exrin.Framework
         /// </summary>
         protected void SetContainer(INavigationPage container)
         {
+            Container = container;
+
             _navigationService.Init(container);
             _displayService.Init(container);
         }
