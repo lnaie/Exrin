@@ -42,9 +42,6 @@ namespace Exrin.Framework
         protected void SetContainer(INavigationPage container)
         {
             Container = container;
-
-            _navigationService.Init(container);
-            _displayService.Init(container);
         }
 
         protected virtual void MapPages() { }
