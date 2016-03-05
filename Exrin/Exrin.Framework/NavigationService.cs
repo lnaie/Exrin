@@ -63,6 +63,9 @@ namespace Exrin.Framework
                     if (page == null)
                         throw new Exception(String.Format("Unable to build page {0}", type.ToString()));
 
+                    if (_page == null)
+                        throw new Exception("Navigation Page is null. Did you forget to call NavigationService.Init?");
+
                     await _page.PushAsync(page);
                 }
                 else

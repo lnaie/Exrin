@@ -68,6 +68,10 @@ namespace Exrin.Framework
 
             var page = constructor.Invoke(parameters) as IPage;
 
+            if (page == null)
+                throw new InvalidOperationException(
+                    $"Page {pageType.ToString()} does not implement the interface IPage");
+
             // Assign Binding Context
             if (_pagesByType.ContainsKey(pageType))
             {
