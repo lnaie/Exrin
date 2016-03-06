@@ -25,6 +25,8 @@ namespace Exrin.Framework
             MapViewModels();
         }
 
+        public bool ShowNavigationBar { get; set; } = true;
+
         public INavigationPage Container { get; private set; }
 
         public StackStatus Status { get; set; } = StackStatus.Stopped;

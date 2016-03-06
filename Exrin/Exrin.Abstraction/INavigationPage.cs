@@ -11,6 +11,8 @@ namespace Exrin.Abstraction
 
         object Page { get; }
 
+        void SetNavigationBar(bool isVisible, object page);
+
         bool CanGoBack();
 
         Task PushAsync(object page);
