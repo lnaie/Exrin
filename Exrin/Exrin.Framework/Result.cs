@@ -9,30 +9,8 @@ namespace Exrin.Framework
 {
     public class Result : IResult
     {
-        public object Arguments
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
+        public object Arguments { get; set; }
 
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public ResultType ResultAction
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public ResultType ResultAction { get; set; }
     }
 }

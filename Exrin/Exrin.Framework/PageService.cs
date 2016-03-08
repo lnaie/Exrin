@@ -10,6 +10,13 @@ namespace Exrin.Framework
 {
     public class PageService : IPageService
     {
+        private readonly IInjection _injection = null;
+
+        public PageService(IInjection injection)
+        {
+            _injection = injection;
+        }
+
         private readonly IDictionary<Type, Type> _pagesByType = new Dictionary<Type, Type>();
 
         private object GetBindingContext(Type pageType)
@@ -18,16 +25,29 @@ namespace Exrin.Framework
 
             ConstructorInfo constructor = null;
 
+            var parameters = new object[] { };
+
             constructor = viewModelType.GetTypeInfo()
                    .DeclaredConstructors
                    .FirstOrDefault(c => !c.GetParameters().Any());
 
             if (constructor == null)
+            {
+                constructor = viewModelType.GetTypeInfo()
+                   .DeclaredConstructors.First();
+
+                var parameterList = new List<object>();
+
+                foreach (var param in constructor.GetParameters())
+                    parameterList.Add(_injection.Get(param.ParameterType));
+
+                parameters = parameterList.ToArray();
+            }
+
+            if (constructor == null)
                 throw new InvalidOperationException(
                     $"No suitable constructor found for ViewModel {viewModelType.ToString()}");
-
-            var parameters = new object[] { };
-
+            
             return constructor.Invoke(parameters);
         }
 

@@ -41,6 +41,7 @@
     <Compile Include="IDisplayService.cs" />
     <Compile Include="IErrorHandlingService.cs" />
     <Compile Include="IExecution.cs" />
+    <Compile Include="IInjection.cs" />
     <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="IOperation.cs" />
