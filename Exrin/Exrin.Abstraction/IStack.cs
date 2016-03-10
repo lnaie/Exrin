@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IDisplayService
+    public interface IStack
     {
-        void Init(INavigationPage page);
-        Task ShowDialog(string message);
+        StackStatus Status { get; set; }
+        INavigationPage Container { get; }
+        Task StartNavigation(object args = null);
 
     }
 }

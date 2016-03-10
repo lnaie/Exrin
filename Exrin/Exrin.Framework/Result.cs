@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class Result: IResult
+    public class Result : IResult
     {
-        
+        public object Arguments { get; set; }
 
+        public ResultType ResultAction { get; set; }
     }
 }

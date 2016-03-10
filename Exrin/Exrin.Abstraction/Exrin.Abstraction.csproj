@@ -43,12 +43,19 @@
     <Compile Include="IDisplayService.cs" />
     <Compile Include="IErrorHandlingService.cs" />
     <Compile Include="IExecution.cs" />
+    <Compile Include="IInjection.cs" />
+    <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="IOperation.cs" />
+    <Compile Include="IPage.cs" />
+    <Compile Include="IPageService.cs" />
     <Compile Include="IResult.cs" />
+    <Compile Include="IStack.cs" />
+    <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />
+    <Compile Include="StackStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -15,7 +15,6 @@ namespace Exrin.Framework
         
         public Execution()
         {
-            HandleResult = async (result) => { await Task.Delay(1); };
         }
 
         public Func<IResult, Task> HandleResult { get; set; }
@@ -27,5 +26,6 @@ namespace Exrin.Framework
         public Func<Task> NotifyActivityFinished { get; set; }
 
         public Func<Task> NotifyOfActivity { get; set; }
+
     }
 }
