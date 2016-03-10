@@ -11,8 +11,24 @@ namespace Exrin.Abstraction
     /// </summary>
     public interface IApplicationInsights
     {
+        /// <summary>
+        /// Get all insight reports ready for sending
+        /// </summary>
+        /// <returns></returns>
+        List<IInsightData> GetQueue();
 
-        void SetIdentity(string username);
+        /// <summary>
+        /// Delete insight reports that have been sent
+        /// </summary>
+        /// <param name="ids">The insight report Ids to be deleted</param>
+        void Clear(List<Guid> ids);
+
+        /// <summary>
+        /// Optionally set the identity these events should be tracked to
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="fullName"></param>
+        void SetIdentity(string userId, string fullName);
         
         /// <summary>
         /// Track an event that occurred in the handling of an action

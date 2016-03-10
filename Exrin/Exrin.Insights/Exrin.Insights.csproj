@@ -35,8 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Process.cs" />
+    <Compile Include="ApplicationInsights.cs" />
+    <Compile Include="InsightData.cs" />
+    <Compile Include="Processor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Timer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj">
