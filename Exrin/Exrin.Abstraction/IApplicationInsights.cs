@@ -11,11 +11,23 @@ namespace Exrin.Abstraction
     /// </summary>
     public interface IApplicationInsights
     {
+
+        void SetIdentity(string username);
+        
         /// <summary>
         /// Track an event that occurred in the handling of an action
         /// </summary>
         /// <param name="objectName">Name of the object that caused the event</param>
         /// <param name="message">Additional details of the event</param>
         void TrackEvent(string objectName, string message);
+
+        /// <summary>
+        /// Timeouts, Load Times
+        /// </summary>
+        void TrackMetric();
+
+        void TrackException();
+
+        void TrackCrash();
     }
 }

@@ -9,15 +9,17 @@ namespace Exrin.Framework
 {
     public static class ThreadHelper
     {
-
-        public static void RunOnUIThread(SynchronizationContext uiContext, Action action)
+        private static SynchronizationContext _uiContext = null;
+        public static void Init(SynchronizationContext uiContext)
         {
-            // TODO: Initial the context when initializing the framework
-            // Then no need to pass it through.
-
-            // SynchronizationContext.Current
-
-            uiContext.Post((e) => action(), null);
+            _uiContext = uiContext;
+        }
+        public static void RunOnUIThread(Action action)
+        {           
+            if (_uiContext != null)
+                _uiContext.Post((e) => action(), null);
+            else
+                throw new Exception("You must call Exrin.Framework.App.Init() before calling this method.");
         }
 
     }
