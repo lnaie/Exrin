@@ -43,9 +43,9 @@ namespace Exrin.Insights
         {
             foreach (var tracker in _insightTrackers.Values)
                 if (tracker != null)
-                    foreach (var data in tracker.GetQueue())
+                    foreach (var data in await tracker.GetQueue())
                         if (await _insightsProvider.Send(data))
-                            tracker.Clear(new List<Guid>() { data.Id });
+                            await tracker.Clear(new List<IInsightData>() { data });
            
         }
 

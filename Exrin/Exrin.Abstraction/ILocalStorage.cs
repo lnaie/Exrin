@@ -9,9 +9,11 @@ namespace Exrin.Abstraction
     public interface ILocalStorage
     {
 
-        Task Save(string fileId, string data);
+        Task Write(IInsightData data);
 
-        Task Read(string fileId, string data);
+        Task<IList<IInsightData>> ReadAllData();
+
+        Task Delete(IInsightData data);
 
     }
 }

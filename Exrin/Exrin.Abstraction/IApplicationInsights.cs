@@ -15,13 +15,14 @@ namespace Exrin.Abstraction
         /// Get all insight reports ready for sending
         /// </summary>
         /// <returns></returns>
-        List<IInsightData> GetQueue();
+        Task<List<IInsightData>> GetQueue();
 
         /// <summary>
         /// Delete insight reports that have been sent
         /// </summary>
-        /// <param name="ids">The insight report Ids to be deleted</param>
-        void Clear(List<Guid> ids);
+        /// <param name="list"></param>
+        /// <returns></returns>
+        Task Clear(IList<IInsightData> list)
 
         /// <summary>
         /// Optionally set the identity these events should be tracked to

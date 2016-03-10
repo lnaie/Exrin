@@ -21,14 +21,15 @@ namespace Exrin.Insights
             _deviceInfo = deviceInfo;
         }
 
-        public void Clear(List<Guid> ids)
+        public async Task Clear(IList<IInsightData> list)
         {
-            throw new NotImplementedException();
+            foreach (var data in list)
+               await _storage.Delete(data);
         }
 
-        public List<IInsightData> GetQueue()
+        public async Task<List<IInsightData>> GetQueue()
         {
-            throw new NotImplementedException();
+            return (await _storage.ReadAllData()).ToList();
         }
 
         public void SetIdentity(string userId, string fullName)
