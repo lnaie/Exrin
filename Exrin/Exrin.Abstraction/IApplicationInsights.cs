@@ -22,7 +22,7 @@ namespace Exrin.Abstraction
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        Task Clear(IList<IInsightData> list)
+        Task Clear(IList<IInsightData> list);
 
         /// <summary>
         /// Optionally set the identity these events should be tracked to

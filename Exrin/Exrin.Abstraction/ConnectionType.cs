@@ -9,9 +9,11 @@ namespace Exrin.Abstraction
     public enum ConnectionType
     {
 
-        Wireless = 0,
+        NotConnected = 0,
         Cellular = 1,
-        Ethernet = 2
+        Ethernet = 2,
+        Wireless = 4,
+        Other = 8
 
     }
 }

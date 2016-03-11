@@ -18,13 +18,15 @@ namespace Exrin.Abstraction
         /// A string representing the model of the device
         /// </summary>
         /// <returns></returns>
-        string GetModel();
+        Task<string> GetModel();
 
         /// <summary>
         /// A string representing the OS and version
         /// </summary>
         /// <returns></returns>
         string GetOS();
+
+        Task<string> GetOSVersion();
 
         /// <summary>
         /// Percentage of how charged the battery is
