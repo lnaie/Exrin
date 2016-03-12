@@ -15,74 +15,85 @@ namespace Exrin.Framework.Tests.ViewModelExecute
     {
         bool IsBusy { get; set; }
 
-        //public async Task Test()
-        //{
-        //    // Interface and Project based bindings
-           
-        //    // Dialog, Navigation Service, 
+        public async Task Test()
+        {
+            // Interface and Project based bindings
 
-        //    var builder = new ExecutionBuilder();
+            // Dialog, Navigation Service, 
 
-        //    INavigationService navigationService = new NavigationService(new PageService());
-        //    IErrorHandlingService errorHandlingService = new ErrorHandlingService();
-        //    IDisplayService displayService = new DisplayService();
+            var builder = new ExecutionBuilder();
 
-        //    Handler handler = new Handler(navigationService, errorHandlingService, displayService);
-            
-        //    // TODO: Package this up and send to sample projects to get it developed from scratch.
+            INavigationService navigationService = new NavigationService(new PageService());
+            IErrorHandlingService errorHandlingService = new ErrorHandlingService();
+            IDisplayService displayService = new DisplayService();
 
-        //    // This below needs to be as light as possible
-        //    // And Operations Need to be easily testable
+            Handler handler = new Handler(navigationService, errorHandlingService, displayService);
 
-        //    // Should be built top level view model
-        //    var execution = builder.BuildNew(handler);
+            // TODO: Package this up and send to sample projects to get it developed from scratch.
 
-        //    // Need easier way to add and build operations to ViewModel
-        //    var operation = new TestViewModelExecute()
-        //    {
-        //        Operations = new List<IOperation>() { new TestOperation() },
-        //        TimeoutMilliseconds = 10000
-        //    };
+            // This below needs to be as light as possible
+            // And Operations Need to be easily testable
 
-        //    await execution.ViewModelExecute(operation);
+            // Should be built top level view model
+            var execution = builder.BuildNew(handler);
 
-        //}
+            // Need easier way to add and build operations to ViewModel
+            var operation = new TestViewModelExecute()
+            {
+                Operations = new List<IOperation>() { new TestOperation() },
+                TimeoutMilliseconds = 10000
+            };
+
+            await execution.ViewModelExecute(operation);
+
+        }
 
 
-        // Values over 1000 but only slight can possibly fail due to minor inaccuracy in the timer function. 
-        // This is deemed acceptable, with a 50ms variance.
-        //[Theory]
-        //[InlineData(10)]
-        //[InlineData(500)]
-        //[InlineData(999)]
-        //[InlineData(1050)]
-        //public async Task TimeoutHandledUnder1000ms(int timeout)
-        //{
+        //Values over 1000 but only slight can possibly fail due to minor inaccuracy in the timer function.
+        //This is deemed acceptable, with a 50ms variance.
 
-        //    var timeoutHandled = false;
+        [Theory]
+        [InlineData(10)]
+        [InlineData(500)]
+        [InlineData(999)]
+        [InlineData(1050)]
+        public async Task TimeoutHandledUnder1000ms(int timeout)
+        {
 
-        //    Func<Task> timeoutHandle = async () => { timeoutHandled = true; };
-        //    Func<Task> waitFunction = async () => { await Task.Delay(1000); };
-        //    Func<Task> notifyActivity = async () => { };
-        //    Func<Task> notifyActivityFinished = async () => { };
-        //    Func<Task> completed = async () => { };
+            var timeoutHandled = false;
 
-        //    await new Object().ViewModelExecute(operations: new List<IOperation>() {
-        //                                                             new Operation() { Function = waitFunction, Rollback = null }
-        //                                                                               },
-        //                                             handleTimeout: timeoutHandle,
-        //                                             timeoutMilliseconds: timeout,
-        //                                             notifyOfActivity: notifyActivity,
-        //                                             notifyActivityFinished: notifyActivityFinished,
-        //                                             completed: completed
-        //                                            );
+            Func<Task> timeoutHandle = async () => { timeoutHandled = true; };
+            Func<IResult, Task> waitFunction = async (result) => { await Task.Delay(1000); };
+            Func<Task> notifyActivity = async () => { };
+            Func<Task> notifyActivityFinished = async () => { };
+            Func<IResult, Task> completed = async (result) => { };
 
-        //    if (timeout <= 1000)
-        //        Assert.Equal(true, timeoutHandled);
-        //    else
-        //        Assert.Equal(false, timeoutHandled);
+            IViewModelExecute vmExecution = new TestViewModelExecute()
+            {
+                Operations = new List<IOperation>() {
+                                                    new Operation() { Function = waitFunction, Rollback = null }
+                                                    },
+                TimeoutMilliseconds = timeout
+            };
 
-        //}
+            IExecution execution = new Execution()
+            {
+                HandleTimeout = timeoutHandle,
+                NotifyOfActivity = notifyActivity,
+                NotifyActivityFinished = notifyActivityFinished,
+                HandleResult = completed
+            };
+
+
+            await execution.ViewModelExecute(vmExecution);
+
+
+            if (timeout <= 1000)
+                Assert.Equal(true, timeoutHandled);
+            else
+                Assert.Equal(false, timeoutHandled);
+
+        }
 
 
     }

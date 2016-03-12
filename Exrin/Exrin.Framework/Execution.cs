@@ -12,10 +12,8 @@ namespace Exrin.Framework
         public IApplicationInsights Insights { get; private set; }
 
         public IResult Result { get; set; }
-        
-        public Execution()
-        {
-        }
+
+        public Execution() { }
 
         public Func<IResult, Task> HandleResult { get; set; }
 
