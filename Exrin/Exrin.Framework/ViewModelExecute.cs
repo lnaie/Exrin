@@ -14,8 +14,7 @@ namespace Exrin.Framework
     {
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
-
-            // Execute inside RelayCommand Action
+            
             return new RelayCommand(async (parameter) =>
             {
                 await ViewModelExecute(sender,

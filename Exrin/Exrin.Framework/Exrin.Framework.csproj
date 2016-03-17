@@ -48,7 +48,6 @@
     <Compile Include="DisplayArgs.cs" />
     <Compile Include="DisplayService.cs" />
     <Compile Include="Execution.cs" />
-    <Compile Include="Handler.cs" />
     <Compile Include="NavigationArgs.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="Operation.cs" />

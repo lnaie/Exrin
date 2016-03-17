@@ -8,7 +8,6 @@ using System.Windows.Input;
 
 namespace Exrin.Framework
 {
-    // TODO: This needs finishing - relays to ViewModelExecute or ModelExecute
     public class RelayCommand : ICommand, IRelayCommand
     {
         private readonly Action<object> _action = null;
