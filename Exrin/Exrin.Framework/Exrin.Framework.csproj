@@ -44,6 +44,7 @@
     <Compile Include="App.cs" />
     <Compile Include="AsyncLock.cs" />
     <Compile Include="BaseStack.cs" />
+    <Compile Include="BaseViewModelExecute.cs" />
     <Compile Include="DisplayArgs.cs" />
     <Compile Include="DisplayService.cs" />
     <Compile Include="Execution.cs" />

@@ -9,7 +9,13 @@ namespace Exrin.Framework
 {
     public class Result : IResult
     {
-        public object Arguments { get; set; }
+        public Result (object parameter)
+        {
+            Parameter = parameter;
+        }
+        public object Parameter { get; private set; }
+
+        public IResultArgs Arguments { get; set; }
 
         public ResultType ResultAction { get; set; }
     }

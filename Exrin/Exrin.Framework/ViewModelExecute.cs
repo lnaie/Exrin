@@ -12,17 +12,23 @@ namespace Exrin.Framework
 {
     public static partial class Process
     {
-        public static Task ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
-            return ViewModelExecute(sender,
-                                    operations: execute.Operations,
-                                    handleTimeout: sender.HandleTimeout,
-                                    handleUnhandledException: sender.HandleUnhandledException,
-                                    insights: sender.Insights,
-                                    notifyActivityFinished: sender.NotifyActivityFinished,
-                                    notifyOfActivity: sender.NotifyOfActivity,
-                                    timeoutMilliseconds: execute.TimeoutMilliseconds,
-                                    name: name);
+
+            // Execute inside RelayCommand Action
+            return new RelayCommand(async (parameter) =>
+            {
+                await ViewModelExecute(sender,
+                                        operations: execute.Operations,
+                                        handleTimeout: sender.HandleTimeout,
+                                        handleUnhandledException: sender.HandleUnhandledException,
+                                        insights: sender.Insights,
+                                        notifyActivityFinished: sender.NotifyActivityFinished,
+                                        notifyOfActivity: sender.NotifyOfActivity,
+                                        timeoutMilliseconds: execute.TimeoutMilliseconds,
+                                        name: name,
+                                        parameter: parameter);
+            });
         }
 
         private readonly static Dictionary<object, bool> _status = new Dictionary<object, bool>();
@@ -35,7 +41,8 @@ namespace Exrin.Framework
                  Func<Task> handleTimeout = null,
                  int timeoutMilliseconds = 0,
                  IApplicationInsights insights = null,
-                 string name = ""
+                 string name = "",
+                 object parameter = null
                  )
         {
             // If current executing, ignore the latest request
@@ -103,11 +110,11 @@ namespace Exrin.Framework
                     rollbacks.Add(operation.Rollback);
 
                     if (result == null)
-                        result = new Result(); // Ensures always an instance
+                        result = new Result(parameter); // Ensures always an instance
 
                     if (operation.Function != null)
                         await Task.Run(async () => { await operation.Function(result); }, task.Token); // Background Thread
-                    
+
                     if (!operation.ChainedRollback)
                         rollbacks.Remove(operation.Rollback);
                 }
@@ -137,7 +144,7 @@ namespace Exrin.Framework
                         foreach (var rollback in rollbacks)
                         {
                             if (result == null)
-                                result = new Result();
+                                result = new Result(parameter);
 
                             await rollback(result);
                         }

@@ -52,6 +52,7 @@
     <Compile Include="IOperation.cs" />
     <Compile Include="IPage.cs" />
     <Compile Include="IPageService.cs" />
+    <Compile Include="IRelayCommand.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IResultArgs.cs" />
     <Compile Include="IStack.cs" />
