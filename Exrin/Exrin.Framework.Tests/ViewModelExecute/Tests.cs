@@ -1,6 +1,7 @@
 ﻿using Exrin.Abstraction;
 using Exrin.Framework.Tests.Builder;
 using Exrin.Framework.Tests.Helper;
+using Exrin.Framework.Tests.ViewModelExecute.Mocks;
 using Exrin.Framework.Tests.ViewModelExecute.Objects;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute
 
             var builder = new ExecutionBuilder();
 
-            INavigationService navigationService = new NavigationService(new PageService());
+            INavigationService navigationService = new NavigationService(new PageService(new Injection()));
             IErrorHandlingService errorHandlingService = new ErrorHandlingService();
             IDisplayService displayService = new DisplayService();
 
@@ -83,8 +84,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute
                 NotifyActivityFinished = notifyActivityFinished,
                 HandleResult = completed
             };
-
-
+            
             await execution.ViewModelExecute(vmExecution);
 
 

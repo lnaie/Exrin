@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Exrin.Framework
 {
-    // TODO: This needs finishing
+    // TODO: This needs finishing - relays to ViewModelExecute or ModelExecute
     public class RelayCommand : ICommand
     {
         private readonly Action<object> _action = null;

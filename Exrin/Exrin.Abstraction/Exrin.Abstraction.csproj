@@ -53,6 +53,7 @@
     <Compile Include="IPage.cs" />
     <Compile Include="IPageService.cs" />
     <Compile Include="IResult.cs" />
+    <Compile Include="IResultArgs.cs" />
     <Compile Include="IStack.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelExecute.cs" />
