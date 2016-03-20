@@ -47,6 +47,7 @@
     <Compile Include="IInsightData.cs" />
     <Compile Include="IInsightsProvider.cs" />
     <Compile Include="ILocalStorage.cs" />
+    <Compile Include="IMultiPage.cs" />
     <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="IOperation.cs" />
