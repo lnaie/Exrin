@@ -20,6 +20,11 @@ namespace Exrin.Framework
             _pageService = pageService;
         }
 
+        public async Task GoBack(object parameter)
+        {
+            await _page.PopAsync(parameter);
+        }
+
         public async Task GoBack()
         {
             await _page.PopAsync();
@@ -27,7 +32,30 @@ namespace Exrin.Framework
 
         public virtual void Init(INavigationPage page)
         {
+            if (_page != null)
+                _page.OnPopped -= page_OnPopped;
+
+            page.OnPopped += page_OnPopped;
+
             _page = page;
+        }
+
+        private void page_OnPopped(object sender, IPageNavigationArgs e)
+        {
+            if (e.PoppedPage != null)
+            {
+                var model = e.PoppedPage.BindingContext as IViewModel;
+                if (model != null)
+                    model.OnPopped();
+            }
+
+            if (e.CurrentPage != null)
+            {
+                var model = e.CurrentPage.BindingContext as IViewModel;
+                if (model != null)
+                    model.OnBackNavigated(null);
+            }
+
         }
 
         public virtual void Map(string pageKey, Type pageType)
@@ -58,17 +86,31 @@ namespace Exrin.Framework
                 {
                     var type = _pagesByKey[pageKey];
 
-                    var page = await _pageService.Build(type, args);
+                    var page = await _pageService.Build(type, args) as IPage;
 
                     if (page == null)
                         throw new Exception(String.Format("Unable to build page {0}", type.ToString()));
 
                     if (_page == null)
-                        throw new Exception("Navigation Page is null. Did you forget to call NavigationService.Init?");
+                        throw new Exception("INavigationPage is null. Did you forget to call NavigationService.Init()?");
 
                     _page.SetNavigationBar(false, page); //TODO: read from stack
-                                        
+
+                    var model = page.BindingContext as IViewModel;
+
+                    if (model != null)
+                    {
+                        page.Appearing += (s, e) => { model.OnAppearing(); };
+                        page.Disappearing += (s, e) => { model.OnDisappearing(); };
+                    }
+
                     await _page.PushAsync(page);
+
+                    ThreadHelper.RunOnUIThread(() =>
+                    {
+                        if (model != null)
+                            model.OnNavigated(args); // Do not await.
+                    });
                 }
                 else
                 {

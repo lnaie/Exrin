@@ -49,9 +49,11 @@
     <Compile Include="DisplayService.cs" />
     <Compile Include="ErrorHandlingService.cs" />
     <Compile Include="Execution.cs" />
+    <Compile Include="ModelExecute.cs" />
     <Compile Include="NavigationArgs.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="Operation.cs" />
+    <Compile Include="PageNavigation.cs" />
     <Compile Include="PageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelayCommand.cs" />

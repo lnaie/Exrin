@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IPage
+    public interface IPageNavigationArgs
     {
-        object BindingContext { get; set; }
+        IPage PoppedPage { get; set; }
 
-        event EventHandler Appearing;      
-        event EventHandler Disappearing;
+        IPage CurrentPage { get; set; }
+
     }
 }

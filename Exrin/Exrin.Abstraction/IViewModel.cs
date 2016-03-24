@@ -11,5 +11,13 @@ namespace Exrin.Abstraction
 
         Task OnNavigated(object args);
 
+        Task OnBackNavigated(object args);
+
+        void OnAppearing();
+
+        void OnDisappearing();
+
+        void OnPopped();
+
     }
 }

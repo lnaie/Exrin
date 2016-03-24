@@ -19,5 +19,9 @@ namespace Exrin.Abstraction
 
         Task PopAsync();
 
+        Task PopAsync(object parameter);
+
+        event EventHandler<IPageNavigationArgs> OnPopped;
+
     }
 }
