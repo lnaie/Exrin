@@ -14,5 +14,7 @@ namespace Exrin.Framework
 
         public object PageIndicator { get; set; }
 
+        public object Parameter { get; set; }
+
     }
 }

@@ -67,9 +67,8 @@ namespace Exrin.Framework
                         throw new Exception("Navigation Page is null. Did you forget to call NavigationService.Init?");
 
                     _page.SetNavigationBar(false, page); //TODO: read from stack
-
+                                        
                     await _page.PushAsync(page);
-
                 }
                 else
                 {

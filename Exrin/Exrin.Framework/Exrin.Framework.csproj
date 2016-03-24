@@ -47,6 +47,7 @@
     <Compile Include="BaseViewModelExecute.cs" />
     <Compile Include="DisplayArgs.cs" />
     <Compile Include="DisplayService.cs" />
+    <Compile Include="ErrorHandlingService.cs" />
     <Compile Include="Execution.cs" />
     <Compile Include="NavigationArgs.cs" />
     <Compile Include="NavigationService.cs" />

@@ -15,8 +15,11 @@ namespace Exrin.Framework
 
         public BaseStack(INavigationService navigationService)
         {
-            _navigationService = navigationService;
+            _navigationService = navigationService;            
+        }
 
+        public void Init()
+        {
             MapPages();
             MapViewModels();
         }

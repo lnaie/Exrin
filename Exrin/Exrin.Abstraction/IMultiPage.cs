@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IMultiPage
+    public interface IMultiPage: IPage
     {
 
         IList<IPage> Pages { get; }
