@@ -8,5 +8,8 @@ namespace Exrin.Abstraction
 {
     public interface IModel
     {
+
+        IModelExecution Execution { get; }
+
     }
 }

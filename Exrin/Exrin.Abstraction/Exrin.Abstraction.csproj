@@ -62,6 +62,7 @@
     <Compile Include="IResult.cs" />
     <Compile Include="IResultArgs.cs" />
     <Compile Include="IStack.cs" />
+    <Compile Include="IStackRunner.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

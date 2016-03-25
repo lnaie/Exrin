@@ -45,10 +45,13 @@
     <Compile Include="AsyncLock.cs" />
     <Compile Include="BaseStack.cs" />
     <Compile Include="BaseViewModelExecute.cs" />
+    <Compile Include="BindableObject.cs" />
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="DisplayArgs.cs" />
     <Compile Include="DisplayService.cs" />
     <Compile Include="ErrorHandlingService.cs" />
     <Compile Include="Execution.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="ModelExecute.cs" />
     <Compile Include="ModelExecution.cs" />
     <Compile Include="NavigationArgs.cs" />
@@ -59,7 +62,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Result.cs" />
+    <Compile Include="StackRunner.cs" />
     <Compile Include="ThreadHelper.cs" />
+    <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelExecute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
