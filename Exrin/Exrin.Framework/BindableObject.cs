@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class BindableObject: INotifyPropertyChanged
+    public class BindableModel: INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;

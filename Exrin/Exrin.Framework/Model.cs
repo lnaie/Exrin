@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class Model : BindableObject, IModel
+    public class Model : BindableModel, IModel
     {
         
         public IModelExecution Execution { get; protected set; }

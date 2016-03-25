@@ -12,10 +12,13 @@ namespace Exrin.Framework
 
         protected readonly AsyncLock _lock = new AsyncLock();
         protected readonly IInjection _injection;
+        private readonly Action<object> _setPage;
+        private readonly IList<Action> _postRun = new List<Action>();
 
-        public Bootstrapper(IInjection injection)
+        public Bootstrapper(IInjection injection, Action<object> setPage)
         {
             _injection = injection;
+            _setPage = setPage;
         }
 
         public IInjection Init()
@@ -32,6 +35,9 @@ namespace Exrin.Framework
             InitModels();
 
             _injection.Complete();
+
+            foreach (var action in _postRun)
+                action();
 
             return _injection;
 
@@ -56,12 +62,17 @@ namespace Exrin.Framework
         private void InitRunners()
         {
             _injection.Register<IStackRunner, StackRunner>();
+            _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setPage); });
         }
 
         protected virtual void RegisterStack<T>(object stackChoice) where T : class, IStack
         {
             _injection.Register<T>();
-            _injection.Get<IStackRunner>().RegisterStack<T>(stackChoice);
+            _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(stackChoice); });
         }
+
+        
+
+
     }
 }

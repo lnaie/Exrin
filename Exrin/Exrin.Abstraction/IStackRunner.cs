@@ -8,6 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface IStackRunner
     {
+        void Init(Action<object> setPage);
 
         void RegisterStack<T>(object stackChoice) where T : class, IStack;
 

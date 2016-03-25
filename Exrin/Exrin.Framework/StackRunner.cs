@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class StackRunner: IStackRunner
+    public class StackRunner : IStackRunner
     {
 
         private readonly IDictionary<object, IStack> _stacks = new Dictionary<object, IStack>();
@@ -15,6 +15,7 @@ namespace Exrin.Framework
         private readonly INavigationService _navigationService;
         private readonly IDisplayService _displayService;
         private readonly IInjection _injection;
+        private Action<object> _setPage = null;
 
         public StackRunner(INavigationService navigationService, IDisplayService displayService, IInjection injection)
         {
@@ -23,9 +24,14 @@ namespace Exrin.Framework
             _injection = injection;
         }
 
-        public void RegisterStack<T>(object stackChoice) where T: class, IStack
+        public void Init(Action<object> setPage)
         {
-            _injection.Register<T>();            
+            _setPage = setPage;
+        }
+
+        public void RegisterStack<T>(object stackChoice) where T : class, IStack
+        {
+            _injection.Register<T>();
             _stacks.Add(stackChoice, _injection.Get<T>());
         }
 
@@ -48,7 +54,8 @@ namespace Exrin.Framework
 
             ThreadHelper.RunOnUIThread(() =>
             {
-                Application.Current.MainPage = stack.Container.Page as Page;
+                if (_setPage != null)
+                    _setPage(stack.Container.Page);
             });
 
         }
