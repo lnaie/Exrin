@@ -11,6 +11,7 @@ namespace Exrin.Abstraction
         StackStatus Status { get; set; }
         INavigationPage Container { get; }
         Task StartNavigation(object args = null);
+        void Init();
 
     }
 }

@@ -68,7 +68,12 @@ namespace Exrin.Framework
         protected virtual void RegisterStack<T>(object stackChoice) where T : class, IStack
         {
             _injection.Register<T>();
+
+            // Register the Stack
             _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(stackChoice); });
+
+            // Initialize the Stack
+            _postRun.Add(() => { _injection.Get<T>().Init(); });
         }
 
         
