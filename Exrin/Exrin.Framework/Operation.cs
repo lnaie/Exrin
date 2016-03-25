@@ -15,4 +15,14 @@ namespace Exrin.Framework
 
         public Func<IResult, Task> Rollback { get; set; } = null;
     }
+
+    public class Operation<T> : IOperation<T>
+    {
+
+        public Func<Task<T>> Function { get; set; } = null;
+
+        public Func<Task<T>> Rollback { get; set; } = null;
+
+      
+    }
 }
