@@ -47,17 +47,26 @@
     <Compile Include="IInsightData.cs" />
     <Compile Include="IInsightsProvider.cs" />
     <Compile Include="ILocalStorage.cs" />
+    <Compile Include="IModel.cs" />
+    <Compile Include="IModelExecute.cs" />
+    <Compile Include="IModelExecution.cs" />
+    <Compile Include="IMultiPage.cs" />
     <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="IOperation.cs" />
+    <Compile Include="IOperationT.cs" />
     <Compile Include="IPage.cs" />
+    <Compile Include="IPageNavigation.cs" />
     <Compile Include="IPageService.cs" />
+    <Compile Include="IRelayCommand.cs" />
     <Compile Include="IResult.cs" />
+    <Compile Include="IResultArgs.cs" />
     <Compile Include="IStack.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />
+    <Compile Include="Size.cs" />
     <Compile Include="StackStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

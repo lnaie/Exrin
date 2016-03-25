@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Exrin.Abstraction
 {
-    public interface IPage
+    public interface IRelayCommand: ICommand
     {
-        object BindingContext { get; set; }
 
-        event EventHandler Appearing;      
-        event EventHandler Disappearing;
     }
 }

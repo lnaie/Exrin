@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IPage
+    public interface IResultArgs
     {
-        object BindingContext { get; set; }
 
-        event EventHandler Appearing;      
-        event EventHandler Disappearing;
     }
 }

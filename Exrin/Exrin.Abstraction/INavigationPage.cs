@@ -14,11 +14,14 @@ namespace Exrin.Abstraction
         void SetNavigationBar(bool isVisible, object page);
 
         bool CanGoBack();
-
+            
         Task PushAsync(object page);
 
         Task PopAsync();
 
+        Task PopAsync(object parameter);
+
+        event EventHandler<IPageNavigationArgs> OnPopped;
 
     }
 }

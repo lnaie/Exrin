@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    /// <summary>
-    /// An execution entity to perform when an action is taken in the ViewModel
-    /// </summary>
-    public interface IViewModelExecute
+   public interface IModelExecute<T>
     {
+
         /// <summary>
-        /// A list of operations to perform in sequence and their associated rollbacks
+        /// The operation to perform and its rollback
         /// </summary>
-        List<IOperation> Operations { get; }
-       
+        IOperation<T> Operation { get; }
+
         /// <summary>
         /// The total length allowed for the operations to complete, before a timeout is triggered. Setting to 0 or below will result in no timeout constraint.
         /// </summary>

@@ -11,16 +11,15 @@ namespace Exrin.Framework
     public class BaseStack: IStack
     {
         protected readonly INavigationService _navigationService = null;
-        private readonly IDisplayService _displayService = null;
-        protected readonly IPageService _pageService = null;
 
 
-        public BaseStack(INavigationService navigationService, IDisplayService dialogService, IPageService pageService)
+        public BaseStack(INavigationService navigationService)
         {
-            _navigationService = navigationService;
-            _displayService = dialogService;
-            _pageService = pageService;
+            _navigationService = navigationService;            
+        }
 
+        public void Init()
+        {
             MapPages();
             MapViewModels();
         }

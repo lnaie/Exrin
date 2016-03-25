@@ -16,6 +16,8 @@ namespace Exrin.Abstraction
         /// Arguments that may be required to pass to the next operation
         /// Or for the final handling of the final rezult
         /// </summary>
-        object Arguments { get; set; }
+        IResultArgs Arguments { get; set; }
+
+        object Parameter { get; }
     }
 }

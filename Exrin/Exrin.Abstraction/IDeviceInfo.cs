@@ -26,7 +26,7 @@ namespace Exrin.Abstraction
         /// <returns></returns>
         string GetOS();
 
-        Task<string> GetOSVersion();
+        Task<Version> GetOSVersion();
 
         /// <summary>
         /// Percentage of how charged the battery is
@@ -34,6 +34,7 @@ namespace Exrin.Abstraction
         /// <returns></returns>
         double GetBattery();
 
+        Size GetScreenSize();
 
         ConnectionType GetConnectionType();
 

@@ -101,6 +101,13 @@ namespace Exrin.Framework
                 var model = page.BindingContext as IViewModel;
                 if (model != null)
                     await model.OnNavigated(parameter);
+
+                var multiPage = page as IMultiPage;
+
+                if (multiPage != null)
+                    foreach (var p in multiPage.Pages)
+                        p.BindingContext = GetBindingContext(p.GetType());
+
             }
             else
                 throw new InvalidOperationException(
