@@ -83,11 +83,9 @@ namespace Exrin.Framework.Tests.ViewModelExecute
                 NotifyActivityFinished = notifyActivityFinished,
                 HandleResult = completed
             };
-
-
+            
             await execution.ViewModelExecute(vmExecution);
-
-
+            
             if (timeout <= 1000)
                 Assert.Equal(true, timeoutHandled);
             else
