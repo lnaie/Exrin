@@ -28,7 +28,9 @@ The framework enforces the rest.
 
 [Getting Started](http://exrin.readthedocs.org/)
 
+**Sample App**
 
+[Tesla App](https://github.com/adamped/Tesla-Mobile-App) - A basic example showing the complete setup and usage of Exrin.
 
 # Frequently Asked Questions
 
