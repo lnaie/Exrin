@@ -1,6 +1,8 @@
 
 ![Exrin](http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png)
 
+[![Build Status](https://travis-ci.org/exrin/Exrin.svg?branch=master)](https://travis-ci.org/exrin/Exrin)
+
 # Introduction
 
 Exrin is a Xamarin Forms Framework designed to enable teams to develop consistent, reliable and highly performant mobile apps. Exrin lets you put more focus on how the app will look and how the user will interact, while Exrin takes care of handling the users intent.
