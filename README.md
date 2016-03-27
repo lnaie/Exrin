@@ -1,18 +1,55 @@
-# exrin
-Enterprise Xamarin Forms Framework
 
-![Image](http://cdn.meme.am/instances/500x/62492497.jpg)
+![Exrin](http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png)
 
-This is a project I keep thinking about, attempt, relent, then try again. After a few weeks and lots of scribbled notes I though its time to give it a proper shot. This is from my learnings of 4 enterprise level projects over 1.5 years. (6 months, 9 months, 3 months, and one in progress). And also 3 other XF consumer applications I did for others after work and weekends. And also on my learnings of writing the xarch-starter project.
+# Introduction
 
-This is not another MVVM framework, it sits on top of any MVVM framework. Something I will test. And its no where near complete yet, its completely broken at the moment so if you stumble across here check back later. :)
+Exrin is a Xamarin Forms Framework designed to enable teams to develop consistent, reliable and highly performant mobile apps. Exrin lets you put more focus on how the app will look and how the user will interact, while Exrin takes care of handling the users intent.
 
-Enterprise or high quality xamarin apps require a lot of code just to ensure errors are handled correctly, application insights are recorded, transactions, easily unit testable and the app stays responsive and always actionable to the user.
+# Backstory
 
-If you have a larger team, enforcing standards also becomes difficult, the less a developer has to remember the easier it will be. Creating something to enforce those standards has typically been hard.
+I always found it hard to isolate and test ViewModels and hard to keep developers consistently accounting for all scenarios on each user action. Think of things such as which thread to run this on, when should I notify the user that the app is currently doing something, handle exceptions, handle timeouts, how should I log an event and how should I track application insights in a reliable fashion.
 
-This framework is designed to be used with any other MVVM framework and will be designed to work regardless of Xamarin Version (though still working some of those details out).
+This is why Exrin is created and there are only 3 rules needed to be followed by each developer to ensure it is consistent across the app.
 
-This is still very much conceptual at the moment and the project may just end in tears, but an attempt will be made.
+1. Always use IViewModelExecute for every Command and/or user action
+2. Always use IModelExecute for every method on the Model.
+3. Unit Test every IOperation created.
 
-Main goal is to make this really easy to implement, understand and use, otherwise this project will fail. If it ends up like the Microsoft Enterprise Libraries then I know I have failed.
+The framework enforces the rest.
+
+# Getting Started
+
+**Install the Nuget Package**
+
+[Exrin Nuget Package](https://www.nuget.org/packages/Exrin/)
+
+
+**Read the Docs**
+
+[Getting Started](http://exrin.readthedocs.org/)
+
+**Sample App**
+
+[Tesla App](https://github.com/adamped/Tesla-Mobile-App) - A basic example showing the complete setup and usage of Exrin.
+
+# Frequently Asked Questions
+
+1. Is this another MVVM Framework?
+Yes and no. You can use this with any other MVVM Framework, or use what is available in Exrin.
+
+2. What IoC does it use?
+None, you inject your own IoC and DI Framework when configuring your app. After using a few on different project, I prefer AutoFac.
+
+3. Does this have any dependencies?
+No. That was a critical design point. Exrin does not depend on anything. Having a package that locks you into another package version has become increasing frustrating and Exrin will not be a part of that.
+
+4. Why this framework?
+It's not going to be for everyone. It is opinionated and requires some effort in project setup. The benefits however include consistency and easy testability for your mobile app. The benefits are greatly enhanced if 2 or more developers are on the project.
+
+# Support
+
+Please visit [Contact](http://xamarinhelp.com/contact/)
+
+# License
+
+[MIT License](https://github.com/adamped/exrin/blob/master/LICENSE) © Adam Pedley
