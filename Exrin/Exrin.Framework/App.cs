@@ -13,7 +13,7 @@ namespace Exrin.Framework
 
         public static void Init()
         {
-            Init(SynchronizationContext.Current);
+            Init(SynchronizationContext.Current); 
         }
 
         /// <summary>
