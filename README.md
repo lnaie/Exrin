@@ -1,18 +1,24 @@
-# exrin
-Enterprise Xamarin Forms Framework
+# Introduction
 
-![Image](http://cdn.meme.am/instances/500x/62492497.jpg)
+Exrin is an Enterprise Xamarin Forms Framework designed to enable teams to develop consistent, reliable and pe
 
-This is a project I keep thinking about, attempt, relent, then try again. After a few weeks and lots of scribbled notes I though its time to give it a proper shot. This is from my learnings of 4 enterprise level projects over 1.5 years. (6 months, 9 months, 3 months, and one in progress). And also 3 other XF consumer applications I did for others after work and weekends. And also on my learnings of writing the xarch-starter project.
+# Getting Started
 
-This is not another MVVM framework, it sits on top of any MVVM framework. Something I will test. And its no where near complete yet, its completely broken at the moment so if you stumble across here check back later. :)
+Install - https://www.nuget.org/packages/Exrin/
 
-Enterprise or high quality xamarin apps require a lot of code just to ensure errors are handled correctly, application insights are recorded, transactions, easily unit testable and the app stays responsive and always actionable to the user.
 
-If you have a larger team, enforcing standards also becomes difficult, the less a developer has to remember the easier it will be. Creating something to enforce those standards has typically been hard.
 
-This framework is designed to be used with any other MVVM framework and will be designed to work regardless of Xamarin Version (though still working some of those details out).
+# Frequently Asked Questions
 
-This is still very much conceptual at the moment and the project may just end in tears, but an attempt will be made.
+1. Is this another MVVM Framework?
+Yes and no. You can use this with any other MVVM Framework, or use what is available in Exrin.
 
-Main goal is to make this really easy to implement, understand and use, otherwise this project will fail. If it ends up like the Microsoft Enterprise Libraries then I know I have failed.
+2. What IoC does it use?
+None, you inject your own IoC and DI Framework when configuring your app. After using a few on different project, I prefer AutoFac.
+
+3. Does this have any dependencies?
+No. That was a critical design point. Exrin does not depend on anything. Having a package that locks you into another package version has become increasing frustrating and Exrin will not be a part of that.
+
+# Support
+
+Please visit http://xamarinhelp.com/contact/
