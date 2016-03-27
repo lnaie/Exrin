@@ -42,7 +42,7 @@ None, you inject your own IoC and DI Framework when configuring your app. After 
 No. That was a critical design point. Exrin does not depend on anything. Having a package that locks you into another package version has become increasing frustrating and Exrin will not be a part of that.
 
 4. Why this framework?
-It's not going to be for everyone. It is opinionated and requires some effort in project setup. The benefits however include consistent for
+It's not going to be for everyone. It is opinionated and requires some effort in project setup. The benefits however include consistency and easy testability for your mobile app. The benefits are greatly enhanced if 2 or more developers are on the project.
 
 # Support
 
