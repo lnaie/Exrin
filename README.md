@@ -26,7 +26,7 @@ The framework enforces the rest.
 
 **Read the Docs**
 
-[Getting Started](http://exrin.readthedocs.org/)
+[Getting Started](http://docs.exrin.net/)
 
 **Sample App**
 
