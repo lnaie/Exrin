@@ -1,10 +1,20 @@
+
+![Exrin](http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png)
+
 # Introduction
 
-Exrin is an Enterprise Xamarin Forms Framework designed to enable teams to develop consistent, reliable and pe
+Exrin is a Xamarin Forms Framework designed to enable teams to develop consistent, reliable and highly performant mobile apps. Exrin lets you put more focus on how the app will look and how the user will interact, while Exrin takes care of handling the users intent.
 
 # Getting Started
 
-Install - https://www.nuget.org/packages/Exrin/
+**Install the Nuget Package**
+
+[Exrin Nuget Package](https://www.nuget.org/packages/Exrin/)
+
+
+**Read the Docs**
+
+[Getting Started](http://exrin.readthedocs.org/)
 
 
 
@@ -21,4 +31,4 @@ No. That was a critical design point. Exrin does not depend on anything. Having 
 
 # Support
 
-Please visit http://xamarinhelp.com/contact/
+Please visit [Contact](http://xamarinhelp.com/contact/)
