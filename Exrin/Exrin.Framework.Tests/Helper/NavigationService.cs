@@ -17,6 +17,11 @@ namespace Exrin.Framework.Tests.Helper
             throw new NotImplementedException();
         }
 
+        public Task GoBack(object parameter)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Init(INavigationPage page)
         {
             throw new NotImplementedException();

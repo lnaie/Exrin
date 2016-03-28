@@ -9,6 +9,6 @@ namespace Exrin.Abstraction
 {
     public interface IRelayCommand: ICommand
     {
-
+        bool Executing { get; }
     }
 }

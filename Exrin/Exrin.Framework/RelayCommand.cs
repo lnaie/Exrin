@@ -16,6 +16,9 @@ namespace Exrin.Framework
             _action = action;
         }
 
+
+        public bool Executing { get; private set; } = false;
+
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
@@ -25,7 +28,11 @@ namespace Exrin.Framework
 
         public void Execute(object parameter)
         {
+            Executing = true;
+
             _action(parameter);
+
+            Executing = false;
         }
     }
 }
