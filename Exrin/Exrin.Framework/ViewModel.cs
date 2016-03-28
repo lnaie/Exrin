@@ -25,6 +25,14 @@ namespace Exrin.Framework
             _errorHandlingService = errorHandlingService;
             _stackRunner = stackRunner;
 
+            Execution = new Execution()
+            {
+                HandleTimeout = TimeoutHandle,
+                NotifyOfActivity = NotifyActivity,
+                NotifyActivityFinished = NotifyActivityFinished,
+                HandleResult = HandleResult
+            };
+
         }
 
         private bool _isBusy = false;
