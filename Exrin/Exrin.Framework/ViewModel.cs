@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Exrin.Framework
 {
@@ -122,9 +123,25 @@ namespace Exrin.Framework
                         case ResultType.Error:
                             await _errorHandlingService.ReportError(result.Arguments as Exception);
                             break;
-
                         case ResultType.Display:
                             await _displayService.ShowDialog((result.Arguments as DisplayArgs).Message);
+                            break;
+                        case ResultType.PropertyUpdate:
+                            var propertyArg = result.Arguments as PropertyArgs;
+                            if (propertyArg == null)
+                                break;
+
+                            try
+                            {                              
+                                var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
+                                propertyInfo.SetValue(this, propertyArg.Value);
+                            }
+                            catch (Exception ex)
+                            {
+                                await _errorHandlingService.ReportError(ex);
+                                await _displayService.ShowDialog($"Unable to update property {propertyArg.Name}");
+                            }
+                            
                             break;
                     }
 
