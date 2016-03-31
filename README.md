@@ -1,7 +1,8 @@
-
+﻿
 ![Exrin](http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png)
 
 [![Build Status](https://travis-ci.org/exrin/Exrin.svg?branch=master)](https://travis-ci.org/exrin/Exrin)
+[![Nuget](https://img.shields.io/nuget/v/Exrin.svg?style=flat-square)](https://www.nuget.org/packages/Exrin) 
 
 # Introduction
 
