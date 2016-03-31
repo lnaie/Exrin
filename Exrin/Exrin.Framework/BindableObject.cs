@@ -8,11 +8,36 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class BindableModel: INotifyPropertyChanged
+    public class BindableModel : INotifyPropertyChanged
     {
 
+        private IDictionary<string, object> _propertyValues = null;
+
+        public BindableModel()
+        {
+            _propertyValues = new Dictionary<string, object>();
+        }
+
+        public T Get<T>([CallerMemberName] string propertyName = "")
+        {
+            if (_propertyValues.ContainsKey(propertyName))
+                return (T)_propertyValues[propertyName];
+            else
+                return default(T);
+        }
+
+        public void Set(object value, [CallerMemberName] string propertyName = "")
+        {
+            if (_propertyValues.ContainsKey(propertyName))
+                _propertyValues[propertyName] = value;
+            else
+                _propertyValues.Add(propertyName, value);
+            
+            OnPropertyChanged(propertyName);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         public void OnPropertyChanged([CallerMemberName] string name = "")
         {
             var handler = PropertyChanged;

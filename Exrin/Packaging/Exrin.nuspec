@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="2.8.1">
+    <id>Exrin</id>
+    <version>0.1.0</version>
+    <title>Exrin</title>
+    <authors>Adam Pedley</authors>
+    <owners>Adam Pedley</owners>
+    <licenseUrl>https://github.com/adamped/exrin/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/adamped/exrin</projectUrl>
+    <iconUrl>http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>
+      Enterprise Xamarin Forms Framework
+    </summary>
+    <description>
+      Enterprise Xamarin Forms Framework
+    </description>
+    <tags>xamarin, xamarin.forms, enterprise</tags>
+    <releaseNotes>
+     
+    </releaseNotes>
+  </metadata>
+  <files>
+    <!--Core-->
+    <file src="..\Exrin.Framework\bin\Release\Exrin.Framework.dll" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Framework.dll" />
+    <file src="..\Exrin.Framework\bin\Release\Exrin.Framework.pdb" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Framework.pdb" />
+  
+    <file src="..\Exrin.Framework\bin\Release\Exrin.Abstraction.dll" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Abstraction.dll" />
+    <file src="..\Exrin.Framework\bin\Release\Exrin.Abstraction.pdb" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Abstraction.pdb" />  
+
+</files>
+</package>

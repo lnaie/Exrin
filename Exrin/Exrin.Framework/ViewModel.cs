@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Exrin.Framework
 {
-    public class ViewModel: BindableModel, IViewModel
+    public class ViewModel : BindableModel, IViewModel
     {
         protected IExecution Execution { get; set; }
 
@@ -19,7 +20,7 @@ namespace Exrin.Framework
 
         public ViewModel(IDisplayService displayService, INavigationService navigationService,
             IErrorHandlingService errorHandlingService, IStackRunner stackRunner)
-           
+
         {
             _displayService = displayService;
             _navigationService = navigationService;
@@ -34,6 +35,14 @@ namespace Exrin.Framework
                 HandleResult = HandleResult
             };
 
+        }
+        private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
+        public IRelayCommand GetCommand(Func<IRelayCommand> create, [CallerMemberName] string name = "")
+        {
+            if (!commands.ContainsKey(name))
+                commands.Add(name, create());
+
+            return commands[name];
         }
 
         private bool _isBusy = false;
@@ -132,7 +141,7 @@ namespace Exrin.Framework
                                 break;
 
                             try
-                            {                              
+                            {
                                 var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
                                 propertyInfo.SetValue(this, propertyArg.Value);
                             }
@@ -141,7 +150,7 @@ namespace Exrin.Framework
                                 await _errorHandlingService.ReportError(ex);
                                 await _displayService.ShowDialog($"Unable to update property {propertyArg.Name}");
                             }
-                            
+
                             break;
                     }
 

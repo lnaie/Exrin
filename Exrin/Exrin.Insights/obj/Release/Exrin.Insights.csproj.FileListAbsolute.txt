@@ -1,0 +1,7 @@
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\bin\Release\Exrin.Insights.dll
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\bin\Release\Exrin.Insights.pdb
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\bin\Release\Exrin.Abstraction.dll
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\bin\Release\Exrin.Abstraction.pdb
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\obj\Release\Exrin.Insights.csprojResolveAssemblyReference.cache
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\obj\Release\Exrin.Insights.dll
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights\obj\Release\Exrin.Insights.pdb
