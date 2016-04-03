@@ -36,7 +36,7 @@ namespace Exrin.Framework
 
         }
 
-        public abstract IVisualState VisualState { get; set; }
+        public IVisualState VisualState { get; set; }
 
         private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
         public IRelayCommand GetCommand(Func<IRelayCommand> create, [CallerMemberName] string name = "")

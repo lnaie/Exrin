@@ -47,9 +47,28 @@ namespace Exrin.Framework
                 handler(this, new PropertyChangedEventArgs(name));
         }
 
-        public virtual void Dispose()
+        public virtual void Disposing()
         {
-            PropertyChanged = null;
+
+        }
+
+        private bool _disposed = false;
+        protected void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Disposing();
+                }
+                _disposed = true;
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            
         }
     }
 }

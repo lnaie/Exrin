@@ -47,6 +47,10 @@ namespace Exrin.Framework
                 var model = e.PoppedPage.BindingContext as IViewModel;
                 if (model != null)
                     model.OnPopped();
+
+                var disposableModel = e.PoppedPage.BindingContext as IDisposable;
+                if (disposableModel != null)
+                    disposableModel.Dispose();
             }
 
             if (e.CurrentPage != null)

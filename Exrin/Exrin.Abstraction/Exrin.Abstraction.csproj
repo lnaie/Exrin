@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="ConnectionType.cs" />
     <Compile Include="IApplicationInsights.cs" />
+    <Compile Include="IBaseModel.cs" />
     <Compile Include="IDeviceInfo.cs" />
     <Compile Include="IDisplayService.cs" />
     <Compile Include="IErrorHandlingService.cs" />
