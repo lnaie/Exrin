@@ -18,13 +18,15 @@ namespace Exrin.Framework
         protected readonly IStackRunner _stackRunner = null;
 
         public ViewModel(IDisplayService displayService, INavigationService navigationService,
-            IErrorHandlingService errorHandlingService, IStackRunner stackRunner)
+            IErrorHandlingService errorHandlingService, IStackRunner stackRunner, IVisualState visualState)
 
         {
             _displayService = displayService;
             _navigationService = navigationService;
             _errorHandlingService = errorHandlingService;
             _stackRunner = stackRunner;
+
+            VisualState = visualState;
 
             Execution = new Execution()
             {

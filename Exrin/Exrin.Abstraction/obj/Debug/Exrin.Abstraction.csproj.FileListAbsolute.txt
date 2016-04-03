@@ -2,3 +2,4 @@ C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Abstraction\bin\Debug\Exrin.Abstrac
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Abstraction\bin\Debug\Exrin.Abstraction.pdb
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Abstraction\obj\Debug\Exrin.Abstraction.dll
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Abstraction\obj\Debug\Exrin.Abstraction.pdb
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Abstraction\obj\Debug\Exrin.Abstraction.csprojResolveAssemblyReference.cache
