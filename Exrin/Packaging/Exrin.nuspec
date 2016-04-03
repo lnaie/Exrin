@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
     <id>Exrin</id>
-    <version>0.1.0</version>
+    <version>0.1.3</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -11,10 +11,10 @@
     <iconUrl>http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>
-      Enterprise Xamarin Forms Framework
+      Xamarin Forms Framework
     </summary>
     <description>
-      Enterprise Xamarin Forms Framework
+      Xamarin Forms Framework
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>

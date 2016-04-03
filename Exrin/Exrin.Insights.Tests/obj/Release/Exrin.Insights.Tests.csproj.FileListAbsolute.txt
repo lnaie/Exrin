@@ -1,5 +1,5 @@
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights.Tests\bin\Release\Exrin.Insights.Tests.dll
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights.Tests\bin\Release\Exrin.Insights.Tests.pdb
-C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.csprojResolveAssemblyReference.cache
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.dll
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.pdb
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.csprojResolveAssemblyReference.cache

@@ -38,7 +38,7 @@
     <Compile Include="AsyncLock.cs" />
     <Compile Include="BaseStack.cs" />
     <Compile Include="BaseViewModelExecute.cs" />
-    <Compile Include="BindableObject.cs" />
+    <Compile Include="BindableModel.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="DisplayArgs.cs" />
     <Compile Include="DisplayService.cs" />
@@ -60,6 +60,7 @@
     <Compile Include="ThreadHelper.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelExecute.cs" />
+    <Compile Include="VisualState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj">

@@ -9,14 +9,13 @@ using System.Runtime.CompilerServices;
 
 namespace Exrin.Framework
 {
-    public class ViewModel : BindableModel, IViewModel
+    public abstract class ViewModel : BindableModel, IViewModel
     {
         protected IExecution Execution { get; set; }
-
-        protected IDisplayService _displayService = null;
-        protected INavigationService _navigationService = null;
-        protected IErrorHandlingService _errorHandlingService = null;
-        protected IStackRunner _stackRunner = null;
+        protected readonly IDisplayService _displayService = null;
+        protected readonly INavigationService _navigationService = null;
+        protected readonly IErrorHandlingService _errorHandlingService = null;
+        protected readonly IStackRunner _stackRunner = null;
 
         public ViewModel(IDisplayService displayService, INavigationService navigationService,
             IErrorHandlingService errorHandlingService, IStackRunner stackRunner)
@@ -36,6 +35,9 @@ namespace Exrin.Framework
             };
 
         }
+
+        public abstract IVisualState VisualState { get; set; }
+
         private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
         public IRelayCommand GetCommand(Func<IRelayCommand> create, [CallerMemberName] string name = "")
         {
@@ -104,7 +106,7 @@ namespace Exrin.Framework
                 };
             }
         }
-
+       
         protected Func<IResult, Task> HandleResult
         {
             get

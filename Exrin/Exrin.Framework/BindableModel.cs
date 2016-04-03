@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class BindableModel : INotifyPropertyChanged
+    public class BindableModel : INotifyPropertyChanged, IDisposable
     {
 
         private IDictionary<string, object> _propertyValues = null;
@@ -17,6 +17,8 @@ namespace Exrin.Framework
         {
             _propertyValues = new Dictionary<string, object>();
         }
+
+        //TODO: When C#7 is released, replace with Sideways Loading for INPC
 
         public T Get<T>([CallerMemberName] string propertyName = "")
         {
@@ -45,5 +47,9 @@ namespace Exrin.Framework
                 handler(this, new PropertyChangedEventArgs(name));
         }
 
+        public virtual void Dispose()
+        {
+            PropertyChanged = null;
+        }
     }
 }

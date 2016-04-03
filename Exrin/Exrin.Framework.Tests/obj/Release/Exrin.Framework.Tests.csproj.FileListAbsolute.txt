@@ -1,4 +1,3 @@
-C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\obj\Release\Exrin.Framework.Tests.csprojResolveAssemblyReference.cache
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.runner.visualstudio.testadapter.dll
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.runner.utility.desktop.dll
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.execution.desktop.dll
@@ -19,5 +18,6 @@ C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.c
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.core.xml
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.execution.dotnet.pdb
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\bin\Release\xunit.execution.dotnet.xml
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\obj\Release\Exrin.Framework.Tests.csprojResolveAssemblyReference.cache
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\obj\Release\Exrin.Framework.Tests.dll
 C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework.Tests\obj\Release\Exrin.Framework.Tests.pdb
