@@ -11,27 +11,28 @@ namespace Exrin.Framework
     public class VisualState : BindableModel, IVisualState
     {
 
-        protected virtual IBaseModel Model { get; set; }
+        protected IBaseModel Model { get; set; }
 
-        public VisualState()
+        public VisualState(IBaseModel model)
         {
-           
+            Model = model;
+            HookEvents();
         }
         
-        protected virtual void OnModelPropertyChanged(string propertyName)
+        protected virtual void OnModelStatePropertyChanged(string propertyName)
         { }
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnModelPropertyChanged(e.PropertyName);
+            OnModelStatePropertyChanged(e.PropertyName);
         }
 
         protected void HookEvents()
         {
-            Model.PropertyChanged += OnPropertyChanged;
+            Model.ModelState.PropertyChanged += OnPropertyChanged;
         }
         public override void Disposing()
         {
-            Model.PropertyChanged -= OnPropertyChanged;
+            Model.ModelState.PropertyChanged -= OnPropertyChanged;
         }
         ~VisualState()
         {

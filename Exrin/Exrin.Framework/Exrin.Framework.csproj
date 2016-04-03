@@ -47,6 +47,7 @@
     <Compile Include="Model.cs" />
     <Compile Include="ModelExecute.cs" />
     <Compile Include="ModelExecution.cs" />
+    <Compile Include="ModelState.cs" />
     <Compile Include="NavigationArgs.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="Operation.cs" />

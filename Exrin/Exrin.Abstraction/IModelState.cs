@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IBaseModel: INotifyPropertyChanged
+    public interface IModelState: INotifyPropertyChanged
     {
-        IModelState ModelState { get; set; }
+
+
     }
 }

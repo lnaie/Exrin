@@ -51,6 +51,7 @@
     <Compile Include="IModel.cs" />
     <Compile Include="IModelExecute.cs" />
     <Compile Include="IModelExecution.cs" />
+    <Compile Include="IModelState.cs" />
     <Compile Include="IMultiPage.cs" />
     <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
