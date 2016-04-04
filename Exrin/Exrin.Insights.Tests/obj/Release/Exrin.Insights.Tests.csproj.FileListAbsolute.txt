@@ -7,3 +7,4 @@ C:\Users\adamp\Source\Repos\Exrin\Exrin\Exrin.Insights.Tests\bin\Release\Exrin.I
 C:\Users\adamp\Source\Repos\Exrin\Exrin\Exrin.Insights.Tests\bin\Release\Exrin.Insights.Tests.pdb
 C:\Users\adamp\Source\Repos\Exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.dll
 C:\Users\adamp\Source\Repos\Exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.pdb
+C:\Users\adamp\Source\Repos\Exrin\Exrin\Exrin.Insights.Tests\obj\Release\Exrin.Insights.Tests.csprojResolveAssemblyReference.cache

@@ -29,12 +29,12 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Mocks
             throw new NotImplementedException();
         }
 
-        public void Register<T>() where T : class
+        public void Register<T>(InstanceType type) where T : class
         {
             throw new NotImplementedException();
         }
 
-        void IInjection.Register<I, T>()
+        void IInjection.Register<I, T>(InstanceType type)
         {
             throw new NotImplementedException();
         }
