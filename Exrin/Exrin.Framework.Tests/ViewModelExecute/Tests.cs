@@ -66,10 +66,10 @@ namespace Exrin.Framework.Tests.ViewModelExecute
             var timeoutHandled = false;
 
             Func<Task> timeoutHandle = async () => { timeoutHandled = true; };
-            Func<IResult, Task> waitFunction = async (result) => { await Task.Delay(1000); };
+            Func<IList<IResult>, object, Task> waitFunction = async (result, parameter) => { await Task.Delay(1000); };
             Func<Task> notifyActivity = async () => { };
             Func<Task> notifyActivityFinished = async () => { };
-            Func<IResult, Task> completed = async (result) => { };
+            Func<IList<IResult>, Task> completed = async (result) => { };
 
             IViewModelExecute vmExecution = new TestViewModelExecute()
             {

@@ -11,9 +11,9 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
     {
         public bool ChainedRollback { get; } = false;
 
-        public Func<IResult, Task> Function { get
+        public Func<IList<IResult>, object, Task> Function { get
             {
-                return async (result) =>
+                return async (result, parameter) =>
                 {
                     // Execute Code Here
 
@@ -24,6 +24,6 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
             set { }
         } 
 
-        public Func<IResult, Task> Rollback { get; }
+        public Func<Task> Rollback { get; }
     }
 }
