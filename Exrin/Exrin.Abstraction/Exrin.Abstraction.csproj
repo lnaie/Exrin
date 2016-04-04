@@ -55,6 +55,7 @@
     <Compile Include="IMultiPage.cs" />
     <Compile Include="INavigationPage.cs" />
     <Compile Include="INavigationService.cs" />
+    <Compile Include="InstanceType.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IOperationT.cs" />
     <Compile Include="IPage.cs" />

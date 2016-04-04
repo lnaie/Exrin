@@ -31,7 +31,7 @@ namespace Exrin.Framework
 
         public void RegisterStack<T>(object stackChoice) where T : class, IStack
         {
-            _injection.Register<T>();
+            _injection.Register<T>(InstanceType.SingleInstance);
             _stacks.Add(stackChoice, _injection.Get<T>());
         }
 

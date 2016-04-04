@@ -13,13 +13,13 @@ namespace Exrin.Abstraction
 
         void Complete();
 
-        void Register<T>() where T : class;
-      
+        void Register<T>(InstanceType type) where T : class;
 
-        void Register<I, T>() where T : class, I
+
+        void Register<I, T>(InstanceType type) where T : class, I
                                              where I : class;
 
-        
+
         T Get<T>() where T : class;
 
         object Get(Type type);

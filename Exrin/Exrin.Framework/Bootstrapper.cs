@@ -49,10 +49,10 @@ namespace Exrin.Framework
         private void InitServices()
         {
 
-            _injection.Register<IPageService, PageService>();
-            _injection.Register<IErrorHandlingService, ErrorHandlingService>(); //TODO: Should be Insights with Error Tracking Capability
-            _injection.Register<INavigationService, NavigationService>();
-            _injection.Register<IDisplayService, DisplayService>();
+            _injection.Register<IPageService, PageService>(InstanceType.SingleInstance);
+            _injection.Register<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance); //TODO: Should be Insights with Error Tracking Capability
+            _injection.Register<INavigationService, NavigationService>(InstanceType.SingleInstance);
+            _injection.Register<IDisplayService, DisplayService>(InstanceType.SingleInstance);
         }
 
         protected virtual void InitStacks() { }
@@ -61,13 +61,13 @@ namespace Exrin.Framework
 
         private void InitRunners()
         {
-            _injection.Register<IStackRunner, StackRunner>();
+            _injection.Register<IStackRunner, StackRunner>(InstanceType.SingleInstance);
             _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setPage); });
         }
 
         protected virtual void RegisterStack<T>(object stackChoice) where T : class, IStack
         {
-            _injection.Register<T>();
+            _injection.Register<T>(InstanceType.SingleInstance);
 
             // Register the Stack
             _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(stackChoice); });
