@@ -54,8 +54,7 @@ namespace Exrin.Framework
 
             ThreadHelper.RunOnUIThread(() =>
             {
-                if (_setPage != null)
-                    _setPage(stack.Container.Page);
+                _setPage?.Invoke(stack.Container.Page);
             });
 
         }

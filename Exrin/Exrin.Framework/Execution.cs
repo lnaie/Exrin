@@ -11,11 +11,11 @@ namespace Exrin.Framework
     {
         public IApplicationInsights Insights { get; private set; }
 
-        public IResult Result { get; set; }
+        public IList<IResult> Result { get; set; }
 
         public Execution() { }
 
-        public Func<IResult, Task> HandleResult { get; set; }
+        public Func<IList<IResult>, Task> HandleResult { get; set; }
 
         public Func<Task> HandleTimeout { get; set; }
 

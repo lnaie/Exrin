@@ -108,55 +108,56 @@ namespace Exrin.Framework
                 };
             }
         }
-       
-        protected Func<IResult, Task> HandleResult
+
+        protected Func<IList<IResult>, Task> HandleResult
         {
             get
             {
-                return async (result) =>
+                return async (results) =>
                 {
 
-                    if (result == null)
+                    if (results == null)
                         return;
 
-                    switch (result.ResultAction)
-                    {
-                        case ResultType.Navigation:
-                            {
-                                var args = result.Arguments as NavigationArgs;
+                    foreach (var result in results)
+                        switch (result.ResultAction)
+                        {
+                            case ResultType.Navigation:
+                                {
+                                    var args = result.Arguments as NavigationArgs;
 
-                                // Determine Stack Change
-                                _stackRunner.Run(args.StackType);
+                                    // Determine Stack Change
+                                    _stackRunner.Run(args.StackType);
 
-                                // Determine Page Load
-                                await _navigationService.Navigate(Convert.ToString(args.PageIndicator), args.Parameter);
+                                    // Determine Page Load
+                                    await _navigationService.Navigate(Convert.ToString(args.PageIndicator), args.Parameter);
+
+                                    break;
+                                }
+                            case ResultType.Error:
+                                await _errorHandlingService.ReportError(result.Arguments as Exception);
+                                break;
+                            case ResultType.Display:
+                                await _displayService.ShowDialog((result.Arguments as DisplayArgs).Message);
+                                break;
+                            case ResultType.PropertyUpdate:
+                                var propertyArg = result.Arguments as PropertyArgs;
+                                if (propertyArg == null)
+                                    break;
+
+                                try
+                                {
+                                    var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
+                                    propertyInfo.SetValue(this, propertyArg.Value);
+                                }
+                                catch (Exception ex)
+                                {
+                                    await _errorHandlingService.ReportError(ex);
+                                    await _displayService.ShowDialog($"Unable to update property {propertyArg.Name}");
+                                }
 
                                 break;
-                            }
-                        case ResultType.Error:
-                            await _errorHandlingService.ReportError(result.Arguments as Exception);
-                            break;
-                        case ResultType.Display:
-                            await _displayService.ShowDialog((result.Arguments as DisplayArgs).Message);
-                            break;
-                        case ResultType.PropertyUpdate:
-                            var propertyArg = result.Arguments as PropertyArgs;
-                            if (propertyArg == null)
-                                break;
-
-                            try
-                            {
-                                var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
-                                propertyInfo.SetValue(this, propertyArg.Value);
-                            }
-                            catch (Exception ex)
-                            {
-                                await _errorHandlingService.ReportError(ex);
-                                await _displayService.ShowDialog($"Unable to update property {propertyArg.Name}");
-                            }
-
-                            break;
-                    }
+                        }
 
                 };
             }

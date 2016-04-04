@@ -23,5 +23,7 @@ namespace Exrin.Abstraction
 
         event EventHandler<IPageNavigationArgs> OnPopped;
 
+        string CurrentPageKey { get; set; }
+
     }
 }

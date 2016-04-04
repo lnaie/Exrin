@@ -10,9 +10,8 @@ namespace Exrin.Framework
     public class NavigationService : INavigationService
     {
         private readonly IPageService _pageService = null;
-        private INavigationPage _page = null;
+        private INavigationPage _navigationPage = null;
         private static AsyncLock _lock = new AsyncLock();
-        private string _currentPageKey = "";
         private readonly Dictionary<string, Type> _pagesByKey = new Dictionary<string, Type>();
 
         public NavigationService(IPageService pageService)
@@ -22,22 +21,27 @@ namespace Exrin.Framework
 
         public async Task GoBack(object parameter)
         {
-            await _page.PopAsync(parameter);
+            await _navigationPage.PopAsync(parameter);
         }
 
         public async Task GoBack()
         {
-            await _page.PopAsync();
+            await _navigationPage.PopAsync();
         }
 
         public virtual void Init(INavigationPage page)
         {
-            if (_page != null)
-                _page.OnPopped -= page_OnPopped;
+            if (_navigationPage != null)
+                _navigationPage.OnPopped -= page_OnPopped;
 
             page.OnPopped += page_OnPopped;
+            
+            _navigationPage = page;
+        }
 
-            _page = page;
+        public void StackLoad(string pageKey)
+        {
+
         }
 
         private void page_OnPopped(object sender, IPageNavigationArgs e)
@@ -83,8 +87,10 @@ namespace Exrin.Framework
             using (var releaser = await _lock.LockAsync())
             {
                 // Do not navigate to the same page.
-                if (pageKey == _currentPageKey)
+                if (pageKey == _navigationPage.CurrentPageKey)
                     return;
+
+                _navigationPage.CurrentPageKey = pageKey;
 
                 if (_pagesByKey.ContainsKey(pageKey))
                 {
@@ -95,10 +101,10 @@ namespace Exrin.Framework
                     if (page == null)
                         throw new Exception(String.Format("Unable to build page {0}", type.ToString()));
 
-                    if (_page == null)
+                    if (_navigationPage == null)
                         throw new Exception("INavigationPage is null. Did you forget to call NavigationService.Init()?");
 
-                    _page.SetNavigationBar(false, page); //TODO: read from stack
+                    _navigationPage.SetNavigationBar(false, page); //TODO: read from stack
 
                     var model = page.BindingContext as IViewModel;
 
@@ -108,7 +114,7 @@ namespace Exrin.Framework
                         page.Disappearing += (s, e) => { model.OnDisappearing(); };
                     }
 
-                    await _page.PushAsync(page);
+                    await _navigationPage.PushAsync(page);
 
                     ThreadHelper.RunOnUIThread(() =>
                     {

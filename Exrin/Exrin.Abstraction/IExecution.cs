@@ -14,12 +14,12 @@ namespace Exrin.Abstraction
         /// <summary>
         /// The end result of all operations
         /// </summary>
-        IResult Result { get; set; }
+        IList<IResult> Result { get; set; }
         /// <summary>
         /// The method that will handle the end result once all operations are complete
         /// </summary>
         /// <returns></returns>
-        Func<IResult, Task> HandleResult { get; set; }
+        Func<IList<IResult>, Task> HandleResult { get; set; }
         /// <summary>
         /// To notify the user of the app that the operations are in progress
         /// </summary>

@@ -74,7 +74,7 @@ namespace Exrin.Framework
                 }
             });
 
-            List<Func<IResult, Task>> rollbacks = new List<Func<IResult, Task>>();
+            List<Func<Task>> rollbacks = new List<Func<Task>>();
             bool transactionRunning = false;
 
             // Setup Cancellation of Tasks if long running
@@ -92,7 +92,7 @@ namespace Exrin.Framework
                 task.CancelAfter(timeoutMilliseconds);
             }
 
-            IResult result = null;
+            IList<IResult> result = new List<IResult>();
 
             try
             {
@@ -107,12 +107,9 @@ namespace Exrin.Framework
                 foreach (var operation in operations)
                 {
                     rollbacks.Add(operation.Rollback);
-
-                    if (result == null)
-                        result = new Result(parameter); // Ensures always an instance
-
+                    
                     if (operation.Function != null)
-                        await Task.Run(async () => { await operation.Function(result); }, task.Token); // Background Thread
+                        await Task.Run(async () => { await operation.Function(result, parameter); }, task.Token); // Background Thread
 
                     if (!operation.ChainedRollback)
                         rollbacks.Remove(operation.Rollback);
@@ -141,12 +138,7 @@ namespace Exrin.Framework
                     {
                         rollbacks.Reverse(); // Do rollbacks in reverse order
                         foreach (var rollback in rollbacks)
-                        {
-                            if (result == null)
-                                result = new Result(parameter);
-
-                            await rollback(result);
-                        }
+                            await rollback();
                     }
 
                     // Set final result

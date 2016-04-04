@@ -14,11 +14,11 @@ namespace Exrin.Abstraction
         /// <summary>
         /// The function or operation to be performed inside the execute
         /// </summary>
-        Func<IResult, Task> Function { get; }
+        Func<IList<IResult>, object, Task> Function { get; }
         /// <summary>
         /// If the Function fails, this function performs a rollback if necessary
         /// </summary>
-        Func<IResult, Task> Rollback { get; }
+        Func<Task> Rollback { get; }
         /// <summary>
         /// If a Function fails later on in the list, do you want to perform this rollback?
         /// </summary>

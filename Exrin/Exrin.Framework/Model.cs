@@ -14,17 +14,19 @@ namespace Exrin.Framework
 
         public IModelExecution Execution { get; protected set; }
 
-        public Model(IDisplayService displayService, IErrorHandlingService errorHandlingService)
+        public Model(IDisplayService displayService, IErrorHandlingService errorHandlingService, IModelState modelState)
         {
             _displayService = displayService;
             _errorHandlingService = errorHandlingService;
-
+            ModelState = modelState;
             Execution = new ModelExecution()
             {
                 HandleTimeout = TimeoutHandle,
                 HandleUnhandledException = HandleError
             };
         }
+
+        public IModelState ModelState { get; set; }
 
         private Func<Exception, Task<bool>> HandleError
         {
