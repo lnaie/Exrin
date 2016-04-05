@@ -34,7 +34,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Mocks
             throw new NotImplementedException();
         }
 
-        void IInjection.Register<I, T>(InstanceType type)
+        void IInjection.RegisterInterface<I, T>(InstanceType type)
         {
             throw new NotImplementedException();
         }
