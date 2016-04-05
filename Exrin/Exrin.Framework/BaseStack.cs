@@ -11,11 +11,13 @@ namespace Exrin.Framework
     public class BaseStack: IStack
     {
         protected readonly INavigationService _navigationService = null;
+        public object StackIdentifier { get; set; }
 
-
-        public BaseStack(INavigationService navigationService)
+        public BaseStack(INavigationService navigationService, INavigationPage navigationPage, object stackIdentifier)
         {
-            _navigationService = navigationService;            
+            _navigationService = navigationService;
+            SetContainer(navigationPage);
+            StackIdentifier = stackIdentifier;
         }
 
         public void Init()
@@ -49,5 +51,6 @@ namespace Exrin.Framework
         protected virtual void MapViewModels() { }
         protected virtual string NavigationStartPageKey { get; }
 
+       
     }
 }

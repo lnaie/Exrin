@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,34 +50,61 @@ namespace Exrin.Framework
         private void InitServices()
         {
 
-            _injection.Register<IPageService, PageService>(InstanceType.SingleInstance);
-            _injection.Register<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance); //TODO: Should be Insights with Error Tracking Capability
-            _injection.Register<INavigationService, NavigationService>(InstanceType.SingleInstance);
-            _injection.Register<IDisplayService, DisplayService>(InstanceType.SingleInstance);
+            _injection.RegisterInterface<IPageService, PageService>(InstanceType.SingleInstance);
+            _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance); //TODO: Should be Insights with Error Tracking Capability
+            _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
+            _injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
         }
 
-        protected virtual void InitStacks() { }
+        protected virtual void InitStacks()
+        {
+            MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterStack), new Type[] { });
+            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IStack));
 
-        protected virtual void InitModels() { }
+            foreach (var stack in list)
+                method.MakeGenericMethod(stack.AsType())
+                        .Invoke(this, null);
+        }
+
+        protected virtual void InitModels()
+        {
+
+            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });
+            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IBaseModel));
+
+            foreach (var model in list)
+            {
+                var typeArg = model.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == typeof(IBaseModel))));
+                if (typeArg != null)
+                    method.MakeGenericMethod(typeArg, model.AsType())
+                        .Invoke(_injection, new object[] { InstanceType.SingleInstance });
+            }
+
+        }
+
+        private void RegisterModel<T>() where T : class, IBaseModel
+        {
+            _injection.Register<T>(InstanceType.SingleInstance);
+        }
 
         private void InitRunners()
         {
-            _injection.Register<IStackRunner, StackRunner>(InstanceType.SingleInstance);
+            _injection.RegisterInterface<IStackRunner, StackRunner>(InstanceType.SingleInstance);
             _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setPage); });
         }
 
-        protected virtual void RegisterStack<T>(object stackChoice) where T : class, IStack
+        public void RegisterStack<T>() where T : class, IStack
         {
             _injection.Register<T>(InstanceType.SingleInstance);
 
             // Register the Stack
-            _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(stackChoice); });
+            _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(); });
 
             // Initialize the Stack
             _postRun.Add(() => { _injection.Get<T>().Init(); });
         }
 
-        
+
 
 
     }

@@ -10,9 +10,8 @@ namespace Exrin.Abstraction
     {
         void Init(Action<object> setPage);
 
-        void RegisterStack<T>(object stackChoice) where T : class, IStack;
+        void RegisterStack<T>() where T : class, IStack;
 
         void Run(object stackChoice, object args = null);
-
     }
 }

@@ -29,10 +29,12 @@ namespace Exrin.Framework
             _setPage = setPage;
         }
 
-        public void RegisterStack<T>(object stackChoice) where T : class, IStack
+        public void RegisterStack<T>() where T : class, IStack
         {
             _injection.Register<T>(InstanceType.SingleInstance);
-            _stacks.Add(stackChoice, _injection.Get<T>());
+
+            var stack = _injection.Get<T>();
+            _stacks.Add(stack.StackIdentifier, stack);
         }
 
         public void Run(object stackChoice, object args = null)
