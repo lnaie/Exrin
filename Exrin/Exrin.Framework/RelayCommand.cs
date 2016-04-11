@@ -10,14 +10,22 @@ namespace Exrin.Framework
 {
     public class RelayCommand : ICommand, IRelayCommand
     {
-        private readonly Action<object> _action = null;
-        public RelayCommand(Action<object> action)
+        private readonly Func<object, Task> _action = null;
+        public RelayCommand(Func<object, Task> action)
         {
             _action = action;
         }
 
+        public RelayCommand(Action<object> action)
+        {
+            _action = (parameter) => { action(parameter);  return Task.FromResult(true); };
+        }
+
 
         public bool Executing { get; private set; } = false;
+        public Action FinishedCallback { get; set; } = null;
+
+        public int Timeout { get; set; }
 
         public event EventHandler CanExecuteChanged;
 
@@ -30,9 +38,11 @@ namespace Exrin.Framework
         {
             Executing = true;
 
-            _action(parameter);
-
-            Executing = false;
+            _action(parameter).ContinueWith((task) =>
+            {
+                Executing = false;
+                FinishedCallback?.Invoke();
+            });        
         }
     }
 }
