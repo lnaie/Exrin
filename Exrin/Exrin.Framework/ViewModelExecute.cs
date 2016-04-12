@@ -27,7 +27,9 @@ namespace Exrin.Framework
                                         timeoutMilliseconds: execute.TimeoutMilliseconds,
                                         name: name,
                                         parameter: parameter);
-            });
+            })
+            { Timeout = execute.TimeoutMilliseconds };
+
         }
 
         private readonly static Dictionary<object, bool> _status = new Dictionary<object, bool>();
