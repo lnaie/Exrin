@@ -8,7 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface IDisplayService
     {
-        void Init(INavigationPage page);
+        void Init(INavigationContainer container);
         Task ShowDialog(string message);
 
     }

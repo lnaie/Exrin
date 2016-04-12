@@ -1,0 +1,14 @@
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Framework.dll
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Framework.pdb
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Abstraction.dll
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Abstraction.pdb
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\obj\Debug\Exrin.Framework.csprojResolveAssemblyReference.cache
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\obj\Debug\Exrin.Framework.dll
+C:\Users\Adam\Source\Repos\exrin\Exrin\Exrin.Framework\obj\Debug\Exrin.Framework.pdb
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Framework.dll
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Framework.pdb
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Abstraction.dll
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\bin\Debug\Exrin.Abstraction.pdb
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\obj\Debug\Exrin.Framework.csprojResolveAssemblyReference.cache
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\obj\Debug\Exrin.Framework.dll
+C:\Users\adamp\Source\Repos\exrin\Exrin\Exrin.Framework\obj\Debug\Exrin.Framework.pdb

@@ -13,28 +13,27 @@ namespace Exrin.Framework
         protected readonly INavigationService _navigationService = null;
         public object StackIdentifier { get; set; }
 
-        public BaseStack(INavigationService navigationService, INavigationPage navigationPage, object stackIdentifier)
+        public BaseStack(INavigationService navigationService, INavigationContainer navigationContainer, object stackIdentifier)
         {
             _navigationService = navigationService;
-            SetContainer(navigationPage);
+            SetContainer(navigationContainer);
             StackIdentifier = stackIdentifier;
         }
 
         public void Init()
         {
-            MapPages();
-            MapViewModels();
+            Map();
         }
 
         public bool ShowNavigationBar { get; set; } = true;
 
-        public INavigationPage Container { get; private set; }
+        public INavigationContainer Container { get; private set; }
 
         public StackStatus Status { get; set; } = StackStatus.Stopped;
 
         public async Task StartNavigation(object args = null)
         {
-            await _navigationService.Navigate(NavigationStartPageKey, args);
+            await _navigationService.Navigate(NavigationStartKey, args);
 
             Status = StackStatus.Started;
         }
@@ -42,14 +41,14 @@ namespace Exrin.Framework
         /// <summary>
         /// Will register appropriate Services for Dependency Injection.
         /// </summary>
-        protected void SetContainer(INavigationPage container)
+        protected void SetContainer(INavigationContainer container)
         {
             Container = container;
         }
 
-        protected virtual void MapPages() { }
-        protected virtual void MapViewModels() { }
-        protected virtual string NavigationStartPageKey { get; }
+        protected virtual void Map() { }
+
+        protected virtual string NavigationStartKey { get; }
 
        
     }

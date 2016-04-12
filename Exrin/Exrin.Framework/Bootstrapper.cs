@@ -13,13 +13,13 @@ namespace Exrin.Framework
 
         protected readonly AsyncLock _lock = new AsyncLock();
         protected readonly IInjection _injection;
-        private readonly Action<object> _setPage;
+        private readonly Action<object> _setRoot;
         private readonly IList<Action> _postRun = new List<Action>();
 
-        public Bootstrapper(IInjection injection, Action<object> setPage)
+        public Bootstrapper(IInjection injection, Action<object> setRoot)
         {
             _injection = injection;
-            _setPage = setPage;
+            _setRoot = setRoot;
         }
 
         public IInjection Init()
@@ -50,7 +50,7 @@ namespace Exrin.Framework
         private void InitServices()
         {
 
-            _injection.RegisterInterface<IPageService, PageService>(InstanceType.SingleInstance);
+            _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
             _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance); //TODO: Should be Insights with Error Tracking Capability
             _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
             _injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
@@ -90,7 +90,7 @@ namespace Exrin.Framework
         private void InitRunners()
         {
             _injection.RegisterInterface<IStackRunner, StackRunner>(InstanceType.SingleInstance);
-            _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setPage); });
+            _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setRoot); });
         }
 
         public void RegisterStack<T>() where T : class, IStack

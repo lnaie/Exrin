@@ -22,12 +22,12 @@ namespace Exrin.Framework.Tests.Helper
             throw new NotImplementedException();
         }
 
-        public void Init(INavigationPage page)
+        public void Init(INavigationContainer page)
         {
             throw new NotImplementedException();
         }
 
-        public void Map(string pageKey, Type pageType)
+        public void Map(string key, Type viewType, Type viewModelType)
         {
             throw new NotImplementedException();
         }

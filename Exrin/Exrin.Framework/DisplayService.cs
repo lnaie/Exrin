@@ -10,7 +10,7 @@ namespace Exrin.Framework
     public class DisplayService : IDisplayService
     {
 
-        public void Init(INavigationPage page)
+        public void Init(INavigationContainer container)
         {
             //throw new NotImplementedException();
         }

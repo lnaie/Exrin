@@ -9,7 +9,7 @@ namespace Exrin.Framework.Tests.Helper
 {
     public class DisplayService : IDisplayService
     {
-        public void Init(INavigationPage page)
+        public void Init(INavigationContainer page)
         {
             throw new NotImplementedException();
         }

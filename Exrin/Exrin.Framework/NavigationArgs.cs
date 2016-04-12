@@ -12,7 +12,7 @@ namespace Exrin.Framework
 
         public object StackType { get; set; }
 
-        public object PageIndicator { get; set; }
+        public object Key { get; set; }
 
         public object Parameter { get; set; }
 

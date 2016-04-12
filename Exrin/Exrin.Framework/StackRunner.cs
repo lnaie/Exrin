@@ -15,7 +15,7 @@ namespace Exrin.Framework
         private readonly INavigationService _navigationService;
         private readonly IDisplayService _displayService;
         private readonly IInjection _injection;
-        private Action<object> _setPage = null;
+        private Action<object> _setRoot = null;
 
         public StackRunner(INavigationService navigationService, IDisplayService displayService, IInjection injection)
         {
@@ -24,9 +24,9 @@ namespace Exrin.Framework
             _injection = injection;
         }
 
-        public void Init(Action<object> setPage)
+        public void Init(Action<object> setRoot)
         {
-            _setPage = setPage;
+            _setRoot = setRoot;
         }
 
         public void RegisterStack<T>() where T : class, IStack
@@ -56,7 +56,7 @@ namespace Exrin.Framework
 
             ThreadHelper.RunOnUIThread(() =>
             {
-                _setPage?.Invoke(stack.Container.Page);
+                _setRoot?.Invoke(stack.Container.View);
             });
 
         }

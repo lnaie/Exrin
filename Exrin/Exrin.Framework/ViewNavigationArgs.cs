@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class PageNavigationArgs : IPageNavigationArgs
+    public class ViewNavigationArgs : IViewNavigationArgs
     {
-        public IPage CurrentPage { get; set; }
+        public IView CurrentView { get; set; }
 
-        public IPage PoppedPage { get; set; }
+        public IView PoppedView { get; set; }
 
         public object Parameter { get; set; }
     }

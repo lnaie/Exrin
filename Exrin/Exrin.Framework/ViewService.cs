@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class PageService : IPageService
+    public class ViewService : IViewService
     {
         private readonly IInjection _injection = null;
 
-        public PageService(IInjection injection)
+        public ViewService(IInjection injection)
         {
             _injection = injection;
         }
 
-        private readonly IDictionary<Type, Type> _pagesByType = new Dictionary<Type, Type>();
+        private readonly IDictionary<Type, Type> _viewsByType = new Dictionary<Type, Type>();
 
-        private object GetBindingContext(Type pageType)
+        private object GetBindingContext(Type viewType)
         {
-            var viewModelType = _pagesByType[pageType];
+            var viewModelType = _viewsByType[viewType];
 
             ConstructorInfo constructor = null;
 
@@ -51,14 +51,14 @@ namespace Exrin.Framework
             return constructor.Invoke(parameters);
         }
 
-        public async Task<object> Build(Type pageType, object parameter)
+        public async Task<object> Build(Type viewType, object parameter)
         {
             ConstructorInfo constructor = null;
             object[] parameters = null;
 
             if (parameter == null)
             {
-                constructor = pageType.GetTypeInfo()
+                constructor = viewType.GetTypeInfo()
                     .DeclaredConstructors
                     .FirstOrDefault(c => !c.GetParameters().Any());
 
@@ -66,7 +66,7 @@ namespace Exrin.Framework
             }
             else
             {
-                constructor = pageType.GetTypeInfo()
+                constructor = viewType.GetTypeInfo()
                     .DeclaredConstructors
                     .FirstOrDefault(
                         c =>
@@ -84,49 +84,49 @@ namespace Exrin.Framework
 
             if (constructor == null)
                 throw new InvalidOperationException(
-                    $"No suitable constructor found for page {pageType.ToString()}");
+                    $"No suitable constructor found for view {viewType.ToString()}");
 
-            var page = constructor.Invoke(parameters) as IPage;
+            var view = constructor.Invoke(parameters) as IView;
 
-            if (page == null)
+            if (view == null)
                 throw new InvalidOperationException(
-                    $"Page {pageType.ToString()} does not implement the interface IPage");
+                    $"View {viewType.ToString()} does not implement the interface {nameof(IView)}");
 
             // Assign Binding Context
-            if (_pagesByType.ContainsKey(pageType))
+            if (_viewsByType.ContainsKey(viewType))
             {
-                page.BindingContext = GetBindingContext(pageType);
+                view.BindingContext = GetBindingContext(viewType);
 
                 // Pass parameter to view model if applicable
-                var model = page.BindingContext as IViewModel;
+                var model = view.BindingContext as IViewModel;
                 if (model != null)
                     await model.OnNavigated(parameter);
 
-                var multiPage = page as IMultiPage;
+                var multiView = view as IMultiView;
 
-                if (multiPage != null)
-                    foreach (var p in multiPage.Pages)
+                if (multiView != null)
+                    foreach (var p in multiView.Views)
                         p.BindingContext = GetBindingContext(p.GetType());
 
             }
             else
                 throw new InvalidOperationException(
-                    "No suitable view model found for page " + pageType.ToString());
+                    "No suitable view model found for view " + viewType.ToString());
 
-            return page;
+            return view;
         }
 
-        public void Map(Type pageType, Type viewModelType)
+        public void Map(Type viewType, Type viewModelType)
         {
-            lock (_pagesByType)
+            lock (_viewsByType)
             {
-                if (_pagesByType.ContainsKey(pageType))
+                if (_viewsByType.ContainsKey(viewType))
                 {
-                    _pagesByType[pageType] = viewModelType;
+                    _viewsByType[viewType] = viewModelType;
                 }
                 else
                 {
-                    _pagesByType.Add(pageType, viewModelType);
+                    _viewsByType.Add(viewType, viewModelType);
                 }
             }
         }

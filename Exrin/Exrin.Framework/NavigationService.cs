@@ -9,112 +9,117 @@ namespace Exrin.Framework
 {
     public class NavigationService : INavigationService
     {
-        private readonly IPageService _pageService = null;
-        private INavigationPage _navigationPage = null;
+        private readonly IViewService _viewService = null;
+        private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
-        private readonly Dictionary<string, Type> _pagesByKey = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
 
-        public NavigationService(IPageService pageService)
+        public NavigationService(IViewService viewService)
         {
-            _pageService = pageService;
+            _viewService = viewService;
         }
 
         public async Task GoBack(object parameter)
         {
-            await _navigationPage.PopAsync(parameter);
+            await _navigationContainer.PopAsync(parameter);
         }
 
         public async Task GoBack()
         {
-            await _navigationPage.PopAsync();
+            await _navigationContainer.PopAsync();
         }
 
-        public virtual void Init(INavigationPage page)
+        public virtual void Init(INavigationContainer container)
         {
-            if (_navigationPage != null)
-                _navigationPage.OnPopped -= page_OnPopped;
+            if (_navigationContainer != null)
+                _navigationContainer.OnPopped -= container_OnPopped;
 
-            page.OnPopped += page_OnPopped;
-            
-            _navigationPage = page;
+            container.OnPopped += container_OnPopped;
+
+            _navigationContainer = container;
         }
 
-        public void StackLoad(string pageKey)
+        public void StackLoad(string key)
         {
 
         }
 
-        private void page_OnPopped(object sender, IPageNavigationArgs e)
+        private void container_OnPopped(object sender, IViewNavigationArgs e)
         {
-            if (e.PoppedPage != null)
+            if (e.PoppedView != null)
             {
-                var model = e.PoppedPage.BindingContext as IViewModel;
+                var model = e.PoppedView.BindingContext as IViewModel;
                 if (model != null)
                     model.OnPopped();
 
-                var disposableModel = e.PoppedPage.BindingContext as IDisposable;
+                var disposableModel = e.PoppedView.BindingContext as IDisposable;
                 if (disposableModel != null)
                     disposableModel.Dispose();
             }
 
-            if (e.CurrentPage != null)
+            if (e.CurrentView != null)
             {
-                var model = e.CurrentPage.BindingContext as IViewModel;
+                var model = e.CurrentView.BindingContext as IViewModel;
                 if (model != null)
                     model.OnBackNavigated(null);
             }
 
         }
 
-        public virtual void Map(string pageKey, Type pageType)
+        public virtual void Map(string key, Type viewType, Type viewModelType)
         {
-            lock (_pagesByKey)
+            lock (_viewsByKey)
             {
-                if (_pagesByKey.ContainsKey(pageKey))
-                    _pagesByKey[pageKey] = pageType;
-                else
-                    _pagesByKey.Add(pageKey, pageType);
+                // Map Key with View
+                if (!String.IsNullOrEmpty(key))
+                    if (_viewsByKey.ContainsKey(key))
+                        _viewsByKey[key] = viewType;
+                    else
+                        _viewsByKey.Add(key, viewType);
+
+                // Map View and ViewModel
+                _viewService.Map(viewType, viewModelType);
             }
         }
 
-        public async Task Navigate(string pageKey)
+        public async Task Navigate(string key)
         {
-            await Navigate(pageKey, null);
+            await Navigate(key, null);
         }
 
-        public async Task Navigate(string pageKey, object args)
+        public async Task Navigate(string viewKey, object args)
         {
             using (var releaser = await _lock.LockAsync())
             {
-                // Do not navigate to the same page.
-                if (pageKey == _navigationPage.CurrentPageKey)
+                // Do not navigate to the same view.
+                if (viewKey == _navigationContainer.CurrentViewKey)
                     return;
 
-                _navigationPage.CurrentPageKey = pageKey;
+                _navigationContainer.CurrentViewKey = viewKey;
 
-                if (_pagesByKey.ContainsKey(pageKey))
+                if (_viewsByKey.ContainsKey(viewKey))
                 {
-                    var type = _pagesByKey[pageKey];
+                    var type = _viewsByKey[viewKey];
 
-                    var page = await _pageService.Build(type, args) as IPage;
+                    var view = await _viewService.Build(type, args) as IView;
 
-                    if (page == null)
-                        throw new Exception(String.Format("Unable to build page {0}", type.ToString()));
+                    if (view == null)
+                        throw new Exception(String.Format("Unable to build view {0}", type.ToString()));
 
-                    if (_navigationPage == null)
-                        throw new Exception("INavigationPage is null. Did you forget to call NavigationService.Init()?");
+                    if (_navigationContainer == null)
+                        throw new Exception($"{nameof(INavigationContainer)} is null. Did you forget to call NavigationService.Init()?");
 
-                    _navigationPage.SetNavigationBar(false, page); //TODO: read from stack
+                    _navigationContainer.SetNavigationBar(false, view); //TODO: read from stack
 
-                    var model = page.BindingContext as IViewModel;
+                    var model = view.BindingContext as IViewModel;
 
                     if (model != null)
                     {
-                        page.Appearing += (s, e) => { model.OnAppearing(); };
-                        page.Disappearing += (s, e) => { model.OnDisappearing(); };
+                        view.Appearing += (s, e) => { model.OnAppearing(); };
+                        view.Disappearing += (s, e) => { model.OnDisappearing(); };
                     }
 
-                    await _navigationPage.PushAsync(page);
+                    await _navigationContainer.PushAsync(view);
 
                     ThreadHelper.RunOnUIThread(() =>
                     {
@@ -126,9 +131,9 @@ namespace Exrin.Framework
                 {
                     throw new ArgumentException(
                         string.Format(
-                            "No such page: {0}. Did you forget to call NavigationService.Map?",
-                            pageKey),
-                        "pageKey");
+                            "No such key: {0}. Did you forget to call NavigationService.Map?",
+                            viewKey),
+                        "key");
                 }
             }
         }

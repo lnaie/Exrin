@@ -8,7 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface IStackRunner
     {
-        void Init(Action<object> setPage);
+        void Init(Action<object> setRoot);
 
         void RegisterStack<T>() where T : class, IStack;
 

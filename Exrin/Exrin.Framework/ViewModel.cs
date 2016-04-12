@@ -129,8 +129,8 @@ namespace Exrin.Framework
                                     // Determine Stack Change
                                     _stackRunner.Run(args.StackType);
 
-                                    // Determine Page Load
-                                    await _navigationService.Navigate(Convert.ToString(args.PageIndicator), args.Parameter);
+                                    // Determine View Load
+                                    await _navigationService.Navigate(Convert.ToString(args.Key), args.Parameter);
 
                                     break;
                                 }

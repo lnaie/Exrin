@@ -8,17 +8,17 @@ namespace Exrin.Abstraction
 {
     public interface INavigationService
     {
-        void Init(INavigationPage page);
+        void Init(INavigationContainer container);
 
-        Task Navigate(string pageKey);
+        Task Navigate(string key);
 
-        Task Navigate(string pageKey, object args);
+        Task Navigate(string key, object args);
 
         Task GoBack();
 
         Task GoBack(object parameter);
 
-        void Map(string pageKey, Type pageType);
+        void Map(string key, Type viewType, Type viewModelType);
 
     }
 }

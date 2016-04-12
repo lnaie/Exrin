@@ -10,7 +10,7 @@ namespace Exrin.Abstraction
     {
         object StackIdentifier { get; set; }
         StackStatus Status { get; set; }
-        INavigationPage Container { get; }
+        INavigationContainer Container { get; }
         Task StartNavigation(object args = null);
         void Init();
 
