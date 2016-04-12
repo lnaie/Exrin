@@ -8,6 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface INavigationService
     {
+
         void Init(INavigationContainer container);
 
         Task Navigate(string key);
