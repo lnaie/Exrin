@@ -70,6 +70,10 @@
       <Project>{f7d56290-97b4-4636-abca-8323c886a7e0}</Project>
       <Name>Exrin.Abstraction</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Exrin.Insights\Exrin.Insights.csproj">
+      <Project>{91CF9504-601C-4F74-B200-9300C72E409C}</Project>
+      <Name>Exrin.Insights</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

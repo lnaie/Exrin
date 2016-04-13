@@ -36,15 +36,26 @@ namespace Exrin.Abstraction
         /// </summary>
         /// <param name="objectName">Name of the object that caused the event</param>
         /// <param name="message">Additional details of the event</param>
-        Task TrackEvent(string eventName, string message);
+        Task TrackEvent(string eventName, string message, string callerName="");
 
         /// <summary>
         /// Timeouts, Load Times
         /// </summary>
-        Task TrackMetric(string metricIdentifier, object value , string key = "");
+        Task TrackMetric(string metricIdentifier, object value, string callerName = "");
 
-        Task TrackException(Exception ex);
+        /// <summary>
+        /// Tracking exceptions that occur within your application
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <param name="callerName"></param>
+        /// <returns></returns>
+        Task TrackException(Exception ex, string callerName = "");
 
-        Task TrackCrash(Exception ex);
+        /// <summary>
+        /// Track a completely custom insight data object you created
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task TrackRaw(IInsightData data);
     }
 }

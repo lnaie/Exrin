@@ -30,13 +30,21 @@ namespace Exrin.Abstraction
 
         string Model { get; set; }
 
-        string OSVersion { get; set; }
+        Version AppVersion { get; set; }
+
+        Version OSVersion { get; set; }
 
         double? Battery { get; set; }
 
         double? ConnectionStrength { get; set; }
 
         Guid SessionId { get; set; }
+
+        InsightCategory Category { get; set; }
+
+        string CustomMarker { get; set; }
+
+        object CustomValue { get; set; }
 
     }
 }

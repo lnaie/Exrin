@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface ILocalStorage
+    public interface IInsightStorage
     {
 
         Task Write(IInsightData data);

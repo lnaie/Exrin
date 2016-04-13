@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,13 +10,13 @@ namespace Exrin.Insights
 {
     public class ApplicationInsights : IApplicationInsights
     {
-        private readonly ILocalStorage _storage = null;
+        private readonly IInsightStorage _storage = null;
         private readonly IDeviceInfo _deviceInfo = null;
         private string _userId = null;
         private string _fullName = null;
-        private Guid _sessionId = Guid.NewGuid(); // Once per application load
-
-        public ApplicationInsights(ILocalStorage storage, IDeviceInfo deviceInfo)
+        private static Guid _sessionId = Guid.NewGuid(); // Once per application load
+        
+        public ApplicationInsights(IInsightStorage storage, IDeviceInfo deviceInfo)
         {
             _storage = storage;
             _deviceInfo = deviceInfo;
@@ -42,29 +43,78 @@ namespace Exrin.Insights
         /// Used to fill in the extra details into the insights data before storage.
         /// </summary>
         /// <param name="data"></param>
-        private void FillData(IInsightData data)
+        private async Task FillData(IInsightData data)
         {
-
+            data.Added = DateTime.UtcNow;
+            data.AppVersion = _deviceInfo.GetAppVersion();
+            data.Battery = await _deviceInfo.GetBattery();
+            data.ConnectionStrength = await _deviceInfo.GetConnectionStrength();
+            data.ConnectionType = _deviceInfo.GetConnectionType();
+            data.DeviceIdentifier = _deviceInfo.GetUniqueId();
+            data.FullName = _fullName;
+            data.Id = Guid.NewGuid();
+            data.IPAddress = await _deviceInfo.GetIPAddress();
+            data.Model = await _deviceInfo.GetModel();
+            data.OSVersion = await _deviceInfo.GetOSVersion();
+            data.SessionId = _sessionId;
+            data.UserId = _userId;
         }
         
-        public Task TrackMetric(string metricIdentifier, object value, string key = "")
+        public async Task TrackMetric(string category, object value, [CallerMemberName] string callerName = "")
         {
-            throw new NotImplementedException();
+            var data = new InsightData()
+            {
+                Category = InsightCategory.Metric,
+                CustomMarker = category,
+                CustomValue = value,
+                CallerName = callerName
+            };
+
+            await FillData(data);
+            Store(data);
         }
 
-        public Task TrackException(Exception ex)
+        public async Task TrackException(Exception ex, [CallerMemberName] string callerName = "")
         {
-            throw new NotImplementedException();
+            var data = new InsightData()
+            {
+                Category = InsightCategory.Exception,
+                Message = ex.Message,
+                StackTrace = ex.StackTrace,
+                CallerName = callerName
+            };
+
+            await FillData(data);
+            Store(data);
         }
 
-        public Task TrackCrash(Exception ex)
+        public async Task TrackEvent(string eventName, string message, [CallerMemberName] string callerName = "")
         {
-            throw new NotImplementedException();
+            var data = new InsightData()
+            {
+                Category = InsightCategory.Event,
+                Message = message,
+                CustomMarker = eventName,
+                CallerName = callerName
+            };
+
+            await FillData(data);
+            Store(data);
         }
 
-        public Task TrackEvent(string eventName, string message)
+        /// <summary>
+        /// Store event in file for transmission
+        /// </summary>
+        /// <param name="data"></param>
+        private void Store(IInsightData data)
         {
-            throw new NotImplementedException();
+            _storage.Write(data);
+        }
+
+        public Task TrackRaw(IInsightData data)
+        {
+            _storage.Write(data);
+            return Task.FromResult(true);
         }
     }
 }

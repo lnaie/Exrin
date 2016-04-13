@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public enum ConnectionType
+    public enum InsightCategory
     {
 
-        NotConnected = 0,
-        Cellular = 1,
-        Ethernet = 2,
-        Wireless = 4,
-        Other = 8,
-        Unknown = 16
-
+        Metric = 1,
+        Exception = 2,
+        Event = 4
     }
 }

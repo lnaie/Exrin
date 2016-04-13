@@ -32,16 +32,20 @@ namespace Exrin.Abstraction
         /// Percentage of how charged the battery is
         /// </summary>
         /// <returns></returns>
-        double GetBattery();
+        Task<double> GetBattery();
 
         Size GetScreenSize();
 
         ConnectionType GetConnectionType();
+
+        Task<double> GetConnectionStrength();
 
         /// <summary>
         /// Gets a unique Id of the application installation
         /// </summary>
         /// <returns></returns>
         string GetUniqueId();
+
+        Task<string> GetIPAddress();
     }
 }

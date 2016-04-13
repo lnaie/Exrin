@@ -28,7 +28,9 @@ namespace Exrin.Insights
 
         public string Model { get; set; }
 
-        public string OSVersion { get; set; }
+        public Version AppVersion { get; set; }
+
+        public Version OSVersion { get; set; }
 
         public string StackTrace { get; set; }
 
@@ -39,5 +41,11 @@ namespace Exrin.Insights
         public double? ConnectionStrength { get; set; }
 
         public Guid SessionId { get; set; }
+
+        public InsightCategory Category { get; set; }
+
+        public string CustomMarker { get; set; }
+
+        public object CustomValue { get; set; }
     }
 }

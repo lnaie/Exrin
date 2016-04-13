@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    //TODO: should change to struct
-    public class Size
+    public struct Size
     {
 
         public Size(int width, int height)

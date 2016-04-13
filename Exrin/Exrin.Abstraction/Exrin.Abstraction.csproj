@@ -48,7 +48,7 @@
     <Compile Include="IInjection.cs" />
     <Compile Include="IInsightData.cs" />
     <Compile Include="IInsightsProvider.cs" />
-    <Compile Include="ILocalStorage.cs" />
+    <Compile Include="IInsightStorage.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IModelExecute.cs" />
     <Compile Include="IModelExecution.cs" />
@@ -56,6 +56,7 @@
     <Compile Include="IMultiView.cs" />
     <Compile Include="INavigationContainer.cs" />
     <Compile Include="INavigationService.cs" />
+    <Compile Include="InsightCategory.cs" />
     <Compile Include="InstanceType.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IOperationT.cs" />

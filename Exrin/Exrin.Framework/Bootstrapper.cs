@@ -1,4 +1,5 @@
 ﻿using Exrin.Abstraction;
+using Exrin.Insights;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +21,15 @@ namespace Exrin.Framework
         {
             _injection = injection;
             _setRoot = setRoot;
+            _injection.Init();
         }
 
         public IInjection Init()
         {
 
-            _injection.Init();
+            InitCustom();
+
+            InitInsights();     
 
             InitServices();
 
@@ -44,11 +48,26 @@ namespace Exrin.Framework
 
         }
 
+        protected virtual void InitCustom() { }
+
+        protected virtual void InitInsights() {
+            if (!_injection.IsRegistered<IInsightStorage>())
+                _injection.RegisterInterface<IInsightStorage, MemoryInsightStorage>(InstanceType.SingleInstance);
+
+            if (!_injection.IsRegistered<IDeviceInfo>())
+                _injection.RegisterInterface<IDeviceInfo, DeviceInfo>(InstanceType.SingleInstance);
+
+            if (!_injection.IsRegistered<IApplicationInsights>())
+                _injection.RegisterInterface<IApplicationInsights, ApplicationInsights>(InstanceType.SingleInstance);
+        }
+
         /// <summary>
         /// Will initialize the basic navigation and display services
         /// </summary>
         protected virtual void InitServices()
         {
+          
+
             if (!_injection.IsRegistered<IViewService>())
                 _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
 
