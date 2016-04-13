@@ -36,15 +36,15 @@ namespace Exrin.Abstraction
         /// </summary>
         /// <param name="objectName">Name of the object that caused the event</param>
         /// <param name="message">Additional details of the event</param>
-        void TrackEvent(string objectName, string message);
+        Task TrackEvent(string eventName, string message);
 
         /// <summary>
         /// Timeouts, Load Times
         /// </summary>
-        void TrackMetric();
+        Task TrackMetric(string metricIdentifier, object value , string key = "");
 
-        void TrackException();
+        Task TrackException(Exception ex);
 
-        void TrackCrash();
+        Task TrackCrash(Exception ex);
     }
 }

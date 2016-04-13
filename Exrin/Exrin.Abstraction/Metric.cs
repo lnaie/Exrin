@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IErrorHandlingService
+    public enum Metric
     {
-
-        Task HandleError(Exception ex);
-
+        Timeout = 1
     }
 }

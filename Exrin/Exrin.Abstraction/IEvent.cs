@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IErrorHandlingService
+    public interface IEvent
     {
-
-        Task HandleError(Exception ex);
-
     }
 }

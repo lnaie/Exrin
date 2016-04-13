@@ -10,7 +10,7 @@ namespace Exrin.Framework
     public class ModelExecution : IModelExecution
     {
 
-        public Func<Task> HandleTimeout { get; set; } = () => { return Task.FromResult(0); };
+        public Func<ITimeoutEvent, Task> HandleTimeout { get; set; } = (timeoutEvent) => { return Task.FromResult(0); };
 
         public Func<Exception, Task<bool>> HandleUnhandledException { get; set; } = (exception) => { return Task.FromResult(true); };
 

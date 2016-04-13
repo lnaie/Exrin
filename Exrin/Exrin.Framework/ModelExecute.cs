@@ -44,14 +44,13 @@ namespace Exrin.Framework
         private static async Task<T> ModelExecute<T>(IModelExecution sender,
                 IOperation<T> operation,
                 Func<Exception, Task<bool>> handleUnhandledException = null,
-                Func<Task> handleTimeout = null,
+                Func<ITimeoutEvent, Task> handleTimeout = null,
                 int timeoutMilliseconds = 0,
                 IApplicationInsights insights = null,
                 string name = ""
                 )
         {
-
-
+            
             if (sender == null)
                 throw new Exception($"The IModelExecution sender can not be null");
 
@@ -79,7 +78,7 @@ namespace Exrin.Framework
             if (timeoutMilliseconds > 0)
             {
                 if (handleTimeout != null)
-                    task.Token.Register(async () => { await handleTimeout(); });
+                    task.Token.Register(async () => { await handleTimeout(new TimeoutEvent("", timeoutMilliseconds)); });
                 else if (handleUnhandledException != null)
                     task.Token.Register(async () => { await handleUnhandledException(new TimeoutException()); });
                 else
@@ -87,7 +86,6 @@ namespace Exrin.Framework
 
                 task.CancelAfter(timeoutMilliseconds);
             }
-
 
             T result = default(T);
 
@@ -99,12 +97,10 @@ namespace Exrin.Framework
 
                 if (operation.Function != null)
                     await Task.Run(async () => { result = await operation.Function(); }, task.Token); // Background Thread
-
-
+                
                 transactionRunning = false;
                 // End of Transaction Block
-
-               
+                               
             }
             catch (Exception e)
             {

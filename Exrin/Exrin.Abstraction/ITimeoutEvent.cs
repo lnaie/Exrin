@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IErrorHandlingService
+    public interface ITimeoutEvent: IEvent
     {
-
-        Task HandleError(Exception ex);
-
+        string MethodName { get; }
+        int TimeoutMilliseconds { get; }
+        string Message { get; }
     }
 }

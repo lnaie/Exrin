@@ -11,13 +11,16 @@ namespace Exrin.Framework
     {
         private IDisplayService _displayService = null;
         private IErrorHandlingService _errorHandlingService = null;
+        private IApplicationInsights _applicationInsights = null;
 
         public IModelExecution Execution { get; protected set; }
 
-        public Model(IDisplayService displayService, IErrorHandlingService errorHandlingService, IModelState modelState)
+        public Model(IDisplayService displayService, IApplicationInsights applicationInsights, IErrorHandlingService errorHandlingService, IModelState modelState)
         {
             _displayService = displayService;
             _errorHandlingService = errorHandlingService;
+            _applicationInsights = applicationInsights;
+
             ModelState = modelState;
             Execution = new ModelExecution()
             {
@@ -34,7 +37,8 @@ namespace Exrin.Framework
             {
                 return async (exception) =>
                 {
-                    await _errorHandlingService.ReportError(exception);
+                    await _applicationInsights.TrackException(exception);
+                    await _errorHandlingService.HandleError(exception);
 
                     return true;
                 };
@@ -42,13 +46,14 @@ namespace Exrin.Framework
 
         }
         
-        private Func<Task> TimeoutHandle
+        private Func<ITimeoutEvent, Task> TimeoutHandle
         {
             get
             {
-                return async () =>
+                return async (timeoutEvent) =>
                 {
-                    await _displayService.ShowDialog("A timeout has occurred");
+                    await _applicationInsights.TrackMetric(nameof(Metric.Timeout), timeoutEvent.MethodName); 
+                    await _displayService.ShowDialog(timeoutEvent.Message ?? "A timeout has occurred");
                 };
             }
         }

@@ -47,13 +47,19 @@ namespace Exrin.Framework
         /// <summary>
         /// Will initialize the basic navigation and display services
         /// </summary>
-        private void InitServices()
+        protected virtual void InitServices()
         {
+            if (!_injection.IsRegistered<IViewService>())
+                _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
 
-            _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
-            _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance); //TODO: Should be Insights with Error Tracking Capability
-            _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
-            _injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
+            if (!_injection.IsRegistered<INavigationService>())
+                _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
+
+            if (!_injection.IsRegistered<IDisplayService>())
+                _injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
+
+            if (!_injection.IsRegistered<IErrorHandlingService>())
+                _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
         }
 
         protected virtual void InitStacks()
@@ -93,7 +99,7 @@ namespace Exrin.Framework
             _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setRoot); });
         }
 
-        public void RegisterStack<T>() where T : class, IStack
+        public void RegisterStack<T>() where T : class, IStack //TODO: Could be internal instead of public
         {
             _injection.Register<T>(InstanceType.SingleInstance);
 

@@ -19,7 +19,7 @@ namespace Exrin.Abstraction
         /// If the operations are taking too long, they will be cancelled and a rollback will occur. Notify the user and handle anything associated with an operation timeout.
         /// </summary>
         /// <returns></returns>
-        Func<Task> HandleTimeout { get; set; }
+        Func<ITimeoutEvent, Task> HandleTimeout { get; set; }
 
         /// <summary>
         /// A reference to the Insights object to allow the framework to record any events

@@ -46,23 +46,23 @@ namespace Exrin.Insights
         {
 
         }
-
-        public void TrackCrash()
+        
+        public Task TrackMetric(string metricIdentifier, object value, string key = "")
         {
             throw new NotImplementedException();
         }
 
-        public void TrackEvent(string objectName, string message)
+        public Task TrackException(Exception ex)
         {
             throw new NotImplementedException();
         }
 
-        public void TrackException()
+        public Task TrackCrash(Exception ex)
         {
             throw new NotImplementedException();
         }
 
-        public void TrackMetric()
+        public Task TrackEvent(string eventName, string message)
         {
             throw new NotImplementedException();
         }

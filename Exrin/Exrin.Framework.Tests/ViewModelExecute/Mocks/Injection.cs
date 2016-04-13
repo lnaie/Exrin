@@ -29,6 +29,11 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Mocks
             throw new NotImplementedException();
         }
 
+        public bool IsRegistered<T>()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Register<T>(InstanceType type) where T : class
         {
             throw new NotImplementedException();

@@ -13,6 +13,8 @@ namespace Exrin.Abstraction
 
         void Complete();
 
+        bool IsRegistered<T>();
+
         void Register<T>(InstanceType type) where T : class;
 
 

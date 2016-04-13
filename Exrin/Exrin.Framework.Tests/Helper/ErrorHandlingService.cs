@@ -9,7 +9,7 @@ namespace Exrin.Framework.Tests.Helper
 {
     public class ErrorHandlingService : IErrorHandlingService
     {
-        public Task ReportError(Exception ex)
+        public Task HandleError(Exception ex)
         {
             throw new NotImplementedException();
         }

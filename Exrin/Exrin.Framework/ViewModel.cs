@@ -135,7 +135,7 @@ namespace Exrin.Framework
                                     break;
                                 }
                             case ResultType.Error:
-                                await _errorHandlingService.ReportError(result.Arguments as Exception);
+                                await _errorHandlingService.HandleError(result.Arguments as Exception);
                                 break;
                             case ResultType.Display:
                                 await _displayService.ShowDialog((result.Arguments as DisplayArgs).Message);
@@ -152,7 +152,7 @@ namespace Exrin.Framework
                                 }
                                 catch (Exception ex)
                                 {
-                                    await _errorHandlingService.ReportError(ex);
+                                    await _errorHandlingService.HandleError(ex);
                                     await _displayService.ShowDialog($"Unable to update property {propertyArg.Name}");
                                 }
 

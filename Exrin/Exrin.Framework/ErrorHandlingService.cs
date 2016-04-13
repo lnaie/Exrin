@@ -9,9 +9,20 @@ namespace Exrin.Framework
 {
     public class ErrorHandlingService : IErrorHandlingService
     {
-        public Task ReportError(Exception ex)
+        private readonly IDisplayService _displayService = null;
+        public ErrorHandlingService(IDisplayService displayService)
         {
-            throw new NotImplementedException();
+            _displayService = displayService;
+        }
+
+        public Task HandleError(Exception ex)
+        {
+            if (ex == null)
+                _displayService.ShowDialog("Unknown Error Occurred");
+            else
+                _displayService.ShowDialog(ex.Message);
+
+            return Task.FromResult(true);
         }
     }
 }

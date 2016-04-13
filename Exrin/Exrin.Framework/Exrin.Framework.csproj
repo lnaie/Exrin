@@ -52,6 +52,7 @@
     <Compile Include="NavigationArgs.cs" />
     <Compile Include="NavigationService.cs" />
     <Compile Include="Operation.cs" />
+    <Compile Include="TimeoutEvent.cs" />
     <Compile Include="ViewNavigationArgs.cs" />
     <Compile Include="ViewService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
