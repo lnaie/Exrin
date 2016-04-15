@@ -15,7 +15,7 @@ namespace Exrin.Framework
         protected readonly AsyncLock _lock = new AsyncLock();
         protected readonly IInjection _injection;
         private readonly Action<object> _setRoot;
-        private readonly IList<Action> _postRun = new List<Action>();
+        protected readonly IList<Action> _postRun = new List<Action>();
 
         public Bootstrapper(IInjection injection, Action<object> setRoot)
         {
@@ -26,10 +26,12 @@ namespace Exrin.Framework
 
         public IInjection Init()
         {
-
+            
             InitCustom();
 
-            InitInsights();     
+            InitInsights();
+
+            StartInsights(null);
 
             InitServices();
 
@@ -51,6 +53,7 @@ namespace Exrin.Framework
         protected virtual void InitCustom() { }
 
         protected virtual void InitInsights() {
+
             if (!_injection.IsRegistered<IInsightStorage>())
                 _injection.RegisterInterface<IInsightStorage, MemoryInsightStorage>(InstanceType.SingleInstance);
 
@@ -59,14 +62,30 @@ namespace Exrin.Framework
 
             if (!_injection.IsRegistered<IApplicationInsights>())
                 _injection.RegisterInterface<IApplicationInsights, ApplicationInsights>(InstanceType.SingleInstance);
+
+            if (!_injection.IsRegistered<IInsightsProcessor>())
+                _injection.RegisterInterface<IInsightsProcessor, Processor>(InstanceType.SingleInstance);
+        }
+
+        protected virtual void StartInsights(IList<IInsightsProvider> providers)
+        {
+            _postRun.Add(() =>
+            {
+                var processor = _injection.Get<IInsightsProcessor>();
+
+                if (providers != null)
+                    foreach (var provider in providers)
+                        processor.RegisterService(provider.ToString(), provider);
+            });
+
+            _postRun.Add(() => { _injection.Get<IInsightsProcessor>().Start(5000); }); // Default 5 second tick
         }
 
         /// <summary>
         /// Will initialize the basic navigation and display services
         /// </summary>
         protected virtual void InitServices()
-        {
-          
+        {          
 
             if (!_injection.IsRegistered<IViewService>())
                 _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);

@@ -7,33 +7,34 @@ using System.Threading.Tasks;
 
 namespace Exrin.Insights
 {
-    public class Processor: IDisposable
+    public class Processor : IInsightsProcessor
     {
-        private Dictionary<string, IApplicationInsights> _insightTrackers = new Dictionary<string, IApplicationInsights>();
+        private Dictionary<string, IInsightsProvider> _insightProviders = new Dictionary<string, IInsightsProvider>();
 
-        private readonly IInsightsProvider _insightsProvider = null;
+        private readonly IApplicationInsights _applicationInsights = null;
         private object _lock = new object();
+        private object _runningLock = new object();
         private Timer _timer = null;
 
-        public Processor(IInsightsProvider insightsProvider)
+        public Processor(IApplicationInsights applicationInsights)
         {
-            _insightsProvider = insightsProvider;
-
-            StartTimer();
+            _applicationInsights = applicationInsights;
         }
 
-        private void StartTimer()
+        public void Start(int tickIntervalMilliseconds)
         {
             var state = new object();
-            
-            _timer = new Timer(async (msg) => { await ProcessData(msg); }, state, 120000, 120000);
+
+            _timer = new Timer(async (msg) => { await ProcessData(msg); }, state, tickIntervalMilliseconds, tickIntervalMilliseconds);
         }
 
-        private void StopTimer()
+        public void Stop()
         {
             _timer.Cancel();
-            _timer.Dispose();
+         
         }
+
+        private bool isRunning = false;
 
         /// <summary>
         /// Will get the data from application insights and send them to the appropriate place
@@ -41,37 +42,50 @@ namespace Exrin.Insights
         /// <param name="state"></param>
         private async Task ProcessData(object state)
         {
-            foreach (var tracker in _insightTrackers.Values)
-                if (tracker != null)
-                    foreach (var data in await tracker.GetQueue())
-                        if (await _insightsProvider.Send(data))
-                            await tracker.Clear(new List<IInsightData>() { data });
-           
+            lock (_runningLock)
+            {
+                if (isRunning)
+                    return;
+                isRunning = true;
+            }
+
+            var list = await _applicationInsights.GetQueue();
+
+            foreach (var item in list)
+                foreach (var provider in _insightProviders.Values)
+                    if (provider != null)
+                        await provider.Send(item);
+
+            await _applicationInsights.Clear(list);
+
+            isRunning = false;
         }
 
         public void DeregisterService(string id)
         {
             lock (_lock)
-                if (_insightTrackers.ContainsKey(id))
-                    _insightTrackers.Remove(id);
-          
+                if (_insightProviders.ContainsKey(id))
+                    _insightProviders.Remove(id);
+
         }
 
-        public void RegisterService(string id, IApplicationInsights insights)
+        public void RegisterService(string id, IInsightsProvider provider)
         {
             lock (_lock)
             {
-                if (_insightTrackers.ContainsKey(id))
+                if (_insightProviders.ContainsKey(id))
                     throw new Exception($"{id} has already been added to registered Insight Services");
 
-                _insightTrackers.Add(id, insights);
+                _insightProviders.Add(id, provider);
             }
         }
 
         public void Dispose()
         {
-            StopTimer();
-        }
+            Stop();
 
+            _timer.Dispose();
+        }
+        
     }
 }
