@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    public interface IDisplayService
+    public interface IPropertyArgs: IResultArgs
     {
+        string Name { get; set; }
 
-        void Init(INavigationContainer container);
-
-        Task ShowDialog(string title, string message);
-
+        object Value { get; set; }
     }
 }

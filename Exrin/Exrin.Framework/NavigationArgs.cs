@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-    public class NavigationArgs: IResultArgs
+    public class NavigationArgs: INavigationArgs
     {
 
         public object StackType { get; set; }

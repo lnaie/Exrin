@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
-
-    
-
-    public class DisplayArgs: IDisplayArgs
+    public class DialogOptions : IDialogOptions
     {
-        public string Title { get; set; }
         public string Message { get; set; }
 
+        public string Title { get; set; }
     }
 }

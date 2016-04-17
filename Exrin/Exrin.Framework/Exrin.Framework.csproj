@@ -41,6 +41,7 @@
     <Compile Include="BaseViewModelExecute.cs" />
     <Compile Include="BindableModel.cs" />
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="DialogOptions.cs" />
     <Compile Include="DisplayArgs.cs" />
     <Compile Include="DisplayService.cs" />
     <Compile Include="ErrorHandlingService.cs" />

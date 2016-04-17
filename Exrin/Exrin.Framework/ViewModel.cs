@@ -75,7 +75,7 @@ namespace Exrin.Framework
             {
                 return async () =>
                 {
-                    await _displayService.ShowDialog("Timeout Occurred");
+                    await _displayService.ShowDialog("Timeout", "Operation failed to complete within an acceptable amount of time");
                 };
             }
         }
@@ -108,7 +108,7 @@ namespace Exrin.Framework
                 };
             }
         }
-
+        
         protected Func<IList<IResult>, Task> HandleResult
         {
             get
@@ -124,7 +124,7 @@ namespace Exrin.Framework
                         {
                             case ResultType.Navigation:
                                 {
-                                    var args = result.Arguments as NavigationArgs;
+                                    var args = result.Arguments as INavigationArgs;
 
                                     // Determine Stack Change
                                     _stackRunner.Run(args.StackType);
@@ -138,10 +138,11 @@ namespace Exrin.Framework
                                 await _errorHandlingService.HandleError(result.Arguments as Exception);
                                 break;
                             case ResultType.Display:
-                                await _displayService.ShowDialog((result.Arguments as DisplayArgs).Message);
+                                var displayArgs = result.Arguments as IDisplayArgs;
+                                await _displayService.ShowDialog(displayArgs.Title, displayArgs.Message);
                                 break;
                             case ResultType.PropertyUpdate:
-                                var propertyArg = result.Arguments as PropertyArgs;
+                                var propertyArg = result.Arguments as IPropertyArgs;
                                 if (propertyArg == null)
                                     break;
 
@@ -153,7 +154,7 @@ namespace Exrin.Framework
                                 catch (Exception ex)
                                 {
                                     await _errorHandlingService.HandleError(ex);
-                                    await _displayService.ShowDialog($"Unable to update property {propertyArg.Name}");
+                                    await _displayService.ShowDialog("Error", $"Unable to update property {propertyArg.Name}");
                                 }
 
                                 break;

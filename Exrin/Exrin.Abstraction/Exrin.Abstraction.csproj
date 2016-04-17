@@ -41,6 +41,8 @@
     <Compile Include="IApplicationInsights.cs" />
     <Compile Include="IBaseModel.cs" />
     <Compile Include="IDeviceInfo.cs" />
+    <Compile Include="IDialogOptions.cs" />
+    <Compile Include="IDisplayArgs.cs" />
     <Compile Include="IDisplayService.cs" />
     <Compile Include="IErrorHandlingService.cs" />
     <Compile Include="IEvent.cs" />
@@ -55,12 +57,14 @@
     <Compile Include="IModelExecution.cs" />
     <Compile Include="IModelState.cs" />
     <Compile Include="IMultiView.cs" />
+    <Compile Include="INavigationArgs.cs" />
     <Compile Include="INavigationContainer.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="InsightCategory.cs" />
     <Compile Include="InstanceType.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IOperationT.cs" />
+    <Compile Include="IPropertyArgs.cs" />
     <Compile Include="IRelayCommand.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IResultArgs.cs" />
