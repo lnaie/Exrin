@@ -18,9 +18,9 @@ namespace Exrin.Framework
         public Task HandleError(Exception ex)
         {
             if (ex == null)
-                _displayService.ShowDialog("Unknown Error Occurred");
+                _displayService.ShowDialog("Error", "Unknown Error Occurred");
             else
-                _displayService.ShowDialog(ex.Message);
+                _displayService.ShowDialog("Error", ex.Message);
 
             return Task.FromResult(true);
         }

@@ -24,5 +24,7 @@ namespace Exrin.Abstraction
 
         string CurrentViewKey { get; set; }
 
+        Task ShowDialog(IDialogOptions dialogOptions);
+
     }
 }

@@ -9,16 +9,15 @@ namespace Exrin.Framework
 {
     public class DisplayService : IDisplayService
     {
-
+        private INavigationContainer _container = null;
         public void Init(INavigationContainer container)
         {
-            //throw new NotImplementedException();
+            _container = container;
         }
 
-        public Task ShowDialog(string message)
+        public async Task ShowDialog(string title, string message)
         {
-            //throw new NotImplementedException();
-            return Task.FromResult(0);
+            await _container.ShowDialog(new DialogOptions() { Title = title, Message = message });
         }
     }
 }

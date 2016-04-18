@@ -53,7 +53,7 @@ namespace Exrin.Framework
                 return async (timeoutEvent) =>
                 {
                     await _applicationInsights.TrackMetric(nameof(Metric.Timeout), timeoutEvent.MethodName); 
-                    await _displayService.ShowDialog(timeoutEvent.Message ?? "A timeout has occurred");
+                    await _displayService.ShowDialog("Timeout", timeoutEvent.Message ?? "A timeout has occurred");
                 };
             }
         }

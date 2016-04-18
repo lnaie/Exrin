@@ -9,14 +9,15 @@ namespace Exrin.Framework.Tests.Helper
 {
     public class DisplayService : IDisplayService
     {
+        private INavigationContainer _page = null;
         public void Init(INavigationContainer page)
         {
-            throw new NotImplementedException();
+            _page = page;
         }
 
-        public Task ShowDialog(string message)
+        public async Task ShowDialog(string title, string message)
         {
-            throw new NotImplementedException();
+            await _page.ShowDialog(new DialogOptions() { Title = title, Message = message });
         }
     }
 }
