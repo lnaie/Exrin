@@ -1,6 +1,7 @@
 ﻿using Exrin.Abstraction;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -39,6 +40,33 @@ namespace Exrin.Insights
             _fullName = fullName;
         }
 
+
+        private async Task<T> GetOrDefaultAsync<T>(Func<Task<T>> function, T defaultValue)
+        {
+            try
+            {
+                return await function();
+            }
+            catch
+            {
+                //TODO: some debug output here would be worthwhile
+                return defaultValue;
+            }
+        }
+
+        private T GetOrDefault<T>(Func<T> function, T defaultValue)
+        {
+            try
+            {
+                return function();
+            }
+            catch
+            {
+                //TODO: some debug output here would be worthwhile
+                return defaultValue;
+            }
+        }
+
         /// <summary>
         /// Used to fill in the extra details into the insights data before storage.
         /// </summary>
@@ -46,16 +74,16 @@ namespace Exrin.Insights
         private async Task FillData(IInsightData data)
         {
             data.Added = DateTime.UtcNow;
-            data.AppVersion = _deviceInfo.GetAppVersion();
-            data.Battery = await _deviceInfo.GetBattery();
-            data.ConnectionStrength = await _deviceInfo.GetConnectionStrength();
-            data.ConnectionType = _deviceInfo.GetConnectionType();
-            data.DeviceIdentifier = _deviceInfo.GetUniqueId();
+            data.AppVersion = GetOrDefault(_deviceInfo.GetAppVersion, new Version("0.0.0.0"));
+            data.Battery = await GetOrDefaultAsync(_deviceInfo.GetBattery, null);
+            data.ConnectionStrength = await GetOrDefaultAsync(_deviceInfo.GetConnectionStrength, null);
+            data.ConnectionType = GetOrDefault(_deviceInfo.GetConnectionType, ConnectionType.Unknown);
+            data.DeviceIdentifier = GetOrDefault(_deviceInfo.GetUniqueId, "");
             data.FullName = _fullName;
             data.Id = Guid.NewGuid();
-            data.IPAddress = await _deviceInfo.GetIPAddress();
-            data.Model = await _deviceInfo.GetModel();
-            data.OSVersion = await _deviceInfo.GetOSVersion();
+            data.IPAddress = await GetOrDefaultAsync(_deviceInfo.GetIPAddress, "");
+            data.Model = await GetOrDefaultAsync(_deviceInfo.GetModel, "");
+            data.OSVersion = await GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0"));
             data.SessionId = _sessionId;
             data.UserId = _userId;
         }
@@ -108,7 +136,14 @@ namespace Exrin.Insights
         /// <param name="data"></param>
         private void Store(IInsightData data)
         {
-            _storage.Write(data);
+            try
+            {
+                _storage?.Write(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         public Task TrackRaw(IInsightData data)

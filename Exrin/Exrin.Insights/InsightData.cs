@@ -32,7 +32,7 @@ namespace Exrin.Insights
 
         public Version OSVersion { get; set; }
 
-        public string StackTrace { get; set; }
+        public string StackTrace { get; set; } = "";
 
         public string UserId { get; set; }
 

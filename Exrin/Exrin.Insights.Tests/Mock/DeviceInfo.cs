@@ -5,58 +5,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exrin.Insights
+namespace Exrin.Insights.Tests.Mock
 {
     public class DeviceInfo : IDeviceInfo
     {
         public Version GetAppVersion()
         {
-            return new Version("0.0.0.0");
+            throw new NotImplementedException();
         }
 
         public Task<double?> GetBattery()
         {
-            return Task.FromResult((Nullable<double>)0.0);
+            throw new NotImplementedException();
         }
 
         public Task<double?> GetConnectionStrength()
         {
-            return Task.FromResult((Nullable<double>)0.0);
+            throw new NotImplementedException();
         }
 
         public ConnectionType GetConnectionType()
         {
-            return ConnectionType.Unknown;
+            throw new NotImplementedException();
         }
 
         public Task<string> GetIPAddress()
         {
-            return Task.FromResult("255.255.255.255");
+            throw new NotImplementedException();
         }
 
         public Task<string> GetModel()
         {
-            return Task.FromResult("Unknown");
+            throw new NotImplementedException();
         }
 
         public string GetOS()
         {
-            return "Unknown";
+            throw new NotImplementedException();
         }
 
         public Task<Version> GetOSVersion()
         {
-            return Task.FromResult(new Version("0.0.0.0"));
+            throw new NotImplementedException();
         }
 
         public Size GetScreenSize()
         {
-            return new Size(0, 0);
+            throw new NotImplementedException();
         }
 
         public string GetUniqueId()
         {
-            return "Unknown";
+            throw new NotImplementedException();
         }
+
     }
 }
