@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Exrin.Common;
 
 namespace Exrin.Insights
 {
@@ -39,34 +40,7 @@ namespace Exrin.Insights
             _userId = userId;
             _fullName = fullName;
         }
-
-
-        private async Task<T> GetOrDefaultAsync<T>(Func<Task<T>> function, T defaultValue)
-        {
-            try
-            {
-                return await function();
-            }
-            catch
-            {
-                //TODO: some debug output here would be worthwhile
-                return defaultValue;
-            }
-        }
-
-        private T GetOrDefault<T>(Func<T> function, T defaultValue)
-        {
-            try
-            {
-                return function();
-            }
-            catch
-            {
-                //TODO: some debug output here would be worthwhile
-                return defaultValue;
-            }
-        }
-
+ 
         /// <summary>
         /// Used to fill in the extra details into the insights data before storage.
         /// </summary>
@@ -74,16 +48,16 @@ namespace Exrin.Insights
         private async Task FillData(IInsightData data)
         {
             data.Added = DateTime.UtcNow;
-            data.AppVersion = GetOrDefault(_deviceInfo.GetAppVersion, new Version("0.0.0.0"));
-            data.Battery = await GetOrDefaultAsync(_deviceInfo.GetBattery, null);
-            data.ConnectionStrength = await GetOrDefaultAsync(_deviceInfo.GetConnectionStrength, null);
-            data.ConnectionType = GetOrDefault(_deviceInfo.GetConnectionType, ConnectionType.Unknown);
-            data.DeviceIdentifier = GetOrDefault(_deviceInfo.GetUniqueId, "");
+            data.AppVersion = DefaultHelper.GetOrDefault(_deviceInfo.GetAppVersion, new Version("0.0.0.0"));
+            data.Battery = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetBattery, null);
+            data.ConnectionStrength = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetConnectionStrength, null);
+            data.ConnectionType = DefaultHelper.GetOrDefault(_deviceInfo.GetConnectionType, ConnectionType.Unknown);
+            data.DeviceIdentifier = DefaultHelper.GetOrDefault(_deviceInfo.GetUniqueId, "");
             data.FullName = _fullName;
             data.Id = Guid.NewGuid();
-            data.IPAddress = await GetOrDefaultAsync(_deviceInfo.GetIPAddress, "");
-            data.Model = await GetOrDefaultAsync(_deviceInfo.GetModel, "");
-            data.OSVersion = await GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0"));
+            data.IPAddress = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetIPAddress, "");
+            data.Model = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetModel, "");
+            data.OSVersion = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0"));
             data.SessionId = _sessionId;
             data.UserId = _userId;
         }

@@ -35,8 +35,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="AssemblyHelper.cs" />
-    <Compile Include="AsyncLock.cs" />
     <Compile Include="BaseStack.cs" />
     <Compile Include="BaseViewModelExecute.cs" />
     <Compile Include="BindableModel.cs" />
@@ -61,7 +59,6 @@
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="StackRunner.cs" />
-    <Compile Include="ThreadHelper.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelExecute.cs" />
     <Compile Include="VisualState.cs" />
@@ -71,8 +68,12 @@
       <Project>{f7d56290-97b4-4636-abca-8323c886a7e0}</Project>
       <Name>Exrin.Abstraction</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Exrin.Common\Exrin.Common.csproj">
+      <Project>{db58430a-de9e-477f-9fee-34e80720908e}</Project>
+      <Name>Exrin.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Exrin.Insights\Exrin.Insights.csproj">
-      <Project>{91CF9504-601C-4F74-B200-9300C72E409C}</Project>
+      <Project>{91cf9504-601c-4f74-b200-9300c72e409c}</Project>
       <Name>Exrin.Insights</Name>
     </ProjectReference>
   </ItemGroup>

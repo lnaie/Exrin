@@ -12,8 +12,18 @@ namespace Exrin.Insights.Tests
     public class ApplicationInsights
     {
 
+        // Scenarios
+        //
+        // DeviceInfo null
+        // InsightStorage failure
+        // Application Insights gives back what you put in
+        // Insight Data has correct default values
+        // Memory insight storage
+        // 
+
+
         [Fact]
-        public async Task DeviceInfoExceptionHandling()
+        public async Task DeviceInfoExceptionHandlingDefaults()
         {
             var startTime = DateTime.UtcNow;
 

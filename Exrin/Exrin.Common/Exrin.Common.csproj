@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{91CF9504-601C-4F74-B200-9300C72E409C}</ProjectGuid>
+    <ProjectGuid>{DB58430A-DE9E-477F-9FEE-34E80720908E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Exrin.Insights</RootNamespace>
-    <AssemblyName>Exrin.Insights</AssemblyName>
+    <RootNamespace>Exrin.Common</RootNamespace>
+    <AssemblyName>Exrin.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -35,25 +35,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ApplicationInsights.cs" />
-    <Compile Include="DeviceInfo.cs" />
-    <Compile Include="InsightData.cs" />
-    <Compile Include="MemoryInsightStorage.cs" />
-    <Compile Include="Processor.cs" />
+    <Compile Include="AssemblyHelper.cs" />
+    <Compile Include="AsyncLock.cs" />
+    <Compile Include="DefaultHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Timer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj">
-      <Project>{f7d56290-97b4-4636-abca-8323c886a7e0}</Project>
-      <Name>Exrin.Abstraction</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Exrin.Common\Exrin.Common.csproj">
-      <Project>{db58430a-de9e-477f-9fee-34e80720908e}</Project>
-      <Name>Exrin.Common</Name>
-    </ProjectReference>
+    <Compile Include="ThreadHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="..\packages\Xamarin.Forms.2.0.0.6482\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.0.0.6482\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Xamarin.Forms.2.0.0.6482\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.2.0.0.6482\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
