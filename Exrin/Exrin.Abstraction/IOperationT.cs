@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
@@ -11,7 +12,7 @@ namespace Exrin.Abstraction
             /// <summary>
             /// The function or operation to be performed inside the execute
             /// </summary>
-            Func<Task<T>> Function { get; }
+            Func<CancellationToken, Task<T>> Function { get; }
             /// <summary>
             /// If the Function fails, this function performs a rollback if necessary
             /// </summary>

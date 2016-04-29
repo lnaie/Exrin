@@ -37,18 +37,15 @@ namespace Exrin.Common
         }
 
         private static Task RunOnUIThreadHelper(Action action)
-        {
-           
+        {           
             var tcs = new TaskCompletionSource<bool>();
 
             _uiContext.Post((e) =>
             {
                 try
                 {
-
                     action();
                     tcs.SetResult(true);
-
                 }
                 catch (Exception ex)
                 {

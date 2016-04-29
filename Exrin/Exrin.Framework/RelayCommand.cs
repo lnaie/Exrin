@@ -20,8 +20,7 @@ namespace Exrin.Framework
         {
             _action = (parameter) => { action(parameter);  return Task.FromResult(true); };
         }
-
-
+        
         public bool Executing { get; private set; } = false;
         public Action FinishedCallback { get; set; } = null;
 
@@ -41,7 +40,7 @@ namespace Exrin.Framework
             _action(parameter).ContinueWith((task) =>
             {
                 Executing = false;
-                FinishedCallback?.Invoke();
+                FinishedCallback?.Invoke();               
             });        
         }
     }

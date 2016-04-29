@@ -14,7 +14,7 @@ namespace Exrin.Framework
     {
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
-            
+
             return new RelayCommand(async (parameter) =>
             {
                 await ViewModelExecute(sender,
@@ -46,7 +46,7 @@ namespace Exrin.Framework
                  object parameter = null
                  )
         {
-            // If current executing, ignore the latest request
+            // If currently executing, ignore the latest request
             lock (sender)
             {
                 if (!_status.ContainsKey(sender))
@@ -82,12 +82,14 @@ namespace Exrin.Framework
             // Setup Cancellation of Tasks if long running
             var task = new CancellationTokenSource();
 
+            var exceptionState = new PropertyArgs() { Value = false };
+
             if (timeoutMilliseconds > 0)
             {
                 if (handleTimeout != null)
-                    task.Token.Register(async () => { await handleTimeout(); });
+                    task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleTimeout(); }, exceptionState);
                 else if (handleUnhandledException != null)
-                    task.Token.Register(async () => { await handleUnhandledException(new TimeoutException()); });
+                    task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleUnhandledException(new TimeoutException()); }, exceptionState);
                 else
                     throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
 
@@ -109,9 +111,18 @@ namespace Exrin.Framework
                 foreach (var operation in operations)
                 {
                     rollbacks.Add(operation.Rollback);
-                    
+
                     if (operation.Function != null)
-                        await Task.Run(async () => { await operation.Function(result, parameter); }, task.Token); // Background Thread
+                        try
+                        {
+                            await Task.Run(async () => await operation.Function(result, parameter, task.Token), task.Token).ConfigureAwait(false); // Background Thread 
+                        }
+                        catch
+                        {
+                            exceptionState.Value = true; // Stops registered cancel function from running, since this is exception not timeout              
+                            task?.Cancel(); // Cancel all tasks
+                            throw; // Go to unhandled exception
+                        }
 
                     if (!operation.ChainedRollback)
                         rollbacks.Remove(operation.Rollback);
@@ -124,7 +135,7 @@ namespace Exrin.Framework
 
             }
             catch (Exception e)
-            {
+            {               
                 if (handleUnhandledException == null)
                     throw;
 
@@ -136,6 +147,8 @@ namespace Exrin.Framework
             {
                 try
                 {
+                    task?.Dispose();
+
                     if (transactionRunning)
                     {
                         rollbacks.Reverse(); // Do rollbacks in reverse order

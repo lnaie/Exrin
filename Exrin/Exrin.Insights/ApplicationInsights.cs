@@ -17,7 +17,7 @@ namespace Exrin.Insights
         private string _userId = null;
         private string _fullName = null;
         private static Guid _sessionId = Guid.NewGuid(); // Once per application load
-        
+
         public ApplicationInsights(IInsightStorage storage, IDeviceInfo deviceInfo)
         {
             _storage = storage;
@@ -27,7 +27,7 @@ namespace Exrin.Insights
         public async Task Clear(IList<IInsightData> list)
         {
             foreach (var data in list)
-               await _storage.Delete(data);
+                await _storage.Delete(data);
         }
 
         public async Task<List<IInsightData>> GetQueue()
@@ -40,7 +40,7 @@ namespace Exrin.Insights
             _userId = userId;
             _fullName = fullName;
         }
- 
+
         /// <summary>
         /// Used to fill in the extra details into the insights data before storage.
         /// </summary>
@@ -61,47 +61,68 @@ namespace Exrin.Insights
             data.SessionId = _sessionId;
             data.UserId = _userId;
         }
-        
+
         public async Task TrackMetric(string category, object value, [CallerMemberName] string callerName = "")
         {
-            var data = new InsightData()
+            try
             {
-                Category = InsightCategory.Metric,
-                CustomMarker = category,
-                CustomValue = value,
-                CallerName = callerName
-            };
+                var data = new InsightData()
+                {
+                    Category = InsightCategory.Metric,
+                    CustomMarker = category,
+                    CustomValue = value,
+                    CallerName = callerName
+                };
 
-            await FillData(data);
-            Store(data);
+                await FillData(data);
+                Store(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
-        public async Task TrackException(Exception ex, [CallerMemberName] string callerName = "")
+        public async Task TrackException(Exception exception, [CallerMemberName] string callerName = "")
         {
-            var data = new InsightData()
+            try
             {
-                Category = InsightCategory.Exception,
-                Message = ex.Message,
-                StackTrace = ex.StackTrace,
-                CallerName = callerName
-            };
+                var data = new InsightData()
+                {
+                    Category = InsightCategory.Exception,
+                    Message = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    CallerName = callerName
+                };
 
-            await FillData(data);
-            Store(data);
+                await FillData(data);
+                Store(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         public async Task TrackEvent(string eventName, string message, [CallerMemberName] string callerName = "")
         {
-            var data = new InsightData()
+            try
             {
-                Category = InsightCategory.Event,
-                Message = message,
-                CustomMarker = eventName,
-                CallerName = callerName
-            };
+                var data = new InsightData()
+                {
+                    Category = InsightCategory.Event,
+                    Message = message,
+                    CustomMarker = eventName,
+                    CallerName = callerName
+                };
 
-            await FillData(data);
-            Store(data);
+                await FillData(data);
+                Store(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
@@ -122,8 +143,16 @@ namespace Exrin.Insights
 
         public Task TrackRaw(IInsightData data)
         {
-            _storage.Write(data);
-            return Task.FromResult(true);
+            try
+            {
+                _storage.Write(data);
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return Task.FromResult(false);
+            }
         }
     }
 }

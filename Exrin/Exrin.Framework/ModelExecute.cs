@@ -17,7 +17,7 @@ namespace Exrin.Framework
         public async static Task<T> ModelExecute<T>(this IModelExecution sender, IModelExecute<T> execute, [CallerMemberName] string name = "")
         {
 
-            return await ModelExecute(sender, 
+            return await ModelExecute(sender,
                     operation: execute.Operation,
                     handleUnhandledException: sender.HandleUnhandledException,
                     handleTimeout: sender.HandleTimeout,
@@ -25,7 +25,7 @@ namespace Exrin.Framework
                     name: name,
                     timeoutMilliseconds: execute.TimeoutMilliseconds
                     );
-            
+
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Exrin.Framework
                 string name = ""
                 )
         {
-            
+
             if (sender == null)
                 throw new Exception($"The IModelExecution sender can not be null");
 
@@ -75,12 +75,14 @@ namespace Exrin.Framework
             // Setup Cancellation of Tasks if long running
             var task = new CancellationTokenSource();
 
+            var exceptionState = new PropertyArgs() { Value = false };
+
             if (timeoutMilliseconds > 0)
             {
                 if (handleTimeout != null)
-                    task.Token.Register(async () => { await handleTimeout(new TimeoutEvent("", timeoutMilliseconds)); });
+                    task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleTimeout(new TimeoutEvent("", timeoutMilliseconds)); }, exceptionState);
                 else if (handleUnhandledException != null)
-                    task.Token.Register(async () => { await handleUnhandledException(new TimeoutException()); });
+                    task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleUnhandledException(new TimeoutException()); }, exceptionState);
                 else
                     throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
 
@@ -96,11 +98,19 @@ namespace Exrin.Framework
                 transactionRunning = true;
 
                 if (operation.Function != null)
-                    await Task.Run(async () => { result = await operation.Function(); }, task.Token); // Background Thread
-                
+                    try
+                    {
+                        await Task.Run(async () => { result = await operation.Function(task.Token); }, task.Token); // Background Thread
+                    }
+                    catch
+                    {
+                        exceptionState.Value = true; // Stops registered cancel function from running, since this is exception not timeout              
+                        task?.Cancel(); // Cancel all tasks
+                        throw; // Go to unhandled exception
+                    }
                 transactionRunning = false;
                 // End of Transaction Block
-                               
+
             }
             catch (Exception e)
             {
@@ -115,6 +125,8 @@ namespace Exrin.Framework
             {
                 try
                 {
+                    task?.Dispose();
+
                     if (transactionRunning)
                         await operation.Rollback();
 

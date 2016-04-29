@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Exrin.Framework.Tests.ViewModelExecute.Objects
@@ -11,9 +12,9 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
     {
         public bool ChainedRollback { get; } = false;
 
-        public Func<IList<IResult>, object, Task> Function { get
+        public Func<IList<IResult>, object, CancellationToken, Task> Function { get
             {
-                return async (result, parameter) =>
+                return async (result, parameter, token) =>
                 {
                     // Execute Code Here
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -66,7 +67,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute
             var timeoutHandled = false;
 
             Func<Task> timeoutHandle = async () => { timeoutHandled = true; };
-            Func<IList<IResult>, object, Task> waitFunction = async (result, parameter) => { await Task.Delay(1000); };
+            Func<IList<IResult>, object, CancellationToken, Task> waitFunction = async (result, parameter, token) => { await Task.Delay(1000); };
             Func<Task> notifyActivity = async () => { };
             Func<Task> notifyActivityFinished = async () => { };
             Func<IList<IResult>, Task> completed = async (result) => { };
