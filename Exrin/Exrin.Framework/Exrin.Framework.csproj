@@ -44,6 +44,7 @@
     <Compile Include="DisplayService.cs" />
     <Compile Include="ErrorHandlingService.cs" />
     <Compile Include="Execution.cs" />
+    <Compile Include="ExrinContainer.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelExecute.cs" />
     <Compile Include="ModelExecution.cs" />

@@ -47,6 +47,7 @@
     <Compile Include="IErrorHandlingService.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IExecution.cs" />
+    <Compile Include="IExrinContainer.cs" />
     <Compile Include="IInjection.cs" />
     <Compile Include="IInsightData.cs" />
     <Compile Include="IInsightsProcessor.cs" />

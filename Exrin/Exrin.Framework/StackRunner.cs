@@ -10,7 +10,6 @@ namespace Exrin.Framework
 {
     public class StackRunner : IStackRunner
     {
-
         private readonly IDictionary<object, IStack> _stacks = new Dictionary<object, IStack>();
         private object _currentStack = null;
         private readonly INavigationService _navigationService;
@@ -40,9 +39,15 @@ namespace Exrin.Framework
 
         public void Run(object stackChoice, object args = null)
         {
+			if (stackChoice == null)
+				throw new NullReferenceException($"{nameof(StackRunner)}.{nameof(Run)} can not accept a null {nameof(stackChoice)}");
+
             // Don't change to the same stack
             if (_currentStack == stackChoice)
                 return;
+
+			if (!_stacks.ContainsKey(stackChoice))
+				throw new NullReferenceException($"{nameof(StackRunner)} does not contain a stack named {stackChoice.ToString()}");
 
             var stack = _stacks[stackChoice];
 

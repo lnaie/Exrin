@@ -15,12 +15,18 @@ namespace Exrin.Framework
 
         public VisualState(IBaseModel model)
         {
+			if (model == null)
+				throw new ArgumentNullException($"{nameof(VisualState)} can not have a null {nameof(IBaseModel)}");
+
             Model = model;
             HookEvents();
         }
-        
-        protected virtual void OnModelStatePropertyChanged(string propertyName)
-        { }
+
+		public virtual void Init() { }
+
+		protected virtual void OnModelStatePropertyChanged(string propertyName)
+		{ }
+
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnModelStatePropertyChanged(e.PropertyName);

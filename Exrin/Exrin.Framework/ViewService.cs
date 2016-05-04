@@ -124,16 +124,10 @@ namespace Exrin.Framework
 		public void Map(Type viewType, Type viewModelType)
 		{
 			lock (_viewsByType)
-			{
 				if (_viewsByType.ContainsKey(viewType))
-				{
 					_viewsByType[viewType] = viewModelType;
-				}
 				else
-				{
 					_viewsByType.Add(viewType, viewModelType);
-				}
-			}
 		}
 	}
 }

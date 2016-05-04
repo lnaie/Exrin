@@ -9,5 +9,6 @@ namespace Exrin.Abstraction
 {
     public interface IVisualState: INotifyPropertyChanged
     {
+		void Init();
     }
 }
