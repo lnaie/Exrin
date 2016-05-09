@@ -69,6 +69,7 @@
     <Compile Include="IRelayCommand.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="IResultArgs.cs" />
+    <Compile Include="IService.cs" />
     <Compile Include="IStack.cs" />
     <Compile Include="IStackRunner.cs" />
     <Compile Include="ITimeoutEvent.cs" />

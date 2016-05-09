@@ -99,6 +99,20 @@ namespace Exrin.Framework
 
             if (!_injection.IsRegistered<IErrorHandlingService>())
                 _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
+
+            // Register anything with IService implemented
+            //TODO: place in its own helper function
+
+            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });
+            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IService));
+
+            foreach (var item in list)
+            {
+                var typeArg = item.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == typeof(IService))));
+                if (typeArg != null)
+                    method.MakeGenericMethod(typeArg, item.AsType())
+                        .Invoke(_injection, new object[] { InstanceType.SingleInstance });
+            }
         }
 
         protected virtual void InitStacks()
