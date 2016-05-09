@@ -7,9 +7,19 @@ namespace Exrin.Common
 {
     public class AssemblyHelper
     {
+        public static IList<TypeInfo> GetTypes(AssemblyName name, Type @interface)
+        {
+
+            var query = from t in Assembly.Load(name).DefinedTypes
+                        where t.IsClass && !t.IsSealed && t.ImplementedInterfaces.Any(x => x == @interface)
+                        select t;
+
+            return query.ToList();
+        }
 
         public static IList<TypeInfo> GetTypes(Type appType, Type @interface)
         {
+           
             var query = from t in appType.GetTypeInfo().Assembly.DefinedTypes
                         where t.IsClass && !t.IsSealed && t.ImplementedInterfaces.Any(x=> x == @interface)
                         select t;

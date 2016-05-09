@@ -17,6 +17,7 @@ namespace Exrin.Framework
         protected readonly IInjection _injection;
         private readonly Action<object> _setRoot;
         protected readonly IList<Action> _postRun = new List<Action>();
+        private readonly Dictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
 
         public Bootstrapper(IInjection injection, Action<object> setRoot)
         {
@@ -27,7 +28,7 @@ namespace Exrin.Framework
 
         public IInjection Init()
         {
-            
+
             InitCustom();
 
             InitInsights();
@@ -53,7 +54,8 @@ namespace Exrin.Framework
 
         protected virtual void InitCustom() { }
 
-        protected virtual void InitInsights() {
+        protected virtual void InitInsights()
+        {
 
             if (!_injection.IsRegistered<IInsightStorage>())
                 _injection.RegisterInterface<IInsightStorage, MemoryInsightStorage>(InstanceType.SingleInstance);
@@ -83,10 +85,10 @@ namespace Exrin.Framework
         }
 
         /// <summary>
-        /// Will initialize the basic navigation and display services
+        /// Will initialize the basic navigation and display services and anything implementing the IService interface.
         /// </summary>
         protected virtual void InitServices()
-        {          
+        {
 
             if (!_injection.IsRegistered<IViewService>())
                 _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
@@ -101,18 +103,8 @@ namespace Exrin.Framework
                 _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
 
             // Register anything with IService implemented
-            //TODO: place in its own helper function
+            RegisterBasedOnInterface(typeof(IService));
 
-            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });
-            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IService));
-
-            foreach (var item in list)
-            {
-                var typeArg = item.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == typeof(IService))));
-                if (typeArg != null)
-                    method.MakeGenericMethod(typeArg, item.AsType())
-                        .Invoke(_injection, new object[] { InstanceType.SingleInstance });
-            }
         }
 
         protected virtual void InitStacks()
@@ -128,17 +120,32 @@ namespace Exrin.Framework
         protected virtual void InitModels()
         {
 
-            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });
-            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IBaseModel));
+            RegisterBasedOnInterface(typeof(IBaseModel));
 
-            foreach (var model in list)
+        }
+
+        public void RegisterTypeAssembly(Type @interface, AssemblyName name)
+        {
+            _typeAssembly.Add(@interface, name);
+        }
+
+        private void RegisterBasedOnInterface(Type @interface)
+        {
+            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });
+            IList<TypeInfo> list = null;
+
+            if (_typeAssembly.ContainsKey(@interface))
+                list = AssemblyHelper.GetTypes(_typeAssembly[@interface], @interface);
+            else
+                list = AssemblyHelper.GetTypes(_injection.GetType(), @interface);
+
+            foreach (var item in list)
             {
-                var typeArg = model.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == typeof(IBaseModel))));
+                var typeArg = item.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == @interface)));
                 if (typeArg != null)
-                    method.MakeGenericMethod(typeArg, model.AsType())
+                    method.MakeGenericMethod(typeArg, item.AsType())
                         .Invoke(_injection, new object[] { InstanceType.SingleInstance });
             }
-
         }
 
         private void RegisterModel<T>() where T : class, IBaseModel
