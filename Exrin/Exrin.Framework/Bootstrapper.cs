@@ -129,6 +129,7 @@ namespace Exrin.Framework
             _typeAssembly.Add(@interface, name);
         }
 
+        // TODO: Improve perf
         private void RegisterBasedOnInterface(Type @interface)
         {
             MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });

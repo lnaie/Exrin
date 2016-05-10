@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exrin.Framework;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -30,21 +31,25 @@ namespace Exrin.Framework
 
         public void Set(object value, [CallerMemberName] string propertyName = "")
         {
+            var oldValue = value;
             if (_propertyValues.ContainsKey(propertyName))
                 _propertyValues[propertyName] = value;
             else
                 _propertyValues.Add(propertyName, value);
             
-            OnPropertyChanged(propertyName);
+            OnPropertyChanged(oldValue, value, propertyName);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName] string name = "")
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public void OnPropertyChanged(object oldValue, object newValue, [CallerMemberName] string name = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyValueChangedEventArgs(name, oldValue, newValue));
         }
 
         public virtual void Disposing()
