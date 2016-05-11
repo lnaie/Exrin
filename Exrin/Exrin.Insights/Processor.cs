@@ -25,6 +25,7 @@ namespace Exrin.Insights
         {
             var state = new object();
 
+            // TODO: Remove timer and setup a Blocking Queue, with possible wait for sending to external (flag on external and delayed grouping before send to conserve battery / minor data usage)
             _timer = new Timer(async (msg) => { await ProcessData(msg); }, state, tickIntervalMilliseconds, tickIntervalMilliseconds);
         }
 
