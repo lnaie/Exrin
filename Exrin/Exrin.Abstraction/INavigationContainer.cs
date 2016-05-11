@@ -26,5 +26,7 @@ namespace Exrin.Abstraction
 
         Task ShowDialog(IDialogOptions dialogOptions);
 
+        VisualStatus ViewStatus { get; set; }
+
     }
 }

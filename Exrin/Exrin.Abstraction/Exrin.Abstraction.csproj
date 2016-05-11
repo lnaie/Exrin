@@ -84,6 +84,7 @@
     <Compile Include="ResultType.cs" />
     <Compile Include="Size.cs" />
     <Compile Include="StackStatus.cs" />
+    <Compile Include="VisualStatus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

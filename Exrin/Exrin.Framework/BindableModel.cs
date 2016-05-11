@@ -31,12 +31,21 @@ namespace Exrin.Framework
 
         public void Set(object value, [CallerMemberName] string propertyName = "")
         {
-            var oldValue = value;
+
+            object oldValue = null; // Only works with value types
             if (_propertyValues.ContainsKey(propertyName))
+            {
+                oldValue = _propertyValues[propertyName];
+                if (oldValue == value) // TODO: Should I block any non-changing property changes?
+                    return;
+
                 _propertyValues[propertyName] = value;
+            }
             else
                 _propertyValues.Add(propertyName, value);
-            
+
+
+
             OnPropertyChanged(oldValue, value, propertyName);
         }
 
@@ -73,7 +82,7 @@ namespace Exrin.Framework
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-            
+
         }
     }
 }

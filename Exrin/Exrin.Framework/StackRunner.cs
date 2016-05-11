@@ -49,14 +49,21 @@ namespace Exrin.Framework
 			if (!_stacks.ContainsKey(stackChoice))
 				throw new NullReferenceException($"{nameof(StackRunner)} does not contain a stack named {stackChoice.ToString()}");
 
-            var stack = _stacks[stackChoice];
+            // Current / Previous Stack
+            if (_currentStack != null)
+                _stacks[stackChoice].Container.ViewStatus = VisualStatus.Hidden;
 
+            var stack = _stacks[stackChoice];
+            
             _currentStack = stackChoice;
+
+            // Set new status
+            stack.Container.ViewStatus = VisualStatus.Visible;
 
             // Switch over services
             _navigationService.Init(stack.Container);
             _displayService.Init(stack.Container);
-
+            
             if (stack.Status == StackStatus.Stopped)
                 Task.Run(async () => await stack.StartNavigation(args));
 

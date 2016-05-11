@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Exrin.Common;
+using Exrin.Framework;
 
 namespace Exrin.Framework
 {
@@ -49,6 +50,8 @@ namespace Exrin.Framework
 
 		}
 
+        public VisualStatus ViewStatus { get; private set; } = VisualStatus.Unseen;
+
 		public IVisualState VisualState { get; set; }
 
 		private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
@@ -73,13 +76,12 @@ namespace Exrin.Framework
 			return Task.FromResult(0);
 		}
 
-		public virtual void OnAppearing() { }
+		public virtual void OnAppearing() { ViewStatus = VisualStatus.Visible; }
 
-		public virtual void OnDisappearing() { }
+		public virtual void OnDisappearing() { ViewStatus = VisualStatus.Hidden; }
 
-		public virtual void OnPopped() { }
-
-
+		public virtual void OnPopped() { ViewStatus = VisualStatus.Disposed; }
+        
 		protected Func<Task> TimeoutHandle
 		{
 			get
@@ -105,7 +107,6 @@ namespace Exrin.Framework
 				};
 			}
 		}
-
 
 		protected Func<Task> NotifyActivityFinished
 		{
