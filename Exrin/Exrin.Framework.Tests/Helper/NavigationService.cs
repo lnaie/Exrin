@@ -22,7 +22,7 @@ namespace Exrin.Framework.Tests.Helper
             throw new NotImplementedException();
         }
 
-        public void Init(INavigationContainer page)
+        public void Init(INavigationContainer page, bool showNavigationBar)
         {
             throw new NotImplementedException();
         }
