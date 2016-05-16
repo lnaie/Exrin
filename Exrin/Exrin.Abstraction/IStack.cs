@@ -9,6 +9,7 @@ namespace Exrin.Abstraction
     public interface IStack
     {
         object StackIdentifier { get; set; }
+        bool ShowNavigationBar { get; set; }
         StackStatus Status { get; set; }
         INavigationContainer Container { get; }
         Task StartNavigation(object args = null);

@@ -9,7 +9,7 @@ namespace Exrin.Abstraction
     public interface INavigationService
     {
 
-        void Init(INavigationContainer container);
+        void Init(INavigationContainer container, bool showNavigationBar);
 
         Task Navigate(string key);
 

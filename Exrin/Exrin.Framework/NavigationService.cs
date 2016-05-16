@@ -11,6 +11,7 @@ namespace Exrin.Framework
     public class NavigationService : INavigationService
     {
         private readonly IViewService _viewService = null;
+        private bool _showNavigationBar = false;
         private readonly INavigationState _state = null;
         private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
@@ -32,7 +33,7 @@ namespace Exrin.Framework
             await _navigationContainer.PopAsync();
         }
 
-        public virtual void Init(INavigationContainer container)
+        public virtual void Init(INavigationContainer container, bool showNavigationBar)
         {
             if (_navigationContainer != null)
                 _navigationContainer.OnPopped -= container_OnPopped;
@@ -40,6 +41,7 @@ namespace Exrin.Framework
             container.OnPopped += container_OnPopped;
 
             _navigationContainer = container;
+            _showNavigationBar = showNavigationBar;
         }
 
         private void container_OnPopped(object sender, IViewNavigationArgs e)
@@ -94,6 +96,7 @@ namespace Exrin.Framework
                     return;
 
                 _navigationContainer.CurrentViewKey = viewKey;
+                _state.ViewName = viewKey;
 
                 if (_viewsByKey.ContainsKey(viewKey))
                 {
@@ -106,8 +109,8 @@ namespace Exrin.Framework
 
                     if (_navigationContainer == null)
                         throw new Exception($"{nameof(INavigationContainer)} is null. Did you forget to call NavigationService.Init()?");
-
-                    _navigationContainer.SetNavigationBar(false, view); //TODO: read from stack
+                    
+                    _navigationContainer.SetNavigationBar(_showNavigationBar, view);
 
                     var model = view.BindingContext as IViewModel;
 
