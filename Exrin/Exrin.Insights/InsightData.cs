@@ -10,7 +10,7 @@ namespace Exrin.Insights
     public class InsightData : IInsightData
     {
         
-        public DateTime Added { get; set; }
+        public DateTime Created { get; set; }
 
         public string CallerName { get; set; }
 
@@ -40,12 +40,14 @@ namespace Exrin.Insights
 
         public double? ConnectionStrength { get; set; }
 
-        public Guid SessionId { get; set; }
+        public string SessionId { get; set; }
 
         public InsightCategory Category { get; set; }
 
         public string CustomMarker { get; set; }
 
         public object CustomValue { get; set; }
+
+        public string ViewName { get; set; }
     }
 }

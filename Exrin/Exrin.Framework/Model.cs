@@ -15,11 +15,14 @@ namespace Exrin.Framework
 
         public IModelExecution Execution { get; protected set; }
 
-        public Model(IDisplayService displayService, IApplicationInsights applicationInsights, IErrorHandlingService errorHandlingService, IModelState modelState)
+        public Model(IExrinContainer exrinContainer, IModelState modelState)
         {
-            _displayService = displayService;
-            _errorHandlingService = errorHandlingService;
-            _applicationInsights = applicationInsights;
+            if (exrinContainer == null)
+                throw new ArgumentNullException(nameof(IExrinContainer));
+
+            _displayService = exrinContainer.DisplayService;
+            _errorHandlingService = exrinContainer.ErrorHandlingService;
+            _applicationInsights = exrinContainer.ApplicationInsights;
 
             ModelState = modelState;
             Execution = new ModelExecution()

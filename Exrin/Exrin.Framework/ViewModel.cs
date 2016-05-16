@@ -20,15 +20,18 @@ namespace Exrin.Framework
 		protected readonly IApplicationInsights _applicationInsights = null;
 		protected readonly IStackRunner _stackRunner = null;
 
-		public ViewModel(IApplicationInsights applicationInsights, IDisplayService displayService, INavigationService navigationService,
-			IErrorHandlingService errorHandlingService, IStackRunner stackRunner, IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
+		public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
 
 		{
-			_applicationInsights = applicationInsights;
-			_displayService = displayService;
-			_navigationService = navigationService;
-			_errorHandlingService = errorHandlingService;
-			_stackRunner = stackRunner;
+
+            if (exrinContainer == null)
+                throw new ArgumentNullException(nameof(IExrinContainer));
+
+			_applicationInsights = exrinContainer.ApplicationInsights;
+			_displayService = exrinContainer.DisplayService;
+			_navigationService = exrinContainer.NavigationService;
+			_errorHandlingService = exrinContainer.ErrorHandlingService;
+			_stackRunner = exrinContainer.StackRunner;
 
 			VisualState = visualState;
 

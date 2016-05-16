@@ -8,10 +8,10 @@ namespace Exrin.Abstraction
 {
 	public interface IExrinContainer
 	{
-		IApplicationInsights ApplicationInsights { get; set; }
-		IDisplayService DisplayService { get; set; }
-		INavigationService NavigationService { get; set; }
-		IErrorHandlingService ErrorHandlingService { get; set; }
-		IStackRunner StackRunner { get; set; }
+		IApplicationInsights ApplicationInsights { get; }
+		IDisplayService DisplayService { get; }
+		INavigationService NavigationService { get; }
+		IErrorHandlingService ErrorHandlingService { get; }
+		IStackRunner StackRunner { get; }
 	}
 }

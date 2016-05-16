@@ -16,7 +16,7 @@ namespace Exrin.Insights
         private readonly IDeviceInfo _deviceInfo = null;
         private string _userId = null;
         private string _fullName = null;
-        private static Guid _sessionId = Guid.NewGuid(); // Once per application load
+        private static string _sessionId = Guid.NewGuid().ToString(); // Once per application load
 
         public ApplicationInsights(IInsightStorage storage, IDeviceInfo deviceInfo)
         {
@@ -47,7 +47,7 @@ namespace Exrin.Insights
         /// <param name="data"></param>
         private async Task FillData(IInsightData data)
         {
-            data.Added = DateTime.UtcNow;
+            data.Created = DateTime.UtcNow;
             data.AppVersion = DefaultHelper.GetOrDefault(_deviceInfo.GetAppVersion, new Version("0.0.0.0"));
             data.Battery = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetBattery, null);
             data.ConnectionStrength = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetConnectionStrength, null);
@@ -60,6 +60,8 @@ namespace Exrin.Insights
             data.OSVersion = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0"));
             data.SessionId = _sessionId;
             data.UserId = _userId;
+
+            // Fill State
         }
 
         public async Task TrackMetric(string category, object value, [CallerMemberName] string callerName = "")

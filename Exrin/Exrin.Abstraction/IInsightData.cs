@@ -14,7 +14,7 @@ namespace Exrin.Abstraction
 
         string FullName { get; set; }
 
-        DateTime Added { get; set; }
+        DateTime Created { get; set; }
 
         string StackTrace { get; set; }
 
@@ -38,13 +38,15 @@ namespace Exrin.Abstraction
 
         double? ConnectionStrength { get; set; }
 
-        Guid SessionId { get; set; }
+        string SessionId { get; set; }
 
         InsightCategory Category { get; set; }
 
         string CustomMarker { get; set; }
 
         object CustomValue { get; set; }
+
+        string ViewName { get; set; }
 
     }
 }

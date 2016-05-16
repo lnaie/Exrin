@@ -11,13 +11,15 @@ namespace Exrin.Framework
     public class NavigationService : INavigationService
     {
         private readonly IViewService _viewService = null;
+        private readonly IApplicationInsights _applicationInsights = null;
         private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
 
-        public NavigationService(IViewService viewService)
+        public NavigationService(IViewService viewService, IApplicationInsights applicationInsights)
         {
             _viewService = viewService;
+            _applicationInsights = applicationInsights;
         }
 
         public async Task GoBack(object parameter)
@@ -38,11 +40,6 @@ namespace Exrin.Framework
             container.OnPopped += container_OnPopped;
 
             _navigationContainer = container;
-        }
-
-        public void StackLoad(string key)
-        {
-
         }
 
         private void container_OnPopped(object sender, IViewNavigationArgs e)

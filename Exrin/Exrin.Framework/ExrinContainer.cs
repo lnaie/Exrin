@@ -9,14 +9,28 @@ namespace Exrin.Framework
 {
 	public class ExrinContainer : IExrinContainer
 	{
-		public IApplicationInsights ApplicationInsights { get; set; }
 
-		public IDisplayService DisplayService { get; set; }
+        public ExrinContainer(IApplicationInsights applicationInsights,
+                              IDisplayService displayService,
+                              IErrorHandlingService errorHandlingService,
+                              INavigationService navigationService,
+                              IStackRunner stackRunner)
+        {
+            ApplicationInsights = applicationInsights;
+            DisplayService = displayService;
+            ErrorHandlingService = errorHandlingService;
+            NavigationService = navigationService;
+            StackRunner = stackRunner;
+        }
 
-		public IErrorHandlingService ErrorHandlingService { get; set; }
+		public IApplicationInsights ApplicationInsights { get; private set; }
 
-		public INavigationService NavigationService { get; set; }
+		public IDisplayService DisplayService { get; private set; }
 
-		public IStackRunner StackRunner { get; set; }
+		public IErrorHandlingService ErrorHandlingService { get; private set; }
+
+		public INavigationService NavigationService { get; private set; }
+
+		public IStackRunner StackRunner { get; private set; }
 	}
 }

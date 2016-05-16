@@ -101,6 +101,9 @@ namespace Exrin.Framework
 
             if (!_injection.IsRegistered<IErrorHandlingService>())
                 _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
+            
+            if (!_injection.IsRegistered<IExrinContainer>())
+                _injection.RegisterInterface<IExrinContainer, ExrinContainer>(InstanceType.SingleInstance);
 
             // Register anything with IService implemented
             RegisterBasedOnInterface(typeof(IService));
