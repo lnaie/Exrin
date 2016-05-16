@@ -35,7 +35,7 @@ namespace Exrin.Insights.Tests
 
             Assert.Equal(1, data.Count);
 
-            Assert.Equal(true, data[0].Added > startTime);
+            Assert.Equal(true, data[0].Created > startTime);
             Assert.Equal("0.0.0.0", data[0].AppVersion.ToString());
             Assert.Equal(null, data[0].Battery);
            // Assert.Equal(nameof(DeviceInfoExceptionHandling), data[0].CallerName);

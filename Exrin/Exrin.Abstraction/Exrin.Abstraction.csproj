@@ -60,7 +60,9 @@
     <Compile Include="IMultiView.cs" />
     <Compile Include="INavigationArgs.cs" />
     <Compile Include="INavigationContainer.cs" />
+    <Compile Include="INavigationReadOnlyState.cs" />
     <Compile Include="INavigationService.cs" />
+    <Compile Include="INavigationState.cs" />
     <Compile Include="InsightCategory.cs" />
     <Compile Include="InstanceType.cs" />
     <Compile Include="IOperation.cs" />

@@ -11,15 +11,15 @@ namespace Exrin.Framework
     public class NavigationService : INavigationService
     {
         private readonly IViewService _viewService = null;
-        private readonly IApplicationInsights _applicationInsights = null;
+        private readonly INavigationState _state = null;
         private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
 
-        public NavigationService(IViewService viewService, IApplicationInsights applicationInsights)
+        public NavigationService(IViewService viewService, INavigationState state)
         {
             _viewService = viewService;
-            _applicationInsights = applicationInsights;
+            _state = state;
         }
 
         public async Task GoBack(object parameter)

@@ -13,15 +13,17 @@ namespace Exrin.Insights
     public class ApplicationInsights : IApplicationInsights
     {
         private readonly IInsightStorage _storage = null;
+        private readonly INavigationReadOnlyState _navigationState = null;
         private readonly IDeviceInfo _deviceInfo = null;
         private string _userId = null;
         private string _fullName = null;
         private static string _sessionId = Guid.NewGuid().ToString(); // Once per application load
 
-        public ApplicationInsights(IInsightStorage storage, IDeviceInfo deviceInfo)
+        public ApplicationInsights(IInsightStorage storage, IDeviceInfo deviceInfo, INavigationReadOnlyState navigationState)
         {
             _storage = storage;
             _deviceInfo = deviceInfo;
+            _navigationState = navigationState;
         }
 
         public async Task Clear(IList<IInsightData> list)

@@ -51,6 +51,7 @@
     <Compile Include="ModelState.cs" />
     <Compile Include="NavigationArgs.cs" />
     <Compile Include="NavigationService.cs" />
+    <Compile Include="NavigationState.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="PropertyValueChangedEventArgs.cs" />
     <Compile Include="TimeoutEvent.cs" />
