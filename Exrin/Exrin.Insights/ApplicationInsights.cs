@@ -62,9 +62,20 @@ namespace Exrin.Insights
             data.OSVersion = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0"));
             data.SessionId = _sessionId;
             data.UserId = _userId;
-
-            // Fill State
         }
+
+        /// <summary>
+        /// Used to fill out the Insight Data with variables that must be obtained
+        /// before the execution of the app continues.
+        /// </summary>
+        /// <param name="data"></param>
+        private Task FillInThreadData(IInsightData data)
+        {
+            data.ViewName = _navigationState.ViewName;
+
+            return Task.FromResult(true);
+        }
+
 
         public async Task TrackMetric(string category, object value, [CallerMemberName] string callerName = "")
         {
@@ -78,13 +89,25 @@ namespace Exrin.Insights
                     CallerName = callerName
                 };
 
-                await FillData(data);
-                Store(data);
+                await FillInThreadData(data);
+
+                Finalize(data);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
+        }
+
+        public void Finalize(IInsightData data)
+        {
+            // Finalize in background thread, no need to keep the app waiting.
+            Task.Run(async () =>
+            {
+                await FillData(data);
+
+                Store(data);
+            });
         }
 
         public async Task TrackException(Exception exception, [CallerMemberName] string callerName = "")
@@ -99,8 +122,9 @@ namespace Exrin.Insights
                     CallerName = callerName
                 };
 
-                await FillData(data);
-                Store(data);
+                await FillInThreadData(data);
+
+                Finalize(data);
             }
             catch (Exception ex)
             {
@@ -120,8 +144,9 @@ namespace Exrin.Insights
                     CallerName = callerName
                 };
 
-                await FillData(data);
-                Store(data);
+                await FillInThreadData(data);
+
+                Finalize(data);
             }
             catch (Exception ex)
             {

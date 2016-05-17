@@ -31,6 +31,8 @@ namespace Exrin.Framework
 
             InitCustom();
 
+            InitState();
+
             InitInsights();
 
             StartInsights(null);
@@ -53,6 +55,15 @@ namespace Exrin.Framework
         }
 
         protected virtual void InitCustom() { }
+
+        protected virtual void InitState() {
+            if (!_injection.IsRegistered<INavigationReadOnlyState>())
+            {
+                var state = new NavigationState();
+                _injection.RegisterInstance<INavigationState, NavigationState>(state);
+                _injection.RegisterInstance<INavigationReadOnlyState, NavigationState>(state);                
+            }
+        }
 
         protected virtual void InitInsights()
         {
@@ -173,9 +184,6 @@ namespace Exrin.Framework
             // Initialize the Stack
             _postRun.Add(() => { _injection.Get<T>().Init(); });
         }
-
-
-
-
+        
     }
 }
