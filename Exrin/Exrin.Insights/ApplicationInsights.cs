@@ -1,40 +1,31 @@
 ﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Exrin.Common;
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Exrin.Insights
 {
     public class ApplicationInsights : IApplicationInsights
     {
-        private readonly IInsightStorage _storage = null;
+
         private readonly INavigationReadOnlyState _navigationState = null;
         private readonly IDeviceInfo _deviceInfo = null;
         private string _userId = null;
         private string _fullName = null;
         private static string _sessionId = Guid.NewGuid().ToString(); // Once per application load
+        private readonly IBlockingQueue<IInsightData> queue = new BlockingQueue<IInsightData>();
 
-        public ApplicationInsights(IInsightStorage storage, IDeviceInfo deviceInfo, INavigationReadOnlyState navigationState)
+        public ApplicationInsights(IDeviceInfo deviceInfo, INavigationReadOnlyState navigationState)
         {
-            _storage = storage;
             _deviceInfo = deviceInfo;
             _navigationState = navigationState;
         }
 
-        public async Task Clear(IList<IInsightData> list)
+        public Task<IBlockingQueue<IInsightData>> GetQueue()
         {
-            foreach (var data in list)
-                await _storage.Delete(data);
-        }
-
-        public async Task<List<IInsightData>> GetQueue()
-        {
-            return (await _storage.ReadAllData()).ToList();
+            return Task.FromResult(queue);
         }
 
         public void SetIdentity(string userId, string fullName)
@@ -162,7 +153,7 @@ namespace Exrin.Insights
         {
             try
             {
-                _storage?.Write(data);
+                queue.Enqueue(data);
             }
             catch (Exception ex)
             {
@@ -174,7 +165,7 @@ namespace Exrin.Insights
         {
             try
             {
-                _storage.Write(data);
+                Store(data);
                 return Task.FromResult(true);
             }
             catch (Exception ex)

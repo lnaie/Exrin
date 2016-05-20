@@ -31,25 +31,24 @@ namespace Exrin.Insights.Tests
 
             await ai.TrackEvent("Test", "Message");
 
-            var data = await ai.GetQueue();
+            var data = (await ai.GetQueue()).Dequeue();
 
-            Assert.Equal(1, data.Count);
-
-            Assert.Equal(true, data[0].Created > startTime);
-            Assert.Equal("0.0.0.0", data[0].AppVersion.ToString());
-            Assert.Equal(null, data[0].Battery);
+            
+            Assert.Equal(true, data.Created > startTime);
+            Assert.Equal("0.0.0.0", data.AppVersion.ToString());
+            Assert.Equal(null, data.Battery);
            // Assert.Equal(nameof(DeviceInfoExceptionHandling), data[0].CallerName);
-            Assert.Equal(InsightCategory.Event, data[0].Category);
-            Assert.Equal(null, data[0].ConnectionStrength);
-            Assert.Equal(ConnectionType.Unknown, data[0].ConnectionType);
-            Assert.Equal("Test", data[0].CustomMarker);
-            Assert.Equal(null, data[0].CustomValue);
-            Assert.Equal("", data[0].DeviceIdentifier);
-            Assert.Equal("", data[0].IPAddress);
-            Assert.Equal("Message", data[0].Message);
-            Assert.Equal("", data[0].Model);
-            Assert.Equal("0.0.0.0", data[0].OSVersion.ToString());
-            Assert.Equal("", data[0].StackTrace);
+            Assert.Equal(InsightCategory.Event, data.Category);
+            Assert.Equal(null, data.ConnectionStrength);
+            Assert.Equal(ConnectionType.Unknown, data.ConnectionType);
+            Assert.Equal("Test", data.CustomMarker);
+            Assert.Equal(null, data.CustomValue);
+            Assert.Equal("", data.DeviceIdentifier);
+            Assert.Equal("", data.IPAddress);
+            Assert.Equal("Message", data.Message);
+            Assert.Equal("", data.Model);
+            Assert.Equal("0.0.0.0", data.OSVersion.ToString());
+            Assert.Equal("", data.StackTrace);
 
         }
 

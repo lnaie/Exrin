@@ -34,12 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="ConnectionType.cs" />
     <Compile Include="IApplicationInsights.cs" />
     <Compile Include="IBaseModel.cs" />
+    <Compile Include="IBlockingQueue.cs" />
     <Compile Include="IDeviceInfo.cs" />
     <Compile Include="IDialogOptions.cs" />
     <Compile Include="IDisplayArgs.cs" />

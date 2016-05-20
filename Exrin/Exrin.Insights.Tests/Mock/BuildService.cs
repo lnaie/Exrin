@@ -13,7 +13,7 @@ namespace Exrin.Insights.Tests.Mock
         // TODO: flag for NIE
         public static IApplicationInsights GetInsights()
         {
-            return new Exrin.Insights.ApplicationInsights(new Exrin.Insights.MemoryInsightStorage(), new DeviceInfo(), new NavigationState());
+            return new Exrin.Insights.ApplicationInsights(new DeviceInfo(), new NavigationState());
         }
 
     }

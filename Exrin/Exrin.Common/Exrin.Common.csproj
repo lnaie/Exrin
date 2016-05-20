@@ -37,10 +37,17 @@
   <ItemGroup>
     <Compile Include="AssemblyHelper.cs" />
     <Compile Include="AsyncLock.cs" />
+    <Compile Include="BlockingQueue.cs" />
     <Compile Include="DefaultHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="ThreadHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj">
+      <Project>{F7D56290-97B4-4636-ABCA-8323C886A7E0}</Project>
+      <Name>Exrin.Abstraction</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

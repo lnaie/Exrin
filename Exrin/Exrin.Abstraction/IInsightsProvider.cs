@@ -13,7 +13,7 @@ namespace Exrin.Abstraction
         /// </summary>
         /// <param name="data"></param>
         /// <returns>Boolean signifying success or failure of the send</returns>
-        Task<bool> Send(IInsightData data);
+        Task<bool> Process(IInsightData data);
 
     }
 }
