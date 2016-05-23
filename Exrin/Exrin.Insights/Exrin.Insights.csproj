@@ -38,6 +38,7 @@
     <Compile Include="ApplicationInsights.cs" />
     <Compile Include="DeviceInfo.cs" />
     <Compile Include="InsightData.cs" />
+    <Compile Include="InsightProvider.cs" />
     <Compile Include="MemoryInsightStorage.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

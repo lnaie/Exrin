@@ -8,7 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface IInsightsProcessor: IDisposable
     {
-        void Start(int tickIntervalMilliseconds);
+        void Start();
         void Stop();
         void RegisterService(string id, IInsightsProvider provider);
         void DeregisterService(string id);

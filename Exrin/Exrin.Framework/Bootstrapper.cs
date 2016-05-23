@@ -92,7 +92,7 @@ namespace Exrin.Framework
                         processor.RegisterService(provider.ToString(), provider);
             });
 
-            _postRun.Add(() => { _injection.Get<IInsightsProcessor>().Start(5000); }); // Default 5 second tick
+            _postRun.Add(() => { _injection.Get<IInsightsProcessor>().Start(); });
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
     <id>Exrin</id>
-    <version>0.4.0</version>
+    <version>0.8.1</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,8 +18,11 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     0.4.0
-     - Completed Insights
+     0.8.1
+     - Insights Finalized
+     - Bug fixes
+     - Finalizing API
+     - Refactored
     </releaseNotes>
   </metadata>
   <files>
@@ -32,5 +35,8 @@
 
     <file src="..\Exrin.Insights\bin\Release\Exrin.Insights.dll" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Insights.dll" />
     <file src="..\Exrin.Insights\bin\Release\Exrin.Insights.pdb" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Insights.pdb" />
+
+    <file src="..\Exrin.Common\bin\Release\Exrin.Common.dll" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Common.dll" />
+    <file src="..\Exrin.Common\bin\Release\Exrin.Common.pdb" target="lib\portable-net45+wp8+win8+wpa81+netcore451+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Exrin.Common.pdb" />
 </files>
 </package>

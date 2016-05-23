@@ -20,7 +20,7 @@ namespace Exrin.Insights
             _applicationInsights = applicationInsights;
         }
 
-        public void Start(int tickIntervalMilliseconds)
+        public void Start()
         {
             var state = new object();
 
@@ -38,7 +38,7 @@ namespace Exrin.Insights
 
                         foreach (var provider in _insightProviders.Values)
                             if (provider != null)
-                                await provider.Process(data);
+                                await provider.Record(data);
 
                     }
                     catch

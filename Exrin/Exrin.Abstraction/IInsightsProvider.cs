@@ -12,8 +12,7 @@ namespace Exrin.Abstraction
         /// Sends the insights data to the provider
         /// </summary>
         /// <param name="data"></param>
-        /// <returns>Boolean signifying success or failure of the send</returns>
-        Task<bool> Process(IInsightData data);
+        Task Record(IInsightData data);
 
     }
 }
