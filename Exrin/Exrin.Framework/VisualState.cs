@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace Exrin.Framework
 {
@@ -25,9 +27,23 @@ namespace Exrin.Framework
 		public virtual void Init() { }
 
 		protected virtual void OnModelStatePropertyChanged(string propertyName)
-		{ }
+		{
+			try
+			{
+				var modelState = Model.GetType().GetRuntimeProperty("ModelState").GetValue(Model);
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+				var value = modelState.GetType().GetRuntimeProperty(propertyName).GetValue(modelState);
+
+				this.GetType().GetRuntimeProperty(propertyName)?.SetValue(this, value);
+			}
+			catch
+			{
+				Debug.WriteLine($"Binding of the {nameof(ModelState)} to {nameof(VisualState)} for property {propertyName} failed.");
+			}
+			
+		}
+
+		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnModelStatePropertyChanged(e.PropertyName);
         }

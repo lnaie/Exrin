@@ -1,5 +1,6 @@
 ﻿using Exrin.Abstraction;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -28,20 +29,21 @@ namespace Exrin.Insights
             var state = new object();
             new Timer(async (s) =>
             {
-                lock (_lock)
-                {
-                    if (_isRunning)
-                        return;
+            lock (_lock)
+            {
+                if (_isRunning)
+                    return;
 
-                    _isRunning = true;
-                }
-                try
-                {
-                    foreach (var data in await _storage.ReadAllData())
-                        if (await Send(data))
+                _isRunning = true;
+            }
+            try
+            {
+                var insights = await _storage.ReadAllData();
+                var sent = await Send(insights);
+                        foreach (var data in insights)
                             await _storage.Delete(data);
                 }
-                catch(Exception ex) { Debug.WriteLine(ex.Message); }
+                catch (Exception ex) { Debug.WriteLine(ex.Message); }
                 finally
                 {
                     _isRunning = false;
@@ -51,13 +53,13 @@ namespace Exrin.Insights
             return Task.FromResult(true);
         }
 
-     
+
         /// <summary>
         /// Will send the insight data to the insight provider
         /// </summary>
         /// <param name="data"></param>
-        /// <returns></returns>
-        protected abstract Task<bool> Send(IInsightData data);
+        /// <returns>The successfully sent insight data</returns>
+        protected abstract Task<IList<IInsightData>> Send(IList<IInsightData> insights);
 
         /// <summary>
         /// Saves to storage for later processing.
