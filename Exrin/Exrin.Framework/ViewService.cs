@@ -91,6 +91,7 @@ namespace Exrin.Framework
 			await ThreadHelper.RunOnUIThreadAsync(() =>
 			{
 				view = constructor.Invoke(parameters) as IView;
+				return Task.FromResult(true);
 			});
 
 			if (view == null)

@@ -20,10 +20,16 @@ namespace Exrin.Common
             return context == _uiContext;
         }
 
-        public static async Task RunOnUIThreadAsync(Action action)
+        public static async Task RunOnUIThreadAsync(Func<Task> action)
         {
-            await RunOnUIThreadHelper(action);
-        }
+			if (_uiContext == null)
+				throw new Exception("You must call Exrin.Framework.App.Init() before calling this method.");
+
+			if (SynchronizationContext.Current == _uiContext)
+				await action();
+			else
+				await RunOnUIThreadHelper(async () => { await action(); }); // I can wait because I am not on the same thread.
+		}
 
         public static void RunOnUIThread(Action action)
         {

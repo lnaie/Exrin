@@ -11,6 +11,8 @@ namespace Exrin.Framework
     {
         public string Message { get; set; }
 
-        public string Title { get; set; }
+		public bool Result { get; set; }
+
+		public string Title { get; set; }
     }
 }

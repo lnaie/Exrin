@@ -10,5 +10,6 @@ namespace Exrin.Abstraction
     {        
         string Title { get; set; }
         string Message { get; set; }
+		bool Result { get; set; }
     }
 }
