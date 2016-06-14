@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
     <id>Exrin</id>
-    <version>0.8.1</version>
+    <version>1.0.0-beta1</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,11 +18,9 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     0.8.1
-     - Insights Finalized
-     - Bug fixes
-     - Finalizing API
-     - Refactored
+     1.0.0-beta1
+     - Few bug fixes
+     - API stable
     </releaseNotes>
   </metadata>
   <files>

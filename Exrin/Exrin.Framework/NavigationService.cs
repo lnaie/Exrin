@@ -16,6 +16,7 @@ namespace Exrin.Framework
         private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
+		private object _stackIdentifier = null;
 
         public NavigationService(IViewService viewService, INavigationState state)
         {
@@ -33,8 +34,10 @@ namespace Exrin.Framework
             await _navigationContainer.PopAsync();
         }
 
-        public virtual void Init(INavigationContainer container, bool showNavigationBar)
+        public virtual void Init(object stackIdentifier, INavigationContainer container, bool showNavigationBar)
         {
+			_stackIdentifier = stackIdentifier;
+
             if (_navigationContainer != null)
                 _navigationContainer.OnPopped -= container_OnPopped;
 
@@ -66,12 +69,30 @@ namespace Exrin.Framework
 
         }
 
-        public virtual void Map(string key, Type viewType, Type viewModelType)
+		private string BuildKey(string key)
+		{
+			return BuildKey(_stackIdentifier, key);
+		}
+
+		private string BuildKey(object stackIdentifier, string key)
+		{
+			if (stackIdentifier == null)
+				throw new NullReferenceException($"{nameof(stackIdentifier)} is null when trying to build the mapping key");
+
+			if (string.IsNullOrEmpty(key))
+				return string.Empty;
+
+			return $"{stackIdentifier}_{key}";
+		}
+
+		public virtual void Map(object stackIdentifier, string key, Type viewType, Type viewModelType)
         {
             lock (_viewsByKey)
             {
+				key = BuildKey(stackIdentifier, key);
+
                 // Map Key with View
-                if (!String.IsNullOrEmpty(key))
+                if (!string.IsNullOrEmpty(key))
                     if (_viewsByKey.ContainsKey(key))
                         _viewsByKey[key] = viewType;
                     else
@@ -91,8 +112,11 @@ namespace Exrin.Framework
         {
             using (var releaser = await _lock.LockAsync())
             {
-                // Do not navigate to the same view.
-                if (viewKey == _navigationContainer.CurrentViewKey)
+
+				viewKey = BuildKey(viewKey);
+
+				// Do not navigate to the same view.
+				if (viewKey == _navigationContainer.CurrentViewKey)
                     return;
 
                 _navigationContainer.CurrentViewKey = viewKey;

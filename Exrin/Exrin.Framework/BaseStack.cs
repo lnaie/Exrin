@@ -48,7 +48,11 @@ namespace Exrin.Framework
 
         protected virtual void Map() { }
 
-        protected virtual string NavigationStartKey { get; }
+		protected void NavigationMap(string key, Type view, Type viewModel) {
+			_navigationService.Map(StackIdentifier, key, view, viewModel);
+		}
+
+		protected virtual string NavigationStartKey { get; }
 
        
     }

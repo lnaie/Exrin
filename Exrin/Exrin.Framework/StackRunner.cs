@@ -61,7 +61,7 @@ namespace Exrin.Framework
             stack.Container.ViewStatus = VisualStatus.Visible;
 
             // Switch over services
-            _navigationService.Init(stack.Container, stack.ShowNavigationBar);
+            _navigationService.Init(stackChoice, stack.Container, stack.ShowNavigationBar);
             _displayService.Init(stack.Container);
             
             if (stack.Status == StackStatus.Stopped)

@@ -9,7 +9,7 @@ namespace Exrin.Abstraction
     public interface INavigationService
     {
 
-        void Init(INavigationContainer container, bool showNavigationBar);
+        void Init(object stackIdentifier, INavigationContainer container, bool showNavigationBar);
 
         Task Navigate(string key);
 
@@ -19,7 +19,7 @@ namespace Exrin.Abstraction
 
         Task GoBack(object parameter);
 
-        void Map(string key, Type viewType, Type viewModelType);
+        void Map(object stackIdentifier, string key, Type viewType, Type viewModelType);
 
     }
 }

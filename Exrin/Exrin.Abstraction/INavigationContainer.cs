@@ -8,6 +8,8 @@ namespace Exrin.Abstraction
 {
     public interface INavigationContainer
     {
+	
+
         object View { get; }
 
         void SetNavigationBar(bool isVisible, object view); 
