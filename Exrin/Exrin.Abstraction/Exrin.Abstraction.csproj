@@ -65,6 +65,7 @@
     <Compile Include="InstanceType.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IOperationT.cs" />
+    <Compile Include="IPlatformBootstrapper.cs" />
     <Compile Include="IPropertyArgs.cs" />
     <Compile Include="IRelayCommand.cs" />
     <Compile Include="IResult.cs" />
