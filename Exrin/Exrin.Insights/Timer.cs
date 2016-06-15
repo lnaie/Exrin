@@ -20,7 +20,7 @@ namespace Exrin.Insights
                     if (waitForCallbackBeforeNextPeriod)
                         tuple.Item1(tuple.Item2);
                     else
-                        await Task.Factory.StartNew(() => tuple.Item1(tuple.Item2));
+                        await Task.Factory.StartNew(() => tuple.Item1(tuple.Item2)); //TODO: Double check that this is only awaiting the Task Creation and not the execution
 
                     await Task.Delay(millisecondsPeriod, Token).ConfigureAwait(false);
                 }

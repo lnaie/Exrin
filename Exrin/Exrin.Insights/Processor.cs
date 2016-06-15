@@ -28,7 +28,7 @@ namespace Exrin.Insights
 
             Task.Run(async () =>
             {
-                do
+                do //TODO: don't like infinite loops, change to recursion with conditional continue
                 {
                     try
                     {

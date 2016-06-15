@@ -24,7 +24,9 @@ namespace Exrin.Abstraction
         void RegisterInstance<I, T>(T instance) where T : class, I
                                              where I : class;
 
-        T Get<T>() where T : class;
+		void RegisterInstance<I>(I instance) where I : class;
+
+		T Get<T>() where T : class;
 
         object Get(Type type);
 
