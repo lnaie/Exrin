@@ -18,7 +18,7 @@ namespace Exrin.Framework
         private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
-		private object _stackIdentifier = null;
+        private object _stackIdentifier = null;
 
         public NavigationService(IViewService viewService, INavigationState state)
         {
@@ -38,7 +38,7 @@ namespace Exrin.Framework
 
         public virtual void Init(object stackIdentifier, INavigationContainer container, bool showNavigationBar)
         {
-			_stackIdentifier = stackIdentifier;
+            _stackIdentifier = stackIdentifier;
 
             if (_navigationContainer != null)
                 _navigationContainer.OnPopped -= container_OnPopped;
@@ -71,27 +71,27 @@ namespace Exrin.Framework
 
         }
 
-		private string BuildKey(string key)
-		{
-			return BuildKey(_stackIdentifier, key);
-		}
+        private string BuildKey(string key)
+        {
+            return BuildKey(_stackIdentifier, key);
+        }
 
-		private string BuildKey(object stackIdentifier, string key)
-		{
-			if (stackIdentifier == null)
-				throw new NullReferenceException($"{nameof(stackIdentifier)} is null when trying to build the mapping key");
+        private string BuildKey(object stackIdentifier, string key)
+        {
+            if (stackIdentifier == null)
+                throw new NullReferenceException($"{nameof(stackIdentifier)} is null when trying to build the mapping key");
 
-			if (string.IsNullOrEmpty(key))
-				return string.Empty;
+            if (string.IsNullOrEmpty(key))
+                return string.Empty;
 
-			return $"{stackIdentifier}_{key}";
-		}
+            return $"{stackIdentifier}_{key}";
+        }
 
-		public virtual void Map(object stackIdentifier, string key, Type viewType, Type viewModelType)
+        public virtual void Map(object stackIdentifier, string key, Type viewType, Type viewModelType)
         {
             lock (_viewsByKey)
             {
-				key = BuildKey(stackIdentifier, key);
+                key = BuildKey(stackIdentifier, key);
 
                 // Map Key with View
                 if (!string.IsNullOrEmpty(key))
@@ -115,11 +115,24 @@ namespace Exrin.Framework
             using (var releaser = await _lock.LockAsync())
             {
 
-				viewKey = BuildKey(viewKey);
+                viewKey = BuildKey(viewKey);
 
-				// Do not navigate to the same view.
-				if (viewKey == _navigationContainer.CurrentViewKey)
+                // Do not navigate to the same view.
+                if (viewKey == _navigationContainer.CurrentViewKey)
+                {
+                    // TODO: Cleanup - push parameter again - this isn't the way to do it
+                  
+                    var view = _navigationContainer.CurrentView as IView;
+                    ThreadHelper.RunOnUIThread(() =>
+                    {
+                        var model = view.BindingContext as IViewModel;
+                        if (model != null)
+                            model.OnNavigated(args); // Do not await.
+                    });
+
                     return;
+                }
+
 
                 _navigationContainer.CurrentViewKey = viewKey;
                 _state.ViewName = viewKey;
@@ -135,7 +148,7 @@ namespace Exrin.Framework
 
                     if (_navigationContainer == null)
                         throw new Exception($"{nameof(INavigationContainer)} is null. Did you forget to call NavigationService.Init()?");
-                    
+
                     _navigationContainer.SetNavigationBar(_showNavigationBar, view);
 
                     var model = view.BindingContext as IViewModel;

@@ -12,6 +12,8 @@ namespace Exrin.Abstraction
 
         object View { get; }
 
+        object CurrentView { get; }
+
         void SetNavigationBar(bool isVisible, object view); 
 
         bool CanGoBack();
