@@ -65,7 +65,7 @@ namespace Exrin.Framework
             _displayService.Init(stack.Container);
             
             if (stack.Status == StackStatus.Stopped)
-                Task.Run(async () => await stack.StartNavigation(args));
+                ThreadHelper.RunOnUIThread(async () => await stack.StartNavigation(args));
 
             ThreadHelper.RunOnUIThread(() =>
             {

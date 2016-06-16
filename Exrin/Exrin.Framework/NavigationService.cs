@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace Exrin.Framework
 {
+    //IDEA: Keep track of stack movement so that when a stack is closed it opens the last one. Like a stack for navigation stacks.
+
     public class NavigationService : INavigationService
     {
         private readonly IViewService _viewService = null;
