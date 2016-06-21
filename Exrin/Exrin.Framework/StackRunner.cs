@@ -34,27 +34,37 @@ namespace Exrin.Framework
             _injection.Register<T>(InstanceType.SingleInstance);
 
             var stack = _injection.Get<T>();
-            _stacks.Add(stack.StackIdentifier, stack);
+
+            if (!_stacks.ContainsKey(stack.StackIdentifier))
+                _stacks.Add(stack.StackIdentifier, stack);
+        }
+        public void Rebuild()
+        {
+            ThreadHelper.RunOnUIThread(() =>
+            {
+                var stack = _stacks[_currentStack];
+                _setRoot?.Invoke(stack.Container.View);
+            });
         }
 
         public void Run(object stackChoice, object args = null)
         {
-			if (stackChoice == null)
-				throw new NullReferenceException($"{nameof(StackRunner)}.{nameof(Run)} can not accept a null {nameof(stackChoice)}");
+            if (stackChoice == null)
+                throw new NullReferenceException($"{nameof(StackRunner)}.{nameof(Run)} can not accept a null {nameof(stackChoice)}");
 
             // Don't change to the same stack
             if (_currentStack == stackChoice)
                 return;
 
-			if (!_stacks.ContainsKey(stackChoice))
-				throw new NullReferenceException($"{nameof(StackRunner)} does not contain a stack named {stackChoice.ToString()}");
+            if (!_stacks.ContainsKey(stackChoice))
+                throw new NullReferenceException($"{nameof(StackRunner)} does not contain a stack named {stackChoice.ToString()}");
 
             // Current / Previous Stack
             if (_currentStack != null)
                 _stacks[stackChoice].Container.ViewStatus = VisualStatus.Hidden;
 
             var stack = _stacks[stackChoice];
-            
+
             _currentStack = stackChoice;
 
             // Set new status
@@ -63,7 +73,7 @@ namespace Exrin.Framework
             // Switch over services
             _navigationService.Init(stackChoice, stack.Container, stack.ShowNavigationBar);
             _displayService.Init(stack.Container);
-            
+
             if (stack.Status == StackStatus.Stopped)
                 ThreadHelper.RunOnUIThread(async () => await stack.StartNavigation(args));
 

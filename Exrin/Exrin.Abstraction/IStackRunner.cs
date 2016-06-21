@@ -13,5 +13,7 @@ namespace Exrin.Abstraction
         void RegisterStack<T>() where T : class, IStack;
 
         void Run(object stackChoice, object args = null);
+
+        void Rebuild();
     }
 }

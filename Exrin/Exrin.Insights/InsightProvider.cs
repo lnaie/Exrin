@@ -70,5 +70,6 @@ namespace Exrin.Insights
 		{
 			await _storage.Write(data);
 		}
+
 	}
 }

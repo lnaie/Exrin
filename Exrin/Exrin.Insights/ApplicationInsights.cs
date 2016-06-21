@@ -41,7 +41,7 @@ namespace Exrin.Insights
         private async Task FillData(IInsightData data)
         {
             data.Created = DateTime.UtcNow;
-            data.AppVersion = DefaultHelper.GetOrDefault(_deviceInfo.GetAppVersion, new Version("0.0.0.0"));
+            data.AppVersion = CleanVersion(DefaultHelper.GetOrDefault(_deviceInfo.GetAppVersion, new Version("0.0.0.0")));
             data.Battery = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetBattery, null);
             data.ConnectionStrength = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetConnectionStrength, null);
             data.ConnectionType = DefaultHelper.GetOrDefault(_deviceInfo.GetConnectionType, ConnectionType.Unknown);
@@ -50,9 +50,14 @@ namespace Exrin.Insights
             data.Id = Guid.NewGuid();
             data.IPAddress = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetIPAddress, "");
             data.Model = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetModel, "");
-            data.OSVersion = await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0"));
+            data.OSVersion = CleanVersion(await DefaultHelper.GetOrDefaultAsync(_deviceInfo.GetOSVersion, new Version("0.0.0.0")));
             data.SessionId = _sessionId;
             data.UserId = _userId;
+        }
+
+        private Version CleanVersion(Version version)
+        {
+            return new Version($"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}".Replace("-1", "0"));
         }
 
         /// <summary>

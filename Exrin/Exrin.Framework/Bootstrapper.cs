@@ -56,12 +56,13 @@ namespace Exrin.Framework
 
         protected virtual void InitCustom() { }
 
-        protected virtual void InitState() {
+        protected virtual void InitState()
+        {
             if (!_injection.IsRegistered<INavigationReadOnlyState>())
             {
                 var state = new NavigationState();
                 _injection.RegisterInstance<INavigationState, NavigationState>(state);
-                _injection.RegisterInstance<INavigationReadOnlyState, NavigationState>(state);                
+                _injection.RegisterInstance<INavigationReadOnlyState, NavigationState>(state);
             }
         }
 
@@ -112,7 +113,7 @@ namespace Exrin.Framework
 
             if (!_injection.IsRegistered<IErrorHandlingService>())
                 _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
-            
+
             if (!_injection.IsRegistered<IExrinContainer>())
                 _injection.RegisterInterface<IExrinContainer, ExrinContainer>(InstanceType.SingleInstance);
 
@@ -140,7 +141,8 @@ namespace Exrin.Framework
 
         public void RegisterTypeAssembly(Type @interface, AssemblyName name)
         {
-            _typeAssembly.Add(@interface, name);
+            if (!_typeAssembly.ContainsKey(@interface))
+                _typeAssembly.Add(@interface, name);
         }
 
         // TODO: Improve perf
@@ -174,16 +176,19 @@ namespace Exrin.Framework
             _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setRoot); });
         }
 
-        public void RegisterStack<T>() where T : class, IStack //TODO: Could be internal instead of public
+        public void RegisterStack<T>() where T : class, IStack
         {
-            _injection.Register<T>(InstanceType.SingleInstance);
+            if (!_injection.IsRegistered<T>())
+            {
+                _injection.Register<T>(InstanceType.SingleInstance);
 
-            // Register the Stack
-            _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(); });
-
+                // Register the Stack
+                _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(); });
+            }
             // Initialize the Stack
             _postRun.Add(() => { _injection.Get<T>().Init(); });
+
         }
-        
+
     }
 }
