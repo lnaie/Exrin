@@ -1,13 +1,10 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
-        
+
+    using Abstraction;
+    using System;
+    using System.Threading.Tasks;
+
     public class BaseStack: IStack
     {
         protected readonly INavigationService _navigationService = null;

@@ -10,19 +10,38 @@ using System.Threading.Tasks;
 namespace Exrin.Common
 {
     public class BlockingQueue<T> : IBlockingQueue<T>
-
     {
 
         private int _count = 0;
 
         private Queue<T> _queue = new Queue<T>();
 
-        public T Dequeue()
-
+        public IList<T> DequeueAll()
         {
 
             lock (_queue)
+            {
 
+                while (_count <= 0) Monitor.Wait(_queue);
+
+                IList<T> list = new List<T>();
+
+                while (_count > 0)
+                {
+                    list.Add(_queue.Dequeue());
+                    _count--;
+                }
+
+                return list;
+
+            }
+
+        }
+
+        public T Dequeue()
+        {
+
+            lock (_queue)
             {
 
                 while (_count <= 0) Monitor.Wait(_queue);
@@ -56,22 +75,15 @@ namespace Exrin.Common
 
         }
 
-
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
-
         {
-
             while (true) yield return Dequeue();
-
         }
 
 
         IEnumerator IEnumerable.GetEnumerator()
-
         {
-
             return ((IEnumerable<T>)this).GetEnumerator();
-
         }
 
     }

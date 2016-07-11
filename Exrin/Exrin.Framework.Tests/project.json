@@ -1,16 +1,11 @@
-﻿{
+{
   "supports": {},
   "dependencies": {
-    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.0",
     "xunit": "2.1.0",
     "xunit.runner.visualstudio": "2.1.0"
   },
   "frameworks": {
-    "netstandard1.1": {
-      "imports": [
-        "portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10"
-      ]
-    }
+    ".NETPortable,Version=v4.5,Profile=Profile259": {}
   }
 }

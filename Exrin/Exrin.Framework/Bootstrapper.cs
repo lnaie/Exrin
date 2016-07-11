@@ -35,8 +35,6 @@ namespace Exrin.Framework
 
             InitInsights();
 
-            StartInsights(null);
-
             InitServices();
 
             InitRunners();
@@ -49,6 +47,8 @@ namespace Exrin.Framework
 
             foreach (var action in _postRun)
                 action();
+
+            StartInsights(null);
 
             return _injection;
 
@@ -84,16 +84,13 @@ namespace Exrin.Framework
 
         protected virtual void StartInsights(IList<IInsightsProvider> providers)
         {
-            _postRun.Add(() =>
-            {
-                var processor = _injection.Get<IInsightsProcessor>();
+            var processor = _injection.Get<IInsightsProcessor>();
 
-                if (providers != null)
-                    foreach (var provider in providers)
-                        processor.RegisterService(provider.ToString(), provider);
-            });
+            if (providers != null)
+                foreach (var provider in providers)
+                    processor.RegisterService(provider.ToString(), provider);
 
-            _postRun.Add(() => { _injection.Get<IInsightsProcessor>().Start(); });
+            _injection.Get<IInsightsProcessor>().Start();
         }
 
         /// <summary>

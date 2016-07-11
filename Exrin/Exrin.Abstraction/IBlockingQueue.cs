@@ -9,6 +9,7 @@ namespace Exrin.Abstraction
     public interface IBlockingQueue<T>: IEnumerable<T>
     {
         T Dequeue();
+        IList<T> DequeueAll();
         void Enqueue(T data);
     }
 }

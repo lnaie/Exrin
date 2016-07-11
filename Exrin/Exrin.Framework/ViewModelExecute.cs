@@ -1,15 +1,13 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public static partial class Process
     {
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
@@ -58,7 +56,7 @@ namespace Exrin.Framework
             }
 
             if (sender == null)
-                throw new Exception($"The IExecution sender can not be null");
+                throw new Exception($"The {nameof(IExecution)} sender can not be null");
 
             sender.Result = null;
 
@@ -70,7 +68,7 @@ namespace Exrin.Framework
                     if (insights != null)
                         insights.TrackEvent(name, $"User activated {name}");
                 }
-                catch (Exception ex)
+                catch (Exception ex) // Purposeful bury exception?
                 {
                     Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
                 }
@@ -131,10 +129,10 @@ namespace Exrin.Framework
                 rollbacks.Clear();
                 transactionRunning = false;
                 // End of Transaction Block
-                
+
             }
             catch (Exception e)
-            {               
+            {
                 if (handleUnhandledException == null)
                     throw;
 
@@ -159,9 +157,9 @@ namespace Exrin.Framework
                     sender.Result = result;
 
                     // Handle the result
-                    await Task.Run(async () => 
-                    await sender.HandleResult(sender.Result)
-                    ); //TODO: why am I passing this in again?
+                    await Task.Run(async () =>
+                        await sender.HandleResult(sender.Result)
+                    );
                 }
                 finally
                 {

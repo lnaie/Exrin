@@ -1,16 +1,11 @@
-﻿using Exrin.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+
+    using Common;
+    using System.Threading;
+
     public static class App
     {
-
 
         public static void Init()
         {

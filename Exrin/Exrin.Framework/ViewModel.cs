@@ -127,7 +127,7 @@ namespace Exrin.Framework
 		protected Func<IList<IResult>, Task> HandleResult
 		{
 			get
-			{
+			{                
 				return async (results) =>
 				{
 

@@ -1,13 +1,8 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
-	public class ExrinContainer : IExrinContainer
+    using Abstraction;
+
+    public class ExrinContainer : IExrinContainer
 	{
 
         public ExrinContainer(IApplicationInsights applicationInsights,

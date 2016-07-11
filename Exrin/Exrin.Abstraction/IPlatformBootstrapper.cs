@@ -8,8 +8,6 @@ namespace Exrin.Abstraction
 {
 	public interface IPlatformBootstrapper
 	{
-
-		void Register(IInjection injection);
-
+        void Register(IInjection injection);
 	}
 }
