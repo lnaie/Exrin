@@ -48,11 +48,15 @@ namespace Exrin.Framework
             foreach (var action in _postRun)
                 action();
 
+            PostContainerBuild();
+
             StartInsights(null);
 
             return _injection;
 
         }
+
+        protected virtual void PostContainerBuild() { }
 
         protected virtual void InitCustom() { }
 
