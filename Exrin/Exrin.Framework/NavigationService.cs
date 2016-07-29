@@ -1,14 +1,10 @@
-﻿using Exrin.Abstraction;
-using Exrin.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
-    //IDEA: Keep track of stack movement so that when a stack is closed it opens the last one. Like a stack for navigation stacks.
+    using Abstraction;
+    using Common;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class NavigationService : INavigationService
     {
@@ -19,6 +15,7 @@ namespace Exrin.Framework
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
         private object _stackIdentifier = null;
+        private string _pastPageKey = ""; // Stores the previous Page Key
 
         public NavigationService(IViewService viewService, INavigationState state)
         {
@@ -51,6 +48,7 @@ namespace Exrin.Framework
 
         private void container_OnPopped(object sender, IViewNavigationArgs e)
         {
+            
             if (e.PoppedView != null)
             {
                 var model = e.PoppedView.BindingContext as IViewModel;
@@ -68,6 +66,9 @@ namespace Exrin.Framework
                 if (model != null)
                     model.OnBackNavigated(null);
             }
+
+            // Changes the navigation key back to the previous page
+            _navigationContainer.CurrentViewKey = _pastPageKey;
 
         }
 
@@ -109,7 +110,7 @@ namespace Exrin.Framework
         {
             await Navigate(key, null);
         }
-
+       
         public async Task Navigate(string viewKey, object args)
         {
             using (var releaser = await _lock.LockAsync())
@@ -133,7 +134,7 @@ namespace Exrin.Framework
                     return;
                 }
 
-
+                _pastPageKey = _navigationContainer.CurrentViewKey;
                 _navigationContainer.CurrentViewKey = viewKey;
                 _state.ViewName = viewKey;
 

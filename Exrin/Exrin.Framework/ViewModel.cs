@@ -1,17 +1,13 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using Exrin.Common;
-using Exrin.Framework;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
-	public abstract class ViewModel : BindableModel, IViewModel
+    using Abstraction;
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
+
+    public abstract class ViewModel : BindableModel, IViewModel
 	{
 		protected IExecution Execution { get; set; }
 		protected readonly IDisplayService _displayService = null;
@@ -65,10 +61,7 @@ namespace Exrin.Framework
 
 			return commands[name];
 		}
-
-		private bool _isBusy = false;
-		public bool IsBusy { get { return _isBusy; } set { _isBusy = value; OnPropertyChanged(); } }
-
+        
 		public virtual Task OnNavigated(object args)
 		{
 			return Task.FromResult(0);
@@ -103,7 +96,7 @@ namespace Exrin.Framework
 				return () =>
 				{
 
-					IsBusy = true;
+					VisualState.IsBusy = true;
 
 					return Task.FromResult(0);
 
@@ -117,7 +110,7 @@ namespace Exrin.Framework
 			{
 				return () =>
 				{
-					IsBusy = false;
+					VisualState.IsBusy = false;
 
 					return Task.FromResult(0);
 				};
@@ -154,7 +147,7 @@ namespace Exrin.Framework
 								break;
 							case ResultType.Display:
 								var displayArgs = result.Arguments as IDisplayArgs;
-								await _displayService.ShowDialog(displayArgs.Title, displayArgs.Message);
+								await _displayService.ShowDialog(displayArgs.Title ?? "Error", displayArgs.Message);
 								break;
 							case ResultType.PropertyUpdate:
 								var propertyArg = result.Arguments as IPropertyArgs;

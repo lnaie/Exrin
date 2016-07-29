@@ -1,15 +1,11 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Diagnostics;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Reflection;
+
     public class VisualState : BindableModel, IVisualState
     {
 
@@ -26,6 +22,13 @@ namespace Exrin.Framework
 
 		public virtual void Init() { }
 
+        private bool _isBusy = false;
+        public bool IsBusy { get { return _isBusy; } set { _isBusy = value; OnPropertyChanged(); } }
+
+        /// <summary>
+        /// Will copy the value from the Model State into the Visual State when the Model property changes
+        /// </summary>
+        /// <param name="propertyName"></param>
 		protected virtual void OnModelStatePropertyChanged(string propertyName)
 		{
 			try
@@ -34,7 +37,10 @@ namespace Exrin.Framework
 
 				var value = modelState.GetType().GetRuntimeProperty(propertyName).GetValue(modelState);
 
-				this.GetType().GetRuntimeProperty(propertyName)?.SetValue(this, value);
+                var existingValue = this.GetType().GetRuntimeProperty(propertyName)?.GetValue(this);
+
+                if (existingValue != value)
+                    this.GetType().GetRuntimeProperty(propertyName)?.SetValue(this, value);
 			}
 			catch
 			{

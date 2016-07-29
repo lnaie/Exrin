@@ -1,15 +1,13 @@
-﻿using Exrin.Abstraction;
-using Exrin.Common;
-using Exrin.Insights;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using Common;
+    using Insights;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+
     public class Bootstrapper
     {
 
@@ -56,7 +54,9 @@ namespace Exrin.Framework
 
         }
 
-        protected virtual void PostContainerBuild() { }
+        protected virtual void PostContainerBuild() {
+            StaticInitialize(new AssemblyName(_injection.GetType().GetTypeInfo().Assembly.GetName().Name));
+        }
 
         protected virtual void InitCustom() { }
 
@@ -102,7 +102,6 @@ namespace Exrin.Framework
         /// </summary>
         protected virtual void InitServices()
         {
-
             if (!_injection.IsRegistered<IViewService>())
                 _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
 
@@ -120,7 +119,6 @@ namespace Exrin.Framework
 
             // Register anything with IService implemented
             RegisterBasedOnInterface(typeof(IService));
-
         }
 
         protected virtual void InitStacks()
@@ -135,9 +133,29 @@ namespace Exrin.Framework
 
         protected virtual void InitModels()
         {
-
             RegisterBasedOnInterface(typeof(IBaseModel));
+        }
 
+        /// <summary>
+        /// Goes through the assembly and create a new instance of each IStaticInitialize
+        /// to inject static values
+        /// </summary>
+        /// <param name="name"></param>
+        public void StaticInitialize(AssemblyName name)
+        {
+            foreach (var type in AssemblyHelper.GetTypes(name, typeof(IStaticInitialize)))
+            {
+                var useConstructor = type.DeclaredConstructors.Where(c => c.CustomAttributes.Any(x => x.AttributeType == typeof(StaticInitialize))).First();
+
+                List<object> parameters = new List<object>();
+                foreach (var parameter in useConstructor.GetParameters())
+                {
+                    parameters.Add(_injection.Get(parameter.ParameterType));
+                }
+
+                Activator.CreateInstance(type.AsType(), parameters.ToArray());
+            }
+       
         }
 
         public void RegisterTypeAssembly(Type @interface, AssemblyName name)
@@ -145,7 +163,7 @@ namespace Exrin.Framework
             if (!_typeAssembly.ContainsKey(@interface))
                 _typeAssembly.Add(@interface, name);
         }
-
+        
         // TODO: Improve perf
         private void RegisterBasedOnInterface(Type @interface)
         {
