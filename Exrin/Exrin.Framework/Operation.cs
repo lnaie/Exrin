@@ -1,13 +1,11 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class Operation : IOperation
     {
         public bool ChainedRollback { get; set; } = true;

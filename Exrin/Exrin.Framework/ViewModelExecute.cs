@@ -69,7 +69,7 @@
                         insights.TrackEvent(name, $"User activated {name}");
                 }
                 catch (Exception ex) // Purposeful bury exception?
-                {
+                {                    
                     Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
                 }
             });

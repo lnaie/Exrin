@@ -1,19 +1,16 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public partial class Process
     {
-
-
+        
         public async static Task<T> ModelExecute<T>(this IModelExecution sender, IModelExecute<T> execute, [CallerMemberName] string name = "")
         {
 

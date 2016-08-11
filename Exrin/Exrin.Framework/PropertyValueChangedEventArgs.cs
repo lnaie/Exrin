@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using System.ComponentModel;
+
     public class PropertyValueChangedEventArgs: PropertyChangedEventArgs
     {
         public object OldValue { get; set; }

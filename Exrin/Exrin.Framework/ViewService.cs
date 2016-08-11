@@ -1,13 +1,13 @@
-﻿using Exrin.Abstraction;
-using Exrin.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using Common;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+
     public class ViewService : IViewService
     {
         private readonly IInjection _injection = null;

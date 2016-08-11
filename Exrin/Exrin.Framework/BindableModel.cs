@@ -1,14 +1,10 @@
-﻿using Exrin.Framework;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
     public class BindableModel : INotifyPropertyChanged, IDisposable
     {
 
@@ -19,7 +15,7 @@ namespace Exrin.Framework
             _propertyValues = new Dictionary<string, object>();
         }
 
-        //TODO: When C#7 is released, replace with Sideways Loading for INPC
+        //TODO: When C#7 is released, possible replace with Sideways Loading for INPC
 
         public T Get<T>([CallerMemberName] string propertyName = "")
         {

@@ -1,13 +1,10 @@
-﻿using Exrin.Abstraction;
-using Exrin.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework
+﻿namespace Exrin.Framework
 {
+    using Abstraction;
+    using Common;
+    using System;
+    using System.Collections.Generic;
+
     public class StackRunner : IStackRunner
     {
         private readonly IDictionary<object, IStack> _stacks = new Dictionary<object, IStack>();
