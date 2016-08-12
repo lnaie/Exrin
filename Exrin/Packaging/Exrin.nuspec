@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
     <id>Exrin</id>
-    <version>1.0.0-beta2</version>
+    <version>1.0.0-beta3</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,9 +18,9 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     1.0.0-beta2
+     1.0.0-beta3
      - Few bug fixes
-     - Minor API changes
+     - Final Profile based PCL Version. Next version will be netstandard.
     </releaseNotes>
   </metadata>
   <files>
