@@ -1,12 +1,8 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Framework.Tests.ViewModelExecute.Mocks
+﻿namespace Exrin.Framework.Tests.ViewModelExecute.Mocks
 {
+    using Exrin.Abstraction;
+    using System;
+
     public class Injection : IInjection
     {
         public void Complete()
@@ -20,6 +16,11 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Mocks
         }
 
         public T Get<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Get<T>(bool optional = false) where T : class
         {
             throw new NotImplementedException();
         }
