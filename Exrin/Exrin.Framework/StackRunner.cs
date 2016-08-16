@@ -70,13 +70,21 @@
             // Switch over services
             _navigationService.Init(stackChoice, stack.Container, stack.ShowNavigationBar);
             _displayService.Init(stack.Container);
-
-            if (stack.Status == StackStatus.Stopped)
-                ThreadHelper.RunOnUIThread(async () => await stack.StartNavigation(args));
-
+            
             ThreadHelper.RunOnUIThread(() =>
             {
-                _setRoot?.Invoke(stack.Container.View);
+                if (stack.Status == StackStatus.Stopped)
+                    stack.StartNavigation(args); //TODO: check how to wait for in UI Thread
+
+                object mainView;
+
+                // Determines if master view is available
+                if (stack.MasterView != null)
+                    mainView = stack.MasterView.View;
+                else
+                    mainView = stack.Container.View;
+
+                _setRoot?.Invoke(mainView);
             });
 
         }

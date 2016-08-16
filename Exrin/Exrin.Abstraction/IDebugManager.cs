@@ -1,11 +1,7 @@
 ﻿namespace Exrin.Abstraction
 {
-    public interface IVisualizer
+    public interface IDebugManager
     {
-
-        void Initialize(IVisualState visualState);
-
         void AddInsight(IInsightData data);
-
     }
 }

@@ -67,7 +67,9 @@
                 throw new Exception("You must call Exrin.Framework.App.Init() before calling this method.");
 
             if (SynchronizationContext.Current == _uiContext)
+            {
                 action(); // WARNING: If on the UI Thread I can not wait for its completion before returning.
+            }
             else
                 RunOnUIThreadHelper(action).Wait(); // I can wait because I am not on the same thread.
         }

@@ -1,14 +1,23 @@
 ﻿namespace Exrin.Framework
 {
-
     using Abstraction;
     using System;
     using System.Threading.Tasks;
 
     public class BaseStack: IStack
     {
-        protected readonly INavigationService _navigationService = null;
+        protected readonly INavigationService _navigationService;
+        private readonly IViewService _viewService;
+
         public object StackIdentifier { get; set; }
+
+        public BaseStack(INavigationService navigationService, INavigationContainer navigationContainer, IMasterView masterView, object stackIdentifier)
+        {
+            MasterView = masterView;            
+            _navigationService = navigationService;
+            SetContainer(navigationContainer);
+            StackIdentifier = stackIdentifier;
+        }
 
         public BaseStack(INavigationService navigationService, INavigationContainer navigationContainer, object stackIdentifier)
         {
@@ -25,13 +34,17 @@
         public bool ShowNavigationBar { get; set; } = true;
 
         public INavigationContainer Container { get; private set; }
-
+        
         public StackStatus Status { get; set; } = StackStatus.Stopped;
 
         public async Task StartNavigation(object args = null)
         {
+            // Assign Master but hold static
+            if (MasterView.MasterView == null)
+                MasterView.MasterView = await _navigationService.BuildView(MasterStartKey, args); // CHECK: see if it can be built elsewhere
+            
             await _navigationService.Navigate(NavigationStartKey, args);
-
+           
             Status = StackStatus.Started;
         }
 
@@ -41,6 +54,9 @@
         protected void SetContainer(INavigationContainer container)
         {
             Container = container;
+
+            if (MasterView != null) // Set Detail Page as Container
+                MasterView.DetailView = Container.View;
         }
 
         protected virtual void Map() { }
@@ -51,6 +67,8 @@
 
 		protected virtual string NavigationStartKey { get; }
 
-       
+        protected virtual string MasterStartKey { get; }
+
+        public IMasterView MasterView { get; private set; }
     }
 }

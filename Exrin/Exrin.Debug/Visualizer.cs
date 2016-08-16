@@ -2,6 +2,7 @@
 {
     using Abstraction;
     using System.Collections.Generic;
+    using System;
 
     public class Visualizer : IVisualizer
     {
@@ -9,6 +10,11 @@
         public Visualizer(IVisualDisplay display)
         {
             _display = display;
+        }
+
+        public void AddInsight(IInsightData data)
+        {
+            throw new NotImplementedException();
         }
 
         public void Initialize(IVisualState visualState)

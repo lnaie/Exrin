@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DebugManager.cs" />
+    <Compile Include="ExrinDebugInsightProvider.cs" />
+    <Compile Include="InsightStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualizer.cs" />
   </ItemGroup>
@@ -43,6 +46,10 @@
     <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj">
       <Project>{f7d56290-97b4-4636-abca-8323c886a7e0}</Project>
       <Name>Exrin.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Exrin.Insights\Exrin.Insights.csproj">
+      <Project>{91CF9504-601C-4F74-B200-9300C72E409C}</Project>
+      <Name>Exrin.Insights</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

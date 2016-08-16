@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Abstraction
+﻿namespace Exrin.Abstraction
 {
+    using System;
+    using System.Threading.Tasks;
+
     public interface INavigationService
     {
 
@@ -20,6 +17,8 @@ namespace Exrin.Abstraction
         Task GoBack(object parameter);
 
         void Map(object stackIdentifier, string key, Type viewType, Type viewModelType);
+
+        Task<object> BuildView(string key, object args);
 
     }
 }

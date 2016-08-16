@@ -17,7 +17,6 @@
 		protected readonly IStackRunner _stackRunner = null;
 
 		public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
-
 		{
 
             if (exrinContainer == null)
@@ -117,7 +116,7 @@
 			}
 		}
 
-		protected Func<IList<IResult>, Task> HandleResult
+		protected virtual Func<IList<IResult>, Task> HandleResult
 		{
 			get
 			{                
@@ -167,7 +166,6 @@
 
 								break;
 						}
-
 				};
 			}
 		}

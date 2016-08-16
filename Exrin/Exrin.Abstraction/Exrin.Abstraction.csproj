@@ -48,6 +48,7 @@
     <Compile Include="IApplicationInsights.cs" />
     <Compile Include="IBaseModel.cs" />
     <Compile Include="IBlockingQueue.cs" />
+    <Compile Include="IDebugManager.cs" />
     <Compile Include="IDeviceInfo.cs" />
     <Compile Include="IDialogOptions.cs" />
     <Compile Include="IDisplayArgs.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="IInsightsProcessor.cs" />
     <Compile Include="IInsightsProvider.cs" />
     <Compile Include="IInsightStorage.cs" />
+    <Compile Include="IMasterView.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IModelExecute.cs" />
     <Compile Include="IModelExecution.cs" />

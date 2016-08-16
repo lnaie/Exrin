@@ -178,5 +178,27 @@
                 }
             }
         }
+        /// <summary>
+        /// WARNING: I shouldn't be exposing this. Please don't base anything off this it will be refactored later
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public async Task<object> BuildView(string key, object args)
+        {
+            key = BuildKey(key);
+            IView view = null;
+            if (_viewsByKey.ContainsKey(key))
+            {
+                var type = _viewsByKey[key];
+
+                view = await _viewService.Build(type, args) as IView;
+
+                if (view == null)
+                    throw new Exception(String.Format("Unable to build view {0}", type.ToString()));
+            }                     
+
+            return view;
+        }
     }
 }

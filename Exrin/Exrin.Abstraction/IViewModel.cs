@@ -19,5 +19,7 @@ namespace Exrin.Abstraction
 
         void OnPopped();
 
+        IVisualState VisualState { get; set; }
+
     }
 }
