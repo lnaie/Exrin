@@ -40,7 +40,7 @@
         public async Task StartNavigation(object args = null)
         {
             // Assign Master but hold static
-            if (MasterView.MasterView == null)
+            if (MasterView != null && MasterView.MasterView == null)
                 MasterView.MasterView = await _navigationService.BuildView(MasterStartKey, args); // CHECK: see if it can be built elsewhere
             
             await _navigationService.Navigate(NavigationStartKey, args);
