@@ -39,8 +39,8 @@ namespace Exrin.Insights
 				try
 				{
 					var insights = await _storage.ReadAllData();
-					var sent = await Send(insights);
-					foreach (var data in insights)
+					
+					foreach (var data in await Send(insights))
 						await _storage.Delete(data);
 				}
 				catch (Exception ex) { Debug.WriteLine(ex.Message); }

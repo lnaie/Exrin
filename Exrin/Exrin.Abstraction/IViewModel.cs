@@ -17,6 +17,8 @@ namespace Exrin.Abstraction
 
         void OnDisappearing();
 
+        bool OnBackButtonPressed();
+
         void OnPopped();
 
         IVisualState VisualState { get; set; }

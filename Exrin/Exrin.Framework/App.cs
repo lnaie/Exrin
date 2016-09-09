@@ -1,15 +1,15 @@
 ﻿namespace Exrin.Framework
 {
-
     using Common;
     using System.Threading;
 
     public static class App
     {
-
-        public static void Init()
+        internal static bool IsDebugging { get; set; } = false;
+        public static void Init(bool debugMode = false)
         {
-            Init(SynchronizationContext.Current); 
+            Init(SynchronizationContext.Current);
+            IsDebugging = debugMode;
         }
 
         /// <summary>

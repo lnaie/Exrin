@@ -7,11 +7,10 @@
     public class BaseStack: IStack
     {
         protected readonly INavigationService _navigationService;
-        private readonly IViewService _viewService;
 
         public object StackIdentifier { get; set; }
 
-        public BaseStack(INavigationService navigationService, INavigationContainer navigationContainer, IMasterView masterView, object stackIdentifier)
+        public BaseStack(INavigationService navigationService, INavigationContainer navigationContainer, IMasterDetailView masterView, object stackIdentifier)
         {
             MasterView = masterView;            
             _navigationService = navigationService;
@@ -37,13 +36,14 @@
         
         public StackStatus Status { get; set; } = StackStatus.Stopped;
 
-        public async Task StartNavigation(object args = null)
+        public async Task StartNavigation(object args = null, bool loadStartKey = true)
         {
             // Assign Master but hold static
             if (MasterView != null && MasterView.MasterView == null)
                 MasterView.MasterView = await _navigationService.BuildView(MasterStartKey, args); // CHECK: see if it can be built elsewhere
             
-            await _navigationService.Navigate(NavigationStartKey, args);
+            if (loadStartKey)
+                await _navigationService.Navigate(NavigationStartKey, args);
            
             Status = StackStatus.Started;
         }
@@ -69,6 +69,6 @@
 
         protected virtual string MasterStartKey { get; }
 
-        public IMasterView MasterView { get; private set; }
+        public IMasterDetailView MasterView { get; private set; }
     }
 }

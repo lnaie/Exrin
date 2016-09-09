@@ -58,6 +58,10 @@
             if (sender == null)
                 throw new Exception($"The {nameof(IExecution)} sender can not be null");
 
+            // Debug Remove Timeout
+            if (App.IsDebugging)
+                timeoutMilliseconds = 0;
+
             sender.Result = null;
 
             // Background thread
@@ -159,7 +163,11 @@
                     // Handle the result
                     await Task.Run(async () =>
                         await sender.HandleResult(sender.Result)
-                    );
+                    ).ContinueWith((t) =>
+                    {
+                        if (t.Exception != null)
+                            throw t.Exception;
+                    });
                 }
                 finally
                 {

@@ -23,6 +23,8 @@ namespace Exrin.Abstraction
 
         Task PopAsync(object parameter);
 
+        Task ClearAsync();
+
         event EventHandler<IViewNavigationArgs> OnPopped;
 
         string CurrentViewKey { get; set; }

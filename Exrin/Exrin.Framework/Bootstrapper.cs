@@ -39,6 +39,8 @@
 
             InitStacks();
 
+            InitViewContainers();
+
             InitModels();
 
             _injection.Complete();
@@ -131,6 +133,16 @@
                         .Invoke(this, null);
         }
 
+        protected virtual void InitViewContainers()
+        {
+            MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterViewContainer), new Type[] { });
+            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IViewContainer));
+
+            foreach (var container in list)
+                method.MakeGenericMethod(container.AsType())
+                        .Invoke(this, null);
+        }
+
         protected virtual void InitModels()
         {
             RegisterBasedOnInterface(typeof(IBaseModel));
@@ -195,14 +207,23 @@
             _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setRoot); });
         }
 
-        public void RegisterStack<T>() where T : class, IStack
+        public void RegisterViewContainer<T>() where T : class, IViewContainer
         {
             if (!_injection.IsRegistered<T>())
             {
                 _injection.Register<T>(InstanceType.SingleInstance);
 
-                // Register the Stack
-                _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterStack<T>(); });
+                // Register the View Container
+                _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterViewContainer<T>(); });
+            }
+
+        }
+
+        public void RegisterStack<T>() where T : class, IStack
+        {
+            if (!_injection.IsRegistered<T>())
+            {
+                _injection.Register<T>(InstanceType.SingleInstance);             
             }
             // Initialize the Stack
             _postRun.Add(() => { _injection.Get<T>().Init(); });

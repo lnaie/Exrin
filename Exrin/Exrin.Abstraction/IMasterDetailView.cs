@@ -1,6 +1,6 @@
 ﻿namespace Exrin.Abstraction
 {
-    public interface IMasterView
+    public interface IMasterDetailView
     {
         object View { get; }
         object MasterView { get; set; }

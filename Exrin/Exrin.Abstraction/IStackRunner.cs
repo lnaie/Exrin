@@ -10,10 +10,12 @@ namespace Exrin.Abstraction
     {
         void Init(Action<object> setRoot);
 
-        void RegisterStack<T>() where T : class, IStack;
+        void RegisterViewContainer<T>() where T : class, IViewContainer;
 
-        void Run(object stackChoice, object args = null);
+        void Run(object stackChoice, object args = null, Dictionary<string, object> predefined = null);
 
         void Rebuild();
+
+        object CurrentStack { get; }
     }
 }

@@ -65,6 +65,7 @@
     <Compile Include="Operation.cs" />
     <Compile Include="PropertyValueChangedEventArgs.cs" />
     <Compile Include="TimeoutEvent.cs" />
+    <Compile Include="ViewContainer.cs" />
     <Compile Include="ViewNavigationArgs.cs" />
     <Compile Include="ViewService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

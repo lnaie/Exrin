@@ -12,8 +12,8 @@ namespace Exrin.Abstraction
         bool ShowNavigationBar { get; set; }
         StackStatus Status { get; set; }
         INavigationContainer Container { get; }
-        IMasterView MasterView { get; }
-        Task StartNavigation(object args = null);
+        IMasterDetailView MasterView { get; }
+        Task StartNavigation(object args = null, bool loadStartKey = true);
         void Init();
 
     }

@@ -76,8 +76,10 @@
 		public virtual void OnDisappearing() { ViewStatus = VisualStatus.Hidden; }
 
 		public virtual void OnPopped() { ViewStatus = VisualStatus.Disposed; }
+
+        public virtual bool OnBackButtonPressed() { return false; }
         
-		protected Func<Task> TimeoutHandle
+        protected Func<Task> TimeoutHandle
 		{
 			get
 			{

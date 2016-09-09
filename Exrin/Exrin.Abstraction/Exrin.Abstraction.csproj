@@ -62,7 +62,7 @@
     <Compile Include="IInsightsProcessor.cs" />
     <Compile Include="IInsightsProvider.cs" />
     <Compile Include="IInsightStorage.cs" />
-    <Compile Include="IMasterView.cs" />
+    <Compile Include="IMasterDetailView.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="IModelExecute.cs" />
     <Compile Include="IModelExecution.cs" />
@@ -73,6 +73,7 @@
     <Compile Include="INavigationReadOnlyState.cs" />
     <Compile Include="INavigationService.cs" />
     <Compile Include="INavigationState.cs" />
+    <Compile Include="INavigationView.cs" />
     <Compile Include="InsightCategory.cs" />
     <Compile Include="InstanceType.cs" />
     <Compile Include="IOperation.cs" />
@@ -83,11 +84,15 @@
     <Compile Include="IResult.cs" />
     <Compile Include="IResultArgs.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="ISingleContainer.cs" />
     <Compile Include="IStack.cs" />
     <Compile Include="IStackRunner.cs" />
     <Compile Include="IStaticInitialize.cs" />
+    <Compile Include="ITabbedContainer.cs" />
+    <Compile Include="ITabbedView.cs" />
     <Compile Include="ITimeoutEvent.cs" />
     <Compile Include="IView.cs" />
+    <Compile Include="IViewContainer.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="IViewModelExecute.cs" />
     <Compile Include="IViewNavigation.cs" />
@@ -95,6 +100,7 @@
     <Compile Include="IVisualDisplay.cs" />
     <Compile Include="IVisualizer.cs" />
     <Compile Include="IVisualState.cs" />
+    <Compile Include="IMasterDetailContainer.cs" />
     <Compile Include="Metric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />

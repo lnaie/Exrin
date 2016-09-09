@@ -4,6 +4,7 @@
     using Common;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class NavigationService : INavigationService
@@ -15,7 +16,7 @@
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
         private object _stackIdentifier = null;
-        private string _pastPageKey = ""; // Stores the previous Page Key
+        private readonly IDictionary<object, IList<string>> _stackBasedViewKeyTracking = new Dictionary<object, IList<string>>();
 
         public NavigationService(IViewService viewService, INavigationState state)
         {
@@ -48,7 +49,7 @@
 
         private void container_OnPopped(object sender, IViewNavigationArgs e)
         {
-            
+
             if (e.PoppedView != null)
             {
                 var model = e.PoppedView.BindingContext as IViewModel;
@@ -68,7 +69,7 @@
             }
 
             // Changes the navigation key back to the previous page
-            _navigationContainer.CurrentViewKey = _pastPageKey;
+            _navigationContainer.CurrentViewKey = _viewsByKey.First(x => x.Value == e.CurrentView.GetType()).Key;
 
         }
 
@@ -110,7 +111,7 @@
         {
             await Navigate(key, null);
         }
-       
+
         public async Task Navigate(string viewKey, object args)
         {
             using (var releaser = await _lock.LockAsync())
@@ -122,21 +123,26 @@
                 if (viewKey == _navigationContainer.CurrentViewKey)
                 {
                     // TODO: Cleanup - push parameter again - this isn't the way to do it
-                  
                     var view = _navigationContainer.CurrentView as IView;
-                    ThreadHelper.RunOnUIThread(() =>
-                    {
-                        var model = view.BindingContext as IViewModel;
-                        if (model != null)
-                            model.OnNavigated(args); // Do not await.
-                    });
+                    if (view != null)
+                        ThreadHelper.RunOnUIThread(() =>
+                        {
+                            var model = view.BindingContext as IViewModel;
+                            if (model != null)
+                                model.OnNavigated(args); // Do not await.
+                        });
 
                     return;
                 }
 
-                _pastPageKey = _navigationContainer.CurrentViewKey;
                 _navigationContainer.CurrentViewKey = viewKey;
                 _state.ViewName = viewKey;
+
+                // **BackTracking**
+               // _stackBasedViewKeyTracking.Add _stackIdentifier - add to 
+
+
+                // ** End **
 
                 if (_viewsByKey.ContainsKey(viewKey))
                 {
@@ -158,6 +164,7 @@
                     {
                         view.Appearing += (s, e) => { model.OnAppearing(); };
                         view.Disappearing += (s, e) => { model.OnDisappearing(); };
+                        view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
                     }
 
                     await _navigationContainer.PushAsync(view);
@@ -171,10 +178,8 @@
                 else
                 {
                     throw new ArgumentException(
-                        string.Format(
-                            "No such key: {0}. Did you forget to call NavigationService.Map?",
-                            viewKey),
-                        "key");
+                            $"No such key: {viewKey}. Did you forget to call NavigationService.Map?",
+                            nameof(viewKey));
                 }
             }
         }
@@ -195,10 +200,16 @@
                 view = await _viewService.Build(type, args) as IView;
 
                 if (view == null)
-                    throw new Exception(String.Format("Unable to build view {0}", type.ToString()));
-            }                     
+                    throw new Exception($"Unable to build view {type.ToString()}");
+            }
 
             return view;
+        }
+
+        public async Task LoadStack(Dictionary<string, object> definitions)
+        {
+            foreach (var page in definitions)
+                await Navigate(page.Key, page.Value);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Exrin.Abstraction
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface INavigationService
@@ -11,6 +12,8 @@
         Task Navigate(string key);
 
         Task Navigate(string key, object args);
+
+        Task LoadStack(Dictionary<string, object> definitions);
 
         Task GoBack();
 

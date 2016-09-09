@@ -13,5 +13,7 @@ namespace Exrin.Abstraction
         event EventHandler Appearing;      
         event EventHandler Disappearing;
 
+        Func<bool> OnBackButtonPressed { get; set; }
+
     }
 }

@@ -68,6 +68,9 @@
 
             if (SynchronizationContext.Current == _uiContext)
             {
+                //TODO: Test this code, still trying to find a way to run a Task synchronously.
+                //Task.Factory.StartNew(async () => await action()).RunSynchronously();
+                //ConfigureAwait(False)
                 action(); // WARNING: If on the UI Thread I can not wait for its completion before returning.
             }
             else
