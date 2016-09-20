@@ -153,8 +153,7 @@
                         throw new Exception($"{nameof(INavigationContainer)} is null. Did you forget to call NavigationService.Init()?");
 
                     _navigationContainer.SetNavigationBar(_showNavigationBar, view);
-
-
+                    
                     if (_stackBasedViewKeyTracking[_stackIdentifier].Contains(viewKey))
                     {
                         // Pop until we get back to that page
