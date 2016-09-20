@@ -9,8 +9,10 @@ namespace Exrin.Framework.Tests.Helper
 {
     public class NavigationService : INavigationService
     {
-
-
+        public Task<object> BuildView(string key, object args)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task GoBack()
         {
@@ -23,6 +25,11 @@ namespace Exrin.Framework.Tests.Helper
         }
 
         public void Init(object stackIdentifier, INavigationContainer page, bool showNavigationBar)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LoadStack(Dictionary<string, object> definitions)
         {
             throw new NotImplementedException();
         }

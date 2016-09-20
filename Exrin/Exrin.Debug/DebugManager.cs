@@ -12,7 +12,7 @@
 
         public void AddInsight(IInsightData data)
         {
-            _visualizer.AddInsight(data);
+            _visualizer?.AddInsight(data);
         }
     }
 }

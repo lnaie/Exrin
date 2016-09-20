@@ -38,6 +38,9 @@
         {
             _stackIdentifier = stackIdentifier;
 
+            if (!_stackBasedViewKeyTracking.Keys.Contains(stackIdentifier)) // Start ViewKey Tracking for the stack
+                _stackBasedViewKeyTracking.Add(stackIdentifier, new List<string>());
+
             if (_navigationContainer != null)
                 _navigationContainer.OnPopped -= container_OnPopped;
 
@@ -68,9 +71,11 @@
                     model.OnBackNavigated(null);
             }
 
+            // Remove CurrentViewKey
+            _stackBasedViewKeyTracking[_stackIdentifier].Remove(_navigationContainer.CurrentViewKey);
+
             // Changes the navigation key back to the previous page
             _navigationContainer.CurrentViewKey = _viewsByKey.First(x => x.Value == e.CurrentView.GetType()).Key;
-
         }
 
         private string BuildKey(string key)
@@ -134,16 +139,7 @@
 
                     return;
                 }
-
-                _navigationContainer.CurrentViewKey = viewKey;
-                _state.ViewName = viewKey;
-
-                // **BackTracking**
-               // _stackBasedViewKeyTracking.Add _stackIdentifier - add to 
-
-
-                // ** End **
-
+                
                 if (_viewsByKey.ContainsKey(viewKey))
                 {
                     var type = _viewsByKey[viewKey];
@@ -158,22 +154,37 @@
 
                     _navigationContainer.SetNavigationBar(_showNavigationBar, view);
 
-                    var model = view.BindingContext as IViewModel;
 
-                    if (model != null)
+                    if (_stackBasedViewKeyTracking[_stackIdentifier].Contains(viewKey))
                     {
-                        view.Appearing += (s, e) => { model.OnAppearing(); };
-                        view.Disappearing += (s, e) => { model.OnDisappearing(); };
-                        view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
+                        // Pop until we get back to that page
+                        while (viewKey != _navigationContainer.CurrentViewKey)
+                            await _navigationContainer.PopAsync();
+                    }
+                    else
+                    {
+                        var model = view.BindingContext as IViewModel;
+
+                        if (model != null)
+                        {
+                            view.Appearing += (s, e) => { model.OnAppearing(); };
+                            view.Disappearing += (s, e) => { model.OnDisappearing(); };
+                            view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
+                        }
+
+                        await _navigationContainer.PushAsync(view);
+                        _stackBasedViewKeyTracking[_stackIdentifier].Add(viewKey);
+
+                        _navigationContainer.CurrentViewKey = viewKey;
+                        _state.ViewName = viewKey;
+
+                        ThreadHelper.RunOnUIThread(() =>
+                        {
+                            if (model != null)
+                                model.OnNavigated(args); // Do not await.
+                        });                        
                     }
 
-                    await _navigationContainer.PushAsync(view);
-
-                    ThreadHelper.RunOnUIThread(() =>
-                    {
-                        if (model != null)
-                            model.OnNavigated(args); // Do not await.
-                    });
                 }
                 else
                 {

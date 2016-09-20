@@ -21,7 +21,7 @@
             // Reflect through all properties and add to List.
             var values = new Dictionary<string, string>();
             
-            _display.Display(visualState.GetType().Name, values);
+            _display?.Display(visualState.GetType().Name, values);
         }
     }
 }

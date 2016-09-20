@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Exrin.Insights
@@ -39,10 +40,16 @@ namespace Exrin.Insights
 				try
 				{
 					var insights = await _storage.ReadAllData();
-					
-					foreach (var data in await Send(insights))
-						await _storage.Delete(data);
-				}
+
+                    var deleteList = new List<IInsightData>();
+                    foreach (var data in await Send(insights))
+                        deleteList.Add(data);
+
+                    deleteList = deleteList.ToList(); // Copy List
+
+                    foreach (var item in deleteList)
+                        await _storage.Delete(item);
+                }
 				catch (Exception ex) { Debug.WriteLine(ex.Message); }
 				finally
 				{

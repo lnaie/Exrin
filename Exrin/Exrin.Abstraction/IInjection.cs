@@ -25,7 +25,5 @@
 		T Get<T>(bool optional = false) where T : class;
 
         object Get(Type type);
-
-
     }
 }

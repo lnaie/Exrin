@@ -26,7 +26,7 @@
 
         public Task Write(IInsightData data)
         {
-            _debugManager.AddInsight(data);
+            _debugManager?.AddInsight(data);
             return Task.FromResult(true);
         }
     }
