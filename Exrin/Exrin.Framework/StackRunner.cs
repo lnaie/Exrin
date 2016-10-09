@@ -4,6 +4,7 @@
     using Common;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class StackRunner : IStackRunner
     {
@@ -42,7 +43,7 @@
 
             var viewContainer = _injection.Get<T>();
             IList<IStack> stacks = new List<IStack>();
-            
+
             // Load list of stacks depending on ViewContainer
             if (viewContainer as ISingleContainer != null)
             {
@@ -125,13 +126,13 @@
                 if (stack.Status == StackStatus.Stopped)
                     await stack.StartNavigation(args: args, loadStartKey: predefinedStack == null); //TODO: check how to wait for in UI Thread
 
-                // Preload Stack
+                //  Preload Stack
                 if (predefinedStack != null)
                     await _navigationService.LoadStack(predefinedStack);
 
                 // Find mainview from ViewHierarchy
                 var viewContainer = _viewContainers[_stackViewContainers[stackChoice]];
-               
+
                 _setRoot?.Invoke(viewContainer.View);
             });
 

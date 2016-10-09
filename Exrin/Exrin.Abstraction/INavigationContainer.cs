@@ -8,7 +8,6 @@ namespace Exrin.Abstraction
 {
     public interface INavigationContainer
     {
-
         object View { get; }
 
         object CurrentView { get; }

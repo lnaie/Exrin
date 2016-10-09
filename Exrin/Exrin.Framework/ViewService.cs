@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class ViewService : IViewService
@@ -67,10 +68,10 @@
                     $"No suitable constructor found for view {viewType.ToString()}");
 
             IView view = null;
-            await ThreadHelper.RunOnUIThreadAsync(() =>
+
+            ThreadHelper.RunOnUIThread(() =>
             {
                 view = constructor.Invoke(parameters) as IView;
-                return Task.FromResult(true);
             });
 
             if (view == null)

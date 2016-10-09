@@ -21,7 +21,6 @@
         public Func<CancellationToken, Task<T>> Function { get; set; } = null;
 
         public Func<Task<T>> Rollback { get; set; } = null;
-
       
     }
 }

@@ -10,7 +10,7 @@ namespace Exrin.Common
         public static IList<TypeInfo> GetTypes(AssemblyName name, Type @interface)
         {
             //TODO: Remove LINQ to increase perf
-            var query = from t in Assembly.Load(name).DefinedTypes
+            var query = from t in Assembly.Load(new AssemblyName(name.FullName)).DefinedTypes
                         where t.IsClass && !t.IsSealed && t.ImplementedInterfaces.Any(x => x == @interface)
                         select t;
 

@@ -44,6 +44,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AssemblyAction.cs" />
     <Compile Include="ConnectionType.cs" />
     <Compile Include="IApplicationInsights.cs" />
     <Compile Include="IBaseModel.cs" />

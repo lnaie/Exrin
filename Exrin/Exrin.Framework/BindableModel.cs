@@ -32,7 +32,7 @@
             if (_propertyValues.ContainsKey(propertyName))
             {
                 oldValue = _propertyValues[propertyName];
-                if (oldValue == value) // TODO: Should I block any non-changing property changes?
+                if (oldValue == value) // FLAG: Should I block any non-changing property changes? Maybe an optional condition?
                     return;
 
                 _propertyValues[propertyName] = value;

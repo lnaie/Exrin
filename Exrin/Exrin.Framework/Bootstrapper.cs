@@ -10,12 +10,13 @@
 
     public class Bootstrapper
     {
-
         protected readonly AsyncLock _lock = new AsyncLock();
         protected readonly IInjection _injection;
         private readonly Action<object> _setRoot;
         protected readonly IList<Action> _postRun = new List<Action>();
-        private readonly Dictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
+        private readonly IDictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
+        private readonly IList<KeyValuePair<AssemblyAction, AssemblyName>> _assemblies = new List<KeyValuePair<AssemblyAction, AssemblyName>>();
+        private static bool IsInitialized { get; set; } = false;
 
         public Bootstrapper(IInjection injection, Action<object> setRoot)
         {
@@ -26,6 +27,8 @@
 
         public IInjection Init()
         {
+            if (IsInitialized)
+                return _injection;
 
             InitCustom();
 
@@ -48,17 +51,20 @@
             foreach (var action in _postRun)
                 action();
 
+            RegisterAssembly(AssemblyAction.StaticInitialize, _injection.GetType().GetTypeInfo().Assembly.GetName());
+
             PostContainerBuild();
+
+            StaticInitialize();
 
             StartInsights(null);
 
+            IsInitialized = true;
+
             return _injection;
-
         }
 
-        protected virtual void PostContainerBuild() {
-            StaticInitialize(new AssemblyName(_injection.GetType().GetTypeInfo().Assembly.GetName().Name));
-        }
+        protected virtual void PostContainerBuild() {}
 
         protected virtual void InitCustom() { }
 
@@ -153,21 +159,28 @@
         /// to inject static values
         /// </summary>
         /// <param name="name"></param>
-        public void StaticInitialize(AssemblyName name)
+        public void StaticInitialize()
         {
-            foreach (var type in AssemblyHelper.GetTypes(name, typeof(IStaticInitialize)))
+            foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.StaticInitialize))
             {
-                var useConstructor = type.DeclaredConstructors.Where(c => c.CustomAttributes.Any(x => x.AttributeType == typeof(StaticInitialize))).First();
-
-                List<object> parameters = new List<object>();
-                foreach (var parameter in useConstructor.GetParameters())
+                foreach (var type in AssemblyHelper.GetTypes(assembly.Value, typeof(IStaticInitialize)))
                 {
-                    parameters.Add(_injection.Get(parameter.ParameterType));
-                }
+                    var useConstructor = type.DeclaredConstructors.Where(c => c.CustomAttributes.Any(x => x.AttributeType == typeof(StaticInitialize))).First();
 
-                Activator.CreateInstance(type.AsType(), parameters.ToArray());
+                    List<object> parameters = new List<object>();
+                    foreach (var parameter in useConstructor.GetParameters())
+                    {
+                        parameters.Add(_injection.Get(parameter.ParameterType));
+                    }
+
+                    Activator.CreateInstance(type.AsType(), parameters.ToArray());
+                }
             }
-       
+        }
+
+        public void RegisterAssembly(AssemblyAction action, AssemblyName name)
+        {
+            _assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, name));
         }
 
         public void RegisterTypeAssembly(Type @interface, AssemblyName name)

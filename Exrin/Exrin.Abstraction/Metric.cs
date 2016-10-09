@@ -8,6 +8,7 @@ namespace Exrin.Abstraction
 {
     public enum Metric
     {
-        Timeout = 1
+        WebLoadTimeout = 1,
+        PushNotificationRegisterFail = 2
     }
 }

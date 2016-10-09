@@ -52,7 +52,7 @@
             {
                 return async (timeoutEvent) =>
                 {
-                    await _applicationInsights.TrackMetric(nameof(Metric.Timeout), timeoutEvent.MethodName); 
+                    await _applicationInsights.TrackMetric(nameof(Metric.WebLoadTimeout), timeoutEvent.MethodName); 
                     await _displayService.ShowDialog("Timeout", timeoutEvent.Message ?? "A timeout has occurred");
                 };
             }

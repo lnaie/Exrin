@@ -23,7 +23,7 @@
      - Visual Hierarchy (Support for MasterDetailPage and TabbedPage)
      - Now supports .NET Standard 1.1
      - Minor bug fixes
-    </releaseNotes>
+    </releaseNotes>   
   </metadata>
   <files>
     <!--Core-->

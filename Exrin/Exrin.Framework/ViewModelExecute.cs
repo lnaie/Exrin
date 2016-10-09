@@ -30,7 +30,7 @@
 
         }
 
-        private readonly static Dictionary<object, bool> _status = new Dictionary<object, bool>();
+        private readonly static IDictionary<object, bool> _status = new Dictionary<object, bool>();
 
         private static async Task ViewModelExecute(IExecution sender,
                  List<IOperation> operations,
@@ -41,8 +41,7 @@
                  int timeoutMilliseconds = 0,
                  IApplicationInsights insights = null,
                  string name = "",
-                 object parameter = null
-                 )
+                 object parameter = null)
         {
             // If currently executing, ignore the latest request
             lock (sender)
@@ -58,14 +57,13 @@
             if (sender == null)
                 throw new Exception($"The {nameof(IExecution)} sender can not be null");
 
-            // Debug Remove Timeout
-            if (App.IsDebugging)
-                timeoutMilliseconds = 0;
+            if (notifyOfActivity == null)
+                throw new Exception($"{nameof(notifyOfActivity)} is null: You must notify the user that something is happening");
 
-            sender.Result = null;
+            await notifyOfActivity();
 
             // Background thread
-            Task insight = Task.Run(() =>
+            var insightTask = Task.Run(() =>
             {
                 try
                 {
@@ -73,124 +71,128 @@
                         insights.TrackEvent(name, $"User activated {name}");
                 }
                 catch (Exception ex) // Purposeful bury exception?
-                {                    
+                {
                     Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
                 }
-            });
+            }).ConfigureAwait(false);
 
-            List<Func<Task>> rollbacks = new List<Func<Task>>();
-            bool transactionRunning = false;
-
-            // Setup Cancellation of Tasks if long running
-            var task = new CancellationTokenSource();
-
-            var exceptionState = new PropertyArgs() { Value = false };
-
-            if (timeoutMilliseconds > 0)
+            await Task.Run(async () =>
             {
-                if (handleTimeout != null)
-                    task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleTimeout(); }, exceptionState);
-                else if (handleUnhandledException != null)
-                    task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleUnhandledException(new TimeoutException()); }, exceptionState);
-                else
-                    throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
+                // Debug Remove Timeout
+                if (App.IsDebugging)
+                    timeoutMilliseconds = 0;
 
-                task.CancelAfter(timeoutMilliseconds);
-            }
+                sender.Result = null;
 
-            IList<IResult> result = new List<IResult>();
+                List<Func<Task>> rollbacks = new List<Func<Task>>();
+                bool transactionRunning = false;
 
-            try
-            {
-                if (notifyOfActivity == null)
-                    throw new Exception($"{nameof(notifyOfActivity)} is null: You must notify the user that something is happening");
+                // Setup Cancellation of Tasks if long running
+                var task = new CancellationTokenSource();
 
-                await notifyOfActivity();
+                var exceptionState = new PropertyArgs() { Value = false };
 
-                // Transaction Block
-                transactionRunning = true;
-
-                foreach (var operation in operations)
+                if (timeoutMilliseconds > 0)
                 {
-                    rollbacks.Add(operation.Rollback);
+                    if (handleTimeout != null)
+                        task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleTimeout(); }, exceptionState);
+                    else if (handleUnhandledException != null)
+                        task.Token.Register(async (state) => { if (!(bool)((PropertyArgs)state).Value) await handleUnhandledException(new TimeoutException()); }, exceptionState);
+                    else
+                        throw new Exception($"You must specify either {nameof(handleTimeout)} or {nameof(handleUnhandledException)} to handle a timeout.");
 
-                    if (operation.Function != null)
-                        try
-                        {
-                            await Task.Run(async () => await operation.Function(result, parameter, task.Token), task.Token).ConfigureAwait(false); // Background Thread 
-                        }
-                        catch
-                        {
-                            exceptionState.Value = true; // Stops registered cancel function from running, since this is exception not timeout              
-                            task?.Cancel(); // Cancel all tasks
-                            throw; // Go to unhandled exception
-                        }
-
-                    if (!operation.ChainedRollback)
-                        rollbacks.Remove(operation.Rollback);
+                    task.CancelAfter(timeoutMilliseconds);
                 }
 
-                rollbacks.Clear();
-                transactionRunning = false;
-                // End of Transaction Block
+                IList<IResult> result = new List<IResult>();
 
-            }
-            catch (Exception e)
-            {
-                if (handleUnhandledException == null)
-                    throw;
-
-                var handled = await handleUnhandledException(e);
-                if (!handled)
-                    throw;
-            }
-            finally
-            {
                 try
                 {
-                    task?.Dispose();
+                    // Transaction Block
+                    transactionRunning = true;
 
-                    if (transactionRunning)
+                    foreach (var operation in operations)
                     {
-                        rollbacks.Reverse(); // Do rollbacks in reverse order
-                        foreach (var rollback in rollbacks)
-                            await rollback();
+                        if (operation.Rollback != null)
+                            rollbacks.Add(operation.Rollback);
+
+                        if (operation.Function != null)
+                            try
+                            {
+                                await operation.Function(result, parameter, task.Token);
+                            }
+                            catch
+                            {
+                                exceptionState.Value = true; // Stops registered cancel function from running, since this is exception not timeout              
+                                task?.Cancel(); // Cancel all tasks
+                                throw; // Go to unhandled exception
+                            }
+
+                        if (!operation.ChainedRollback)
+                            rollbacks.Remove(operation.Rollback);
                     }
 
-                    // Set final result
-                    sender.Result = result;
+                    rollbacks.Clear();
+                    transactionRunning = false;
+                    // End of Transaction Block
 
-                    // Handle the result
-                    await Task.Run(async () =>
-                        await sender.HandleResult(sender.Result)
-                    ).ContinueWith((t) =>
-                    {
-                        if (t.Exception != null)
-                            throw t.Exception;
-                    });
+                }
+                catch (Exception e)
+                {
+                    if (handleUnhandledException == null)
+                        throw;
+
+                    var handled = await handleUnhandledException(e);
+                    if (!handled)
+                        throw;
                 }
                 finally
                 {
-                    if (notifyActivityFinished == null)
-                        throw new Exception($"{nameof(notifyActivityFinished)} is null: You need to specify what happens when the operations finish");
-
                     try
                     {
-                        await notifyActivityFinished();
-                    }
-                    catch (Exception e)
-                    {
-                        var handled = await handleUnhandledException(e);
-                        if (!handled)
-                            throw;
+                        task?.Dispose();
+
+                        if (transactionRunning)
+                        {
+                            rollbacks.Reverse(); // Do rollbacks in reverse order
+                            foreach (var rollback in rollbacks)
+                                await rollback();
+                        }
+
+                        // Set final result
+                        sender.Result = result;
+
+                        // Handle the result
+                        await Task.Run(async () =>
+                            await sender.HandleResult(sender.Result)
+                        ).ContinueWith((t) =>
+                        {
+                            if (t.Exception != null)
+                                throw t.Exception;
+                        });
                     }
                     finally
                     {
-                        _status.Remove(sender);
+                        if (notifyActivityFinished == null)
+                            throw new Exception($"{nameof(notifyActivityFinished)} is null: You need to specify what happens when the operations finish");
+
+                        try
+                        {
+                            await notifyActivityFinished();
+                        }
+                        catch (Exception e)
+                        {
+                            var handled = await handleUnhandledException(e);
+                            if (!handled)
+                                throw;
+                        }
+                        finally
+                        {
+                            _status.Remove(sender);
+                        }
                     }
                 }
-
-            }
+            });
         }
 
     }
