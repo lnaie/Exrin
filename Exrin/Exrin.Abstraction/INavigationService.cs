@@ -13,15 +13,21 @@
 
         Task Navigate(string key, object args);
 
-        Task LoadStack(Dictionary<string, object> definitions);
-
         Task GoBack();
 
         Task GoBack(object parameter);
 
-        void Map(object stackIdentifier, string key, Type viewType, Type viewModelType);
+        void Map(object stackIdentifier, string key, Type viewType, Type viewModelType, bool noHistory = false);
 
+        /// <summary>
+        /// WARNING: I shouldn't be exposing this. Please don't base anything off this it will be refactored later
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         Task<object> BuildView(string key, object args);
+
+        Task StackChanged();
 
     }
 }

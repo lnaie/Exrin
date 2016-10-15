@@ -87,6 +87,7 @@
     <Compile Include="IService.cs" />
     <Compile Include="ISingleContainer.cs" />
     <Compile Include="IStack.cs" />
+    <Compile Include="IStackOptions.cs" />
     <Compile Include="IStackRunner.cs" />
     <Compile Include="IStaticInitialize.cs" />
     <Compile Include="ITabbedContainer.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultType.cs" />
     <Compile Include="Size.cs" />
+    <Compile Include="StackResult.cs" />
     <Compile Include="StackStatus.cs" />
     <Compile Include="StaticInitialize.cs" />
     <Compile Include="VisualStatus.cs" />

@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Threading;
     using System.Threading.Tasks;
 
     public class ViewService : IViewService
@@ -18,7 +17,7 @@
             _injection = injection;
         }
 
-        private readonly IDictionary<Type, Type> _viewsByType = new Dictionary<Type, Type>();
+        private readonly IDictionary<Type, TypeDefinition> _viewsByType = new Dictionary<Type, TypeDefinition>();
 
         private object GetBindingContext(Type viewType)
         {
@@ -28,13 +27,13 @@
 
             var parameters = new object[] { };
 
-            constructor = viewModelType.GetTypeInfo()
+            constructor = viewModelType.Type.GetTypeInfo()
                    .DeclaredConstructors
                    .FirstOrDefault(c => !c.GetParameters().Any());
 
             if (constructor == null)
             {
-                constructor = viewModelType.GetTypeInfo()
+                constructor = viewModelType.Type.GetTypeInfo()
                    .DeclaredConstructors.First();
 
                 var parameterList = new List<object>();
@@ -52,7 +51,7 @@
             return constructor.Invoke(parameters);
         }
 
-        public async Task<object> Build(Type viewType, object parameter)
+        public Task<IView> Build(Type viewType)
         {
             ConstructorInfo constructor = null;
             object[] parameters = null;
@@ -83,10 +82,10 @@
             {
                 view.BindingContext = GetBindingContext(viewType);
 
-                // Pass parameter to view model if applicable
-                var model = view.BindingContext as IViewModel;
-                if (model != null)
-                    await model.OnNavigated(parameter);
+                //// Pass parameter to view model if applicable
+                //var model = view.BindingContext as IViewModel;
+                //if (model != null)
+                //    await model.OnNavigated(parameter);
 
                 var multiView = view as IMultiView;
 
@@ -99,16 +98,16 @@
                 throw new InvalidOperationException(
                     "No suitable view model found for view " + viewType.ToString());
 
-            return view;
+            return Task.FromResult(view);
         }
 
         public void Map(Type viewType, Type viewModelType)
         {
             lock (_viewsByType)
                 if (_viewsByType.ContainsKey(viewType))
-                    _viewsByType[viewType] = viewModelType;
+                    _viewsByType[viewType] = new TypeDefinition() { Type = viewModelType };
                 else
-                    _viewsByType.Add(viewType, viewModelType);
+                    _viewsByType.Add(viewType, new TypeDefinition() { Type = viewModelType });
         }
     }
 }

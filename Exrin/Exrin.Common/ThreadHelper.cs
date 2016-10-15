@@ -117,7 +117,7 @@
         }
 
 
-        public static void RunSync(Func<Task> task)
+        private static void RunSync(Func<Task> task)
         {
             var oldContext = SynchronizationContext.Current;
             var synch = new ExclusiveSynchronizationContext();

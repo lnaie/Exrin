@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Abstraction
+﻿namespace Exrin.Abstraction
 {
+    using System.Threading.Tasks;
+
     public interface IStack
     {
         object StackIdentifier { get; set; }
@@ -15,6 +11,7 @@ namespace Exrin.Abstraction
         IMasterDetailView MasterView { get; }
         Task StartNavigation(object args = null, bool loadStartKey = true);
         void Init();
+        string NavigationStartKey { get; }
 
     }
 }

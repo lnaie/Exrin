@@ -4,7 +4,6 @@
     using Common;
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     public class StackRunner : IStackRunner
     {
@@ -87,21 +86,16 @@
             });
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stackChoice"></param>
-        /// <param name="args"></param>
-        /// <param name="predefinedStack">An ordered array with the Page Keys for a stack to be preloaded. The last page on the array will be the visible one.</param>
-        public void Run(object stackChoice, object args = null, Dictionary<string, object> predefinedStack = null)
+        public StackResult Run(object stackChoice, IStackOptions options = null)
         {
+            StackResult stackResult = StackResult.StackStarted;
 
             if (stackChoice == null)
                 throw new NullReferenceException($"{nameof(StackRunner)}.{nameof(Run)} can not accept a null {nameof(stackChoice)}");
 
             // Don't change to the same stack
             if (_currentStack == stackChoice)
-                return;
+                return StackResult.None;
 
             if (!_stacks.ContainsKey(stackChoice))
                 throw new NullReferenceException($"{nameof(StackRunner)} does not contain a stack named {stackChoice.ToString()}");
@@ -109,7 +103,7 @@
             // Current / Previous Stack
             if (_currentStack != null)
                 _stacks[stackChoice].Container.ViewStatus = VisualStatus.Hidden;
-
+          
             var stack = _stacks[stackChoice];
 
             _currentStack = stackChoice;
@@ -124,18 +118,39 @@
             ThreadHelper.RunOnUIThread(async () =>
             {
                 if (stack.Status == StackStatus.Stopped)
-                    await stack.StartNavigation(args: args, loadStartKey: predefinedStack == null); //TODO: check how to wait for in UI Thread
+                {
+                    object args = null;
+
+                    // If ArgsKey present only pass args along if the StartKey is the same
+                    if ((!string.IsNullOrEmpty(options?.ArgsKey) && stack.NavigationStartKey == options?.ArgsKey) || string.IsNullOrEmpty(options?.ArgsKey))
+                    {
+                        stackResult = stackResult | StackResult.ArgsPassed;
+                        args = options?.Args;
+                    }
+
+                    var loadStartKey = options?.PredefinedStack == null;
+
+                    if (loadStartKey)
+                        stackResult = stackResult | StackResult.NavigationStarted;
+
+                    await stack.StartNavigation(args: args, loadStartKey: loadStartKey);
+                }
 
                 //  Preload Stack
-                if (predefinedStack != null)
-                    await _navigationService.LoadStack(predefinedStack);
-
+                if (options?.PredefinedStack != null)
+                    foreach (var page in options.PredefinedStack)
+                        await _navigationService.Navigate(page.Key, page.Value);
+                
                 // Find mainview from ViewHierarchy
                 var viewContainer = _viewContainers[_stackViewContainers[stackChoice]];
 
                 _setRoot?.Invoke(viewContainer.View);
+
+                await _navigationService.StackChanged();
+
             });
 
+            return stackResult;
         }
 
     }

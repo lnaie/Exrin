@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Abstraction
+﻿namespace Exrin.Abstraction
 {
+    using System;
+    using System.Threading.Tasks;
+
     public interface INavigationContainer
     {
         object View { get; }
@@ -27,6 +24,13 @@ namespace Exrin.Abstraction
         event EventHandler<IViewNavigationArgs> OnPopped;
 
         string CurrentViewKey { get; set; }
+
+        /// <summary>
+        /// Will remove from the stack without using a Pop
+        /// </summary>
+        /// <param name="indexFromTop">How many from the current page to Pop. e.g. top page is 0, next page back is -1</param>
+        /// <returns></returns>
+        Task SilentPopAsync(int indexFromTop);
 
         Task ShowDialog(IDialogOptions dialogOptions);
 

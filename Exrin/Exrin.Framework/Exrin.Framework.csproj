@@ -64,7 +64,9 @@
     <Compile Include="NavigationState.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="PropertyValueChangedEventArgs.cs" />
+    <Compile Include="StackOptions.cs" />
     <Compile Include="TimeoutEvent.cs" />
+    <Compile Include="TypeDefinition.cs" />
     <Compile Include="ViewContainer.cs" />
     <Compile Include="ViewNavigationArgs.cs" />
     <Compile Include="ViewService.cs" />

@@ -61,11 +61,18 @@
 
         protected virtual void Map() { }
 
-		protected void NavigationMap(string key, Type view, Type viewModel) {
-			_navigationService.Map(StackIdentifier, key, view, viewModel);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="view"></param>
+        /// <param name="viewModel"></param>
+        /// <param name="noHistory">Will remove from the navigation stack when there is a push or a stack change</param>
+        protected void NavigationMap(string key, Type view, Type viewModel, bool noHistory = false) {
+			_navigationService.Map(StackIdentifier, key, view, viewModel, noHistory);
 		}
 
-		protected virtual string NavigationStartKey { get; }
+		public virtual string NavigationStartKey { get; }
 
         protected virtual string MasterStartKey { get; }
 

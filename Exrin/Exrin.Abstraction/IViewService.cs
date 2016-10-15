@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Abstraction
+﻿namespace Exrin.Abstraction
 {
+    using System;
+    using System.Threading.Tasks;
+
     public interface IViewService
     {
         void Map(Type viewType, Type viewModelType);
 
-        Task<object> Build(Type viewType, object parameter); 
+        Task<IView> Build(Type viewType); 
     }
 }

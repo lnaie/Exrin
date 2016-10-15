@@ -12,7 +12,7 @@
 
         public List<IOperation> Operations { get; private set; } = new List<IOperation>();
 
-        public int TimeoutMilliseconds { get; protected set; } = 30000;
+        public int TimeoutMilliseconds { get; protected set; } = 60000;
 
     }
 }

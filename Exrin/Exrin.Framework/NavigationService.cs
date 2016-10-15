@@ -14,7 +14,7 @@
         private readonly INavigationState _state = null;
         private INavigationContainer _navigationContainer = null;
         private static AsyncLock _lock = new AsyncLock();
-        private readonly Dictionary<string, Type> _viewsByKey = new Dictionary<string, Type>();
+        private readonly Dictionary<string, TypeDefinition> _viewsByKey = new Dictionary<string, TypeDefinition>();
         private object _stackIdentifier = null;
         private readonly IDictionary<object, IList<string>> _stackBasedViewKeyTracking = new Dictionary<object, IList<string>>();
 
@@ -36,6 +36,9 @@
 
         public virtual void Init(object stackIdentifier, INavigationContainer container, bool showNavigationBar)
         {
+            // Removes No History from last page of previous stack
+            NoHistoryRemoval(_navigationContainer, _stackIdentifier);
+
             _stackIdentifier = stackIdentifier;
 
             if (!_stackBasedViewKeyTracking.Keys.Contains(stackIdentifier)) // Start ViewKey Tracking for the stack
@@ -48,6 +51,7 @@
 
             _navigationContainer = container;
             _showNavigationBar = showNavigationBar;
+
         }
 
         private void container_OnPopped(object sender, IViewNavigationArgs e)
@@ -71,11 +75,13 @@
                     model.OnBackNavigated(null);
             }
 
+            var container = sender as INavigationContainer;
+
             // Remove CurrentViewKey
-            _stackBasedViewKeyTracking[_stackIdentifier].Remove(_navigationContainer.CurrentViewKey);
+            _stackBasedViewKeyTracking[_stackIdentifier].Remove(container.CurrentViewKey);
 
             // Changes the navigation key back to the previous page
-            _navigationContainer.CurrentViewKey = _viewsByKey.First(x => x.Value == e.CurrentView.GetType()).Key;
+            container.CurrentViewKey = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;
         }
 
         private string BuildKey(string key)
@@ -94,7 +100,7 @@
             return $"{stackIdentifier}_{key}";
         }
 
-        public virtual void Map(object stackIdentifier, string key, Type viewType, Type viewModelType)
+        public virtual void Map(object stackIdentifier, string key, Type viewType, Type viewModelType, bool noHistory = false)
         {
             lock (_viewsByKey)
             {
@@ -103,9 +109,9 @@
                 // Map Key with View
                 if (!string.IsNullOrEmpty(key))
                     if (_viewsByKey.ContainsKey(key))
-                        _viewsByKey[key] = viewType;
+                        _viewsByKey[key] = new TypeDefinition() { Type = viewType, NoHistory = noHistory };
                     else
-                        _viewsByKey.Add(key, viewType);
+                        _viewsByKey.Add(key, new TypeDefinition() { Type = viewType, NoHistory = noHistory });
 
                 // Map View and ViewModel
                 _viewService.Map(viewType, viewModelType);
@@ -121,7 +127,6 @@
         {
             using (var releaser = await _lock.LockAsync())
             {
-
                 viewKey = BuildKey(viewKey);
 
                 // Do not navigate to the same view.
@@ -139,21 +144,21 @@
 
                     return;
                 }
-                
+
                 if (_viewsByKey.ContainsKey(viewKey))
                 {
-                    var type = _viewsByKey[viewKey];
+                    var typeDefinition = _viewsByKey[viewKey];
 
-                    var view = await _viewService.Build(type, args) as IView;
+                    var view = await _viewService.Build(typeDefinition.Type) as IView;
 
                     if (view == null)
-                        throw new Exception(String.Format("Unable to build view {0}", type.ToString()));
+                        throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
 
                     if (_navigationContainer == null)
                         throw new Exception($"{nameof(INavigationContainer)} is null. Did you forget to call NavigationService.Init()?");
 
                     _navigationContainer.SetNavigationBar(_showNavigationBar, view);
-                    
+
                     if (_stackBasedViewKeyTracking[_stackIdentifier].Contains(viewKey))
                     {
                         // Pop until we get back to that page
@@ -171,7 +176,22 @@
                             view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
                         }
 
+                        var popCurrent = false;
+
+                        if (_navigationContainer != null && !string.IsNullOrEmpty(_navigationContainer.CurrentViewKey))
+                            if (_viewsByKey[_navigationContainer.CurrentViewKey].NoHistory)
+                                popCurrent = true;
+
                         await _navigationContainer.PushAsync(view);
+
+                        if (popCurrent) // Pop the one behind without showing it
+                            ThreadHelper.RunOnUIThread(async () =>
+                            {
+                                await _navigationContainer.SilentPopAsync(-1);
+                                // Remove the top one as the new tracking key hasn't been added yet
+                                _stackBasedViewKeyTracking[_stackIdentifier].RemoveAt(_stackBasedViewKeyTracking[_stackIdentifier].Count - 1);
+                            });
+
                         _stackBasedViewKeyTracking[_stackIdentifier].Add(viewKey);
 
                         _navigationContainer.CurrentViewKey = viewKey;
@@ -181,7 +201,7 @@
                         {
                             if (model != null)
                                 model.OnNavigated(args); // Do not await.
-                        });                        
+                        });
                     }
 
                 }
@@ -193,12 +213,32 @@
                 }
             }
         }
+
+        private IList<Action> StackChangeActions = new List<Action>();
+
         /// <summary>
-        /// WARNING: I shouldn't be exposing this. Please don't base anything off this it will be refactored later
+        /// If No History, we need to Pop before moving forward
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
+        private void NoHistoryRemoval(INavigationContainer container, object stackIdentifier)
+        {
+
+            if (stackIdentifier == null)
+                return;
+
+            if (container != null && !string.IsNullOrEmpty(container.CurrentViewKey))
+                if (_viewsByKey[container.CurrentViewKey].NoHistory)
+                    StackChangeActions.Add(new Action(() =>
+                    {
+                        ThreadHelper.RunOnUIThread(async () =>
+                        {                           
+                            await container.SilentPopAsync(0);
+                            var count = _stackBasedViewKeyTracking[stackIdentifier].Count;
+                            _stackBasedViewKeyTracking[stackIdentifier].RemoveAt(count - 1);
+                            container.CurrentViewKey = _stackBasedViewKeyTracking[stackIdentifier][count -2];
+                        });
+                    }));
+        }
+
         public async Task<object> BuildView(string key, object args)
         {
             key = BuildKey(key);
@@ -207,7 +247,7 @@
             {
                 var type = _viewsByKey[key];
 
-                view = await _viewService.Build(type, args) as IView;
+                view = await _viewService.Build(type.Type) as IView;
 
                 if (view == null)
                     throw new Exception($"Unable to build view {type.ToString()}");
@@ -215,11 +255,15 @@
 
             return view;
         }
-
-        public async Task LoadStack(Dictionary<string, object> definitions)
+        
+        public Task StackChanged()
         {
-            foreach (var page in definitions)
-                await Navigate(page.Key, page.Value);
+            foreach (var action in StackChangeActions)
+                action();
+
+            StackChangeActions.Clear();
+
+            return Task.FromResult(true);
         }
     }
 }
