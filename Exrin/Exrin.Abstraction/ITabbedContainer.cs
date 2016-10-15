@@ -4,7 +4,6 @@
 
     public interface ITabbedContainer : IViewContainer
     {
-        ITabbedView TabbedView { get; set; }
         IList<IStack> Children { get; set; }
 
     }

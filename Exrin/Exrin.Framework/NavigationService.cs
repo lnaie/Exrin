@@ -123,17 +123,23 @@
             await Navigate(key, null);
         }
 
-        public async Task Navigate(string viewKey, object args)
+        public async Task Navigate(string viewKey, object args, object stackIdentifier = null, INavigationContainer container = null)
         {
-            using (var releaser = await _lock.LockAsync())
-            {
-                viewKey = BuildKey(viewKey);
+            //using (var releaser = await _lock.LockAsync())
+            //{
+                if (stackIdentifier == null)
+                    stackIdentifier = _stackIdentifier;
+
+                viewKey = BuildKey(stackIdentifier, viewKey);
+
+                if (container == null)
+                    container = _navigationContainer;
 
                 // Do not navigate to the same view.
-                if (viewKey == _navigationContainer.CurrentViewKey)
+                if (viewKey == container.CurrentViewKey)
                 {
                     // TODO: Cleanup - push parameter again - this isn't the way to do it
-                    var view = _navigationContainer.CurrentView as IView;
+                    var view = container.CurrentView as IView;
                     if (view != null)
                         ThreadHelper.RunOnUIThread(() =>
                         {
@@ -154,16 +160,19 @@
                     if (view == null)
                         throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
 
-                    if (_navigationContainer == null)
+                    if (container == null)
                         throw new Exception($"{nameof(INavigationContainer)} is null. Did you forget to call NavigationService.Init()?");
 
-                    _navigationContainer.SetNavigationBar(_showNavigationBar, view);
+                    container.SetNavigationBar(_showNavigationBar, view);
 
-                    if (_stackBasedViewKeyTracking[_stackIdentifier].Contains(viewKey))
+                    if (!_stackBasedViewKeyTracking.ContainsKey(stackIdentifier))
+                        _stackBasedViewKeyTracking.Add(stackIdentifier, new List<string>());
+
+                    if (_stackBasedViewKeyTracking[stackIdentifier].Contains(viewKey))
                     {
                         // Pop until we get back to that page
-                        while (viewKey != _navigationContainer.CurrentViewKey)
-                            await _navigationContainer.PopAsync();
+                        while (viewKey != container.CurrentViewKey)
+                            await container.PopAsync();
                     }
                     else
                     {
@@ -178,23 +187,23 @@
 
                         var popCurrent = false;
 
-                        if (_navigationContainer != null && !string.IsNullOrEmpty(_navigationContainer.CurrentViewKey))
-                            if (_viewsByKey[_navigationContainer.CurrentViewKey].NoHistory)
+                        if (container != null && !string.IsNullOrEmpty(container.CurrentViewKey))
+                            if (_viewsByKey[container.CurrentViewKey].NoHistory)
                                 popCurrent = true;
 
-                        await _navigationContainer.PushAsync(view);
+                        await container.PushAsync(view);
 
                         if (popCurrent) // Pop the one behind without showing it
                             ThreadHelper.RunOnUIThread(async () =>
                             {
-                                await _navigationContainer.SilentPopAsync(-1);
+                                await container.SilentPopAsync(-1);
                                 // Remove the top one as the new tracking key hasn't been added yet
-                                _stackBasedViewKeyTracking[_stackIdentifier].RemoveAt(_stackBasedViewKeyTracking[_stackIdentifier].Count - 1);
+                                _stackBasedViewKeyTracking[stackIdentifier].RemoveAt(_stackBasedViewKeyTracking[stackIdentifier].Count - 1);
                             });
 
-                        _stackBasedViewKeyTracking[_stackIdentifier].Add(viewKey);
+                        _stackBasedViewKeyTracking[stackIdentifier].Add(viewKey);
 
-                        _navigationContainer.CurrentViewKey = viewKey;
+                        container.CurrentViewKey = viewKey;
                         _state.ViewName = viewKey;
 
                         ThreadHelper.RunOnUIThread(() =>
@@ -211,7 +220,7 @@
                             $"No such key: {viewKey}. Did you forget to call NavigationService.Map?",
                             nameof(viewKey));
                 }
-            }
+            //}
         }
 
         private IList<Action> StackChangeActions = new List<Action>();

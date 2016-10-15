@@ -143,7 +143,7 @@
                 
                 // Find mainview from ViewHierarchy
                 var viewContainer = _viewContainers[_stackViewContainers[stackChoice]];
-
+                
                 _setRoot?.Invoke(viewContainer.View);
 
                 await _navigationService.StackChanged();

@@ -43,7 +43,7 @@
                 MasterView.MasterView = await _navigationService.BuildView(MasterStartKey, args); // CHECK: see if it can be built elsewhere
             
             if (loadStartKey)
-                await _navigationService.Navigate(NavigationStartKey, args);
+                await _navigationService.Navigate(NavigationStartKey, args, StackIdentifier, Container);
            
             Status = StackStatus.Started;
         }

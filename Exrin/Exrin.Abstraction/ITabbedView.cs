@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-
-namespace Exrin.Abstraction
+﻿namespace Exrin.Abstraction
 {
+    using System.Collections.ObjectModel;
+
     public interface ITabbedView
     {
-        object View { get; }
-        ObservableCollection<INavigationView> Children { get; set; }        
+        ObservableCollection<object> Children { get; set; }        
     }
 }

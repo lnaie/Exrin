@@ -11,7 +11,7 @@
 
         Task Navigate(string key);
 
-        Task Navigate(string key, object args);
+        Task Navigate(string key, object args, object stackIdentifier = null, INavigationContainer container = null);
 
         Task GoBack();
 

@@ -11,6 +11,6 @@
         }
         public string Identifier { get; private set; }
 
-        public object View { get; private set; }
+        public object View { get; set; }
     }
 }
