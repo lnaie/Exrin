@@ -10,6 +10,11 @@
 
     public static partial class Process
     {
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IOperation execute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IOperation>() { execute }), name);
+        }
+
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
 
