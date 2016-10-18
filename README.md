@@ -6,26 +6,21 @@
 
 # Introduction
 
-Exrin is a Xamarin Forms Framework designed to enable teams to develop consistent, reliable and highly performant mobile apps. Exrin lets you put more focus on how the app will look and how the user will interact, while Exrin takes care of handling the users intent.
+Exrin is an extended Xamarin Forms MVVM Framework designed to enable teams to develop consistent, reliable and highly performant mobile apps. Exrin lets you put more focus on how the app will look and function, while Exrin takes care of handling the rest.
 
-# Backstory
+# Benefits
 
-I always found it hard to isolate and test ViewModels and hard to keep developers consistently accounting for all scenarios on each user action. Think of things such as which thread to run this on, when should I notify the user that the app is currently doing something, handle exceptions, handle timeouts, how should I log an event and how should I track application insights in a reliable fashion.
-
-This is why Exrin is created and there are only 3 rules needed to be followed by each developer to ensure it is consistent across the app.
-
-1. Always use IViewModelExecute for every Command and/or user action
-2. Always use IModelExecute for every method on the Model.
-3. Unit Test every IOperation created.
-
-The framework enforces the rest.
+1. Easily isolate and unit test Commands in ViewModels
+2. Advanced NavigationService that takes care of all the plumbing.
+3. Enforces consistency, which is of more benefit when multiple developers are working on the project.
+4. Handles complex threading scenarios.
+5. Flexible. Allows you to choose your own Dependency Injection Framework.
 
 # Getting Started
 
 **Install the Nuget Package**
 
 [Exrin Nuget Package](https://www.nuget.org/packages/Exrin/)
-
 
 **Read the Docs**
 
@@ -38,16 +33,16 @@ The framework enforces the rest.
 # Frequently Asked Questions
 
 1. Is this another MVVM Framework?
-Yes and no. You can use this with any other MVVM Framework, or use what is available in Exrin.
+Yes and no. It contains all the MVVM helpers you would need however you can use another MVVM framework with Exrin if you choose.
 
 2. What IoC does it use?
-None, you inject your own IoC and DI Framework when configuring your app. After using a few on different project, I prefer AutoFac.
+None, you inject your own IoC and DI Framework when configuring your app. After using a few on different projects, I prefer AutoFac.
 
-3. Does this have any dependencies?
+3. Does Exrin have any dependencies?
 No. That was a critical design point. Exrin does not depend on anything. Having a package that locks you into another package version has become increasing frustrating and Exrin will not be a part of that.
 
 4. Why this framework?
-It's not going to be for everyone. It is opinionated and requires some effort in project setup. The benefits however include consistency and easy testability for your mobile app. The benefits are greatly enhanced if 2 or more developers are on the project.
+It's not going to be for everyone. It is opinionated and requires a bit of effort in project setup. The benefits however include consistency and easy testability for your mobile app. The benefits are greatly enhanced if 2 or more developers are on the project.
 
 # Support
 
