@@ -25,14 +25,8 @@
             _displayService = displayService;
             _injection = injection;
         }
-        
-        public object CurrentStack {
-
-            get
-            {
-                return _currentStack;
-            }
-        }
+    
+        public object ActiveStackIdentifier  { get { return _currentStack; } }
 
         public async Task Navigate(string key)
         {

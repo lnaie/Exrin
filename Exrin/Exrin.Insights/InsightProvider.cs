@@ -1,13 +1,13 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Exrin.Insights
+﻿namespace Exrin.Insights
 {
-	public abstract class InsightProvider : IInsightsProvider
+    using Abstraction;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    public abstract class InsightProvider : IInsightsProvider
 	{
 
 		private readonly IInsightStorage _storage = null;

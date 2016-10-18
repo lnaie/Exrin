@@ -1,13 +1,10 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Insights
+﻿namespace Exrin.Insights
 {
+    using Abstraction;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class MemoryInsightStorage : IInsightStorage
     {
 

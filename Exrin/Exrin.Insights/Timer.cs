@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Exrin.Insights
+﻿namespace Exrin.Insights
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     internal sealed class Timer : CancellationTokenSource
     {
         internal Timer(Action<object> callback, object state, int millisecondsDueTime, int millisecondsPeriod, bool waitForCallbackBeforeNextPeriod = false)

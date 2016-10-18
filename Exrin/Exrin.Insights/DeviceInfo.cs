@@ -1,12 +1,9 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Insights
+﻿namespace Exrin.Insights
 {
+    using Abstraction;
+    using System;
+    using System.Threading.Tasks;
+
     public class DeviceInfo : IDeviceInfo
     {
         public Version GetAppVersion()
@@ -16,12 +13,12 @@ namespace Exrin.Insights
 
         public Task<double?> GetBattery()
         {
-            return Task.FromResult((Nullable<double>)0.0);
+            return Task.FromResult((double?)0.0);
         }
 
         public Task<double?> GetConnectionStrength()
         {
-            return Task.FromResult((Nullable<double>)0.0);
+            return Task.FromResult((double?)0.0);
         }
 
         public ConnectionType GetConnectionType()

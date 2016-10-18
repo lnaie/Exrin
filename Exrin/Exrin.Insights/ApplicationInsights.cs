@@ -1,12 +1,12 @@
-﻿using Exrin.Abstraction;
-using Exrin.Common;
-using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-
-namespace Exrin.Insights
+﻿namespace Exrin.Insights
 {
+    using Abstraction;
+    using Common;
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
+
     public class ApplicationInsights : IApplicationInsights
     {
 

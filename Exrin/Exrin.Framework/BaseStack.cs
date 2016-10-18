@@ -29,7 +29,6 @@
 
         public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
         {
-            //TODO: Can't all this be private?
             Proxy = navigationProxy;
             Proxy.OnPopped += proxy_OnPopped;
             StackIdentifier = stackIdentifier;
@@ -46,20 +45,20 @@
         /// <summary>
         /// Will map the View, ViewModel to a key
         /// </summary>
-        protected virtual void NavigationMap<V, VM>(string key, bool noHistory = false) where V : IView
-                                                                                        where VM : IViewModel
+        protected virtual void NavigationMap<View, ViewModel>(string key, bool noHistory = false) where View : IView
+                                                                                                  where ViewModel : IViewModel
         {
             lock (_viewsByKey)
             {
                 // Map Key with View
                 if (!string.IsNullOrEmpty(key))
                     if (_viewsByKey.ContainsKey(key))
-                        _viewsByKey[key] = new TypeDefinition() { Type = typeof(V), NoHistory = noHistory };
+                        _viewsByKey[key] = new TypeDefinition() { Type = typeof(View), NoHistory = noHistory };
                     else
-                        _viewsByKey.Add(key, new TypeDefinition() { Type = typeof(V), NoHistory = noHistory });
+                        _viewsByKey.Add(key, new TypeDefinition() { Type = typeof(View), NoHistory = noHistory });
 
                 // Map View and ViewModel
-                _viewService.Map(typeof(V), typeof(VM));
+                _viewService.Map(typeof(View), typeof(ViewModel));
             }
         }
 

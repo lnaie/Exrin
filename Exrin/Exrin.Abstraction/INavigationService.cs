@@ -29,5 +29,7 @@
         
         void Rebuild();
 
+        object ActiveStackIdentifier { get; }
+
     }
 }

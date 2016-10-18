@@ -1,11 +1,11 @@
-﻿using Exrin.Abstraction;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Exrin.Insights
+﻿namespace Exrin.Insights
 {
+    using Abstraction;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class Processor : IInsightsProcessor
     {
         private Dictionary<string, IInsightsProvider> _insightProviders = new Dictionary<string, IInsightsProvider>();
