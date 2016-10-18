@@ -46,19 +46,20 @@
         /// <summary>
         /// Will map the View, ViewModel to a key
         /// </summary>
-        protected virtual void NavigationMap(string key, Type view, Type viewModel, bool noHistory = false)
+        protected virtual void NavigationMap<V, VM>(string key, bool noHistory = false) where V : IView
+                                                                                        where VM : IViewModel
         {
             lock (_viewsByKey)
             {
                 // Map Key with View
                 if (!string.IsNullOrEmpty(key))
                     if (_viewsByKey.ContainsKey(key))
-                        _viewsByKey[key] = new TypeDefinition() { Type = view, NoHistory = noHistory };
+                        _viewsByKey[key] = new TypeDefinition() { Type = typeof(V), NoHistory = noHistory };
                     else
-                        _viewsByKey.Add(key, new TypeDefinition() { Type = view, NoHistory = noHistory });
+                        _viewsByKey.Add(key, new TypeDefinition() { Type = typeof(V), NoHistory = noHistory });
 
                 // Map View and ViewModel
-                _viewService.Map(view, viewModel);
+                _viewService.Map(typeof(V), typeof(VM));
             }
         }
 

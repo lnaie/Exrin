@@ -2,7 +2,7 @@
 {
     public interface IMasterDetailProxy
     {
-        object MasterView { get; set; }
-        object DetailView { get; set; }
+        object MasterNativeView { get; set; }
+        object DetailNativeView { get; set; }
     }
 }

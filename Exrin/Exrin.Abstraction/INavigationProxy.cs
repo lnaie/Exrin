@@ -5,10 +5,8 @@
 
     public interface INavigationProxy
     {
-        object View { get; }
-
-        object CurrentView { get; }
-
+        object NativeView { get; }
+        
         void SetNavigationBar(bool isVisible, object view); 
 
         bool CanGoBack();

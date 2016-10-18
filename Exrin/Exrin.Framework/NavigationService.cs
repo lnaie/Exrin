@@ -91,8 +91,8 @@
             }
             else if (viewContainer as IMasterDetailContainer != null)
             {
-                stacks.Add(((IMasterDetailContainer)viewContainer).Master);
-                stacks.Add(((IMasterDetailContainer)viewContainer).Detail);
+                stacks.Add(((IMasterDetailContainer)viewContainer).MasterStack);
+                stacks.Add(((IMasterDetailContainer)viewContainer).DetailStack);
             }
             else if (viewContainer as ITabbedContainer != null)
             {
@@ -124,7 +124,7 @@
             ThreadHelper.RunOnUIThread(() =>
             {
                 var stack = _stacks[_currentStack];
-                _setRoot?.Invoke(stack.Proxy.View);
+                _setRoot?.Invoke(stack.Proxy.NativeView);
             });
         }
 
@@ -192,28 +192,28 @@
                 if (viewContainer is IMasterDetailContainer)
                 {
                     var masterDetailContainer = viewContainer as IMasterDetailContainer;
-                    if (masterDetailContainer.Detail != null)
+                    if (masterDetailContainer.DetailStack != null)
                     {
                         // Setup Detail Stack
-                        var detailStack = _stacks[masterDetailContainer.Detail.StackIdentifier];
+                        var detailStack = _stacks[masterDetailContainer.DetailStack.StackIdentifier];
 
                         if (detailStack.Status == StackStatus.Stopped)
                             await detailStack.StartNavigation();
 
-                        masterDetailContainer.Proxy.DetailView = detailStack.Proxy.View;
+                        masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
 
                         // Setup Master Stack
-                        var masterStack = _stacks[masterDetailContainer.Master.StackIdentifier];
+                        var masterStack = _stacks[masterDetailContainer.MasterStack.StackIdentifier];
 
                         if (masterStack.Status == StackStatus.Stopped)
                             await masterStack.StartNavigation();
 
-                        masterDetailContainer.Proxy.MasterView = masterStack.Proxy.View;
+                        masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
                     }
 
                 }
 
-                _setRoot?.Invoke(viewContainer.View);
+                _setRoot?.Invoke(viewContainer.NativeView);
 
                 if (oldStack != null)
                 await oldStack.StackChanged();

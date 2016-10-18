@@ -4,6 +4,6 @@
     public interface IViewContainer
     {
         string Identifier { get; }
-        object View { get; }
+        object NativeView { get; }
     }
 }

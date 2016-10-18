@@ -3,8 +3,8 @@
 
     public interface IMasterDetailContainer : IViewContainer
     {
-        IStack Master { get; set; }
-        IStack Detail { get; set; }
+        IStack MasterStack { get; set; }
+        IStack DetailStack { get; set; }
         IMasterDetailProxy Proxy { get; set; }
 
     }
