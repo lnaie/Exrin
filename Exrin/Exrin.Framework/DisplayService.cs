@@ -1,6 +1,7 @@
 ﻿namespace Exrin.Framework
 {
     using Abstraction;
+    using Common;
     using System.Threading.Tasks;
 
     public class DisplayService : IDisplayService
@@ -13,7 +14,10 @@
 
         public async Task ShowDialog(string title, string message)
         {
-            await _container.ShowDialog(new DialogOptions() { Title = title, Message = message });
+            await ThreadHelper.RunOnUIThreadAsync(async () =>
+            {
+                await _container.ShowDialog(new DialogOptions() { Title = title, Message = message });
+            });
         }
     }
 }

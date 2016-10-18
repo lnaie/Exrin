@@ -66,7 +66,7 @@
             if (_uiContext == null)
                 throw new Exception("You must call Exrin.Framework.App.Init() before calling this method.");
 
-            if (SynchronizationContext.Current == _uiContext)
+            if (SynchronizationContext.Current == _uiContext || SynchronizationContext.Current is ExclusiveSynchronizationContext)
             {
                 RunSync(action);
             }
@@ -188,7 +188,7 @@
                         task.Item1(task.Item2);
                         if (InnerException != null) // the method threw an exeption
                         {
-                            throw new AggregateException("AsyncHelpers.Run method threw an exception.", InnerException);
+                            throw new AggregateException("ThreadHelper.Run method threw an exception.", InnerException);
                         }
                     }
                     else

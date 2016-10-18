@@ -11,22 +11,17 @@
     {
         private static AsyncLock _lock = new AsyncLock();
         private readonly Dictionary<string, TypeDefinition> _viewsByKey = new Dictionary<string, TypeDefinition>();
+        private readonly IList<string> _viewKeyTracking = new List<string>();
+        private readonly IViewService _viewService;
 
         public object StackIdentifier { get; private set; }
         public StackStatus Status { get; private set; } = StackStatus.Stopped;
         public bool ShowNavigationBar { get; set; }
         public string CurrentViewKey { get; set; }
         public IView CurrentView { get; set; }
-
         public INavigationProxy Proxy { get; private set; }
-
-        private readonly IList<string> _viewKeyTracking = new List<string>();
-
-
-        public virtual string NavigationStartKey { get; } // ??
-
-        private readonly IViewService _viewService;
-
+        public virtual string NavigationStartKey { get; }
+        
         public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
         {
             Proxy = navigationProxy;
@@ -72,12 +67,18 @@
 
         public async Task GoBack(object parameter)
         {
-            await Proxy.PopAsync(parameter);
+            await ThreadHelper.RunOnUIThreadAsync(async () =>
+            {
+                await Proxy.PopAsync(parameter);
+            });
         }
 
         public async Task GoBack()
         {
-            await Proxy.PopAsync();
+            await ThreadHelper.RunOnUIThreadAsync(async () =>
+            {
+                await Proxy.PopAsync();
+            });
         }
 
         public async Task Navigate(string key, object args)
@@ -135,15 +136,17 @@
                         if (_viewsByKey[CurrentViewKey].NoHistory)
                             popCurrent = true;
 
-                    await Proxy.PushAsync(view);
+                    ThreadHelper.RunOnUIThread(async () =>
+                    {
+                        await Proxy.PushAsync(view);
 
-                    if (popCurrent) // Pop the one behind without showing it
-                        ThreadHelper.RunOnUIThread(async () =>
+                        if (popCurrent) // Pop the one behind without showing it
                         {
                             await Proxy.SilentPopAsync(-1);
                             // Remove the top one as the new tracking key hasn't been added yet
                             _viewKeyTracking.RemoveAt(_viewKeyTracking.Count - 1);
-                        });
+                        }
+                    });
 
                     _viewKeyTracking.Add(key);
 
