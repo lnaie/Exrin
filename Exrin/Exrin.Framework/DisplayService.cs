@@ -5,8 +5,8 @@
 
     public class DisplayService : IDisplayService
     {
-        private INavigationContainer _container = null;
-        public void Init(INavigationContainer container)
+        private INavigationProxy _container = null;
+        public void Init(INavigationProxy container)
         {
             _container = container;
         }

@@ -2,7 +2,7 @@
 {
     using System.Collections.ObjectModel;
 
-    public interface ITabbedView
+    public interface ITabbedViewProxy
     {
         ObservableCollection<object> Children { get; set; }        
     }

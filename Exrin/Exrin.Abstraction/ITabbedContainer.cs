@@ -5,6 +5,5 @@
     public interface ITabbedContainer : IViewContainer
     {
         IList<IStack> Children { get; set; }
-
     }
 }

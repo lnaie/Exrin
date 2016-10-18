@@ -14,7 +14,6 @@
         protected readonly INavigationService _navigationService = null;
         protected readonly IErrorHandlingService _errorHandlingService = null;
         protected readonly IApplicationInsights _applicationInsights = null;
-        protected readonly IStackRunner _stackRunner = null;
 
         public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
         {
@@ -26,7 +25,6 @@
             _displayService = exrinContainer.DisplayService;
             _navigationService = exrinContainer.NavigationService;
             _errorHandlingService = exrinContainer.ErrorHandlingService;
-            _stackRunner = exrinContainer.StackRunner;
 
             VisualState = visualState;
 
@@ -147,7 +145,7 @@
                                     var args = result.Arguments as INavigationArgs;
 
                                     // Determine Stack Change
-                                    var stackResult = _stackRunner.Run(args.StackType, options: new StackOptions() { Args = args.Parameter, ArgsKey = Convert.ToString(args.Key) });
+                                    var stackResult = _navigationService.Navigate(options: new StackOptions() { StackChoice = args.StackType, Args = args.Parameter, ArgsKey = Convert.ToString(args.Key) });
 
                                     if (!stackResult.HasFlag(StackResult.ArgsPassed))
                                         // Determine View Load

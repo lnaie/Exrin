@@ -7,27 +7,27 @@
     public interface INavigationService
     {
 
-        void Init(object stackIdentifier, INavigationContainer container, bool showNavigationBar);
+        void Init(Action<object> setRoot);
 
         Task Navigate(string key);
 
-        Task Navigate(string key, object args, object stackIdentifier = null, INavigationContainer container = null);
+        Task Navigate(string key, object args);
+
+        Task Navigate(object stackIdentifier, string viewKey, object args);
+
+        Task Navigate(string viewKey, object args, IStackOptions options);
 
         Task GoBack();
 
         Task GoBack(object parameter);
 
-        void Map(object stackIdentifier, string key, Type viewType, Type viewModelType, bool noHistory = false);
+        void RegisterViewContainer<T>() where T : class, IViewContainer;
 
-        /// <summary>
-        /// WARNING: I shouldn't be exposing this. Please don't base anything off this it will be refactored later
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        Task<object> BuildView(string key, object args);
+        StackResult Navigate(IStackOptions options);
 
-        Task StackChanged();
+        void Rebuild();
+
+        object CurrentStack { get; } //TODO: Check to remove
 
     }
 }

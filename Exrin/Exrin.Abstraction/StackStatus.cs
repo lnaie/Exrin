@@ -9,7 +9,8 @@ namespace Exrin.Abstraction
     public enum StackStatus
     {
         Stopped = 1,
-        Started = 2
+        Started = 2,
+        Background = 4
 
     }
 }

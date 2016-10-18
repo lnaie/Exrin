@@ -12,6 +12,5 @@ namespace Exrin.Abstraction
 		IDisplayService DisplayService { get; }
 		INavigationService NavigationService { get; }
 		IErrorHandlingService ErrorHandlingService { get; }
-		IStackRunner StackRunner { get; }
 	}
 }

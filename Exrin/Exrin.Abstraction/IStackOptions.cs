@@ -4,6 +4,9 @@
 
     public interface IStackOptions
     {
+
+        object StackChoice { get; }
+
         object Args { get; }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace Exrin.Abstraction
     public interface IDisplayService
     {
 
-        void Init(INavigationContainer container);
+        void Init(INavigationProxy container);
 
         Task ShowDialog(string title, string message);
 

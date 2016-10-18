@@ -11,21 +11,21 @@
     public class Bootstrapper
     {
         protected readonly AsyncLock _lock = new AsyncLock();
-        protected readonly IInjection _injection;
+        protected readonly IInjectionProxy _injection;
         private readonly Action<object> _setRoot;
         protected readonly IList<Action> _postRun = new List<Action>();
         private readonly IDictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
         private readonly IList<KeyValuePair<AssemblyAction, AssemblyName>> _assemblies = new List<KeyValuePair<AssemblyAction, AssemblyName>>();
         private static bool IsInitialized { get; set; } = false;
 
-        public Bootstrapper(IInjection injection, Action<object> setRoot)
+        public Bootstrapper(IInjectionProxy injection, Action<object> setRoot)
         {
             _injection = injection;
             _setRoot = setRoot;
             _injection.Init();
         }
 
-        public IInjection Init()
+        public IInjectionProxy Init()
         {
             if (IsInitialized)
                 return _injection;
@@ -37,8 +37,6 @@
             InitInsights();
 
             InitServices();
-
-            InitRunners();
 
             InitStacks();
 
@@ -114,7 +112,10 @@
                 _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
 
             if (!_injection.IsRegistered<INavigationService>())
+            {
                 _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
+                _postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot); });
+            }
 
             if (!_injection.IsRegistered<IDisplayService>())
                 _injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
@@ -192,7 +193,7 @@
         // TODO: Improve perf
         private void RegisterBasedOnInterface(Type @interface)
         {
-            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjection.RegisterInterface), new Type[] { typeof(InstanceType) });
+            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjectionProxy.RegisterInterface), new Type[] { typeof(InstanceType) });
             IList<TypeInfo> list = null;
 
             if (_typeAssembly.ContainsKey(@interface))
@@ -214,11 +215,6 @@
             _injection.Register<T>(InstanceType.SingleInstance);
         }
 
-        private void InitRunners()
-        {
-            _injection.RegisterInterface<IStackRunner, StackRunner>(InstanceType.SingleInstance);
-            _postRun.Add(() => { _injection.Get<IStackRunner>().Init(_setRoot); });
-        }
 
         public void RegisterViewContainer<T>() where T : class, IViewContainer
         {
@@ -227,7 +223,7 @@
                 _injection.Register<T>(InstanceType.SingleInstance);
 
                 // Register the View Container
-                _postRun.Add(() => { _injection.Get<IStackRunner>().RegisterViewContainer<T>(); });
+                _postRun.Add(() => { _injection.Get<INavigationService>().RegisterViewContainer<T>(); });
             }
 
         }

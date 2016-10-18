@@ -10,9 +10,9 @@
 
     public class ViewService : IViewService
     {
-        private readonly IInjection _injection = null;
+        private readonly IInjectionProxy _injection = null;
 
-        public ViewService(IInjection injection)
+        public ViewService(IInjectionProxy injection)
         {
             _injection = injection;
         }
@@ -92,7 +92,6 @@
                 if (multiView != null)
                     foreach (var p in multiView.Views)
                         p.BindingContext = GetBindingContext(p.GetType());
-
             }
             else
                 throw new InvalidOperationException(

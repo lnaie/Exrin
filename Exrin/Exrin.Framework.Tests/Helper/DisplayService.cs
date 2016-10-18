@@ -9,8 +9,8 @@ namespace Exrin.Framework.Tests.Helper
 {
     public class DisplayService : IDisplayService
     {
-        private INavigationContainer _page = null;
-        public void Init(INavigationContainer page)
+        private INavigationProxy _page = null;
+        public void Init(INavigationProxy page)
         {
             _page = page;
         }

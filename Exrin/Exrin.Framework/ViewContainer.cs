@@ -4,6 +4,11 @@
 
     public class ViewContainer : IViewContainer
     {
+        public ViewContainer(string identifier)
+        {
+            Identifier = identifier;
+        }
+
         public ViewContainer(string identifier, object view)
         {
             Identifier = identifier;

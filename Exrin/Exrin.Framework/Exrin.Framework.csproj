@@ -74,7 +74,6 @@
     <Compile Include="PropertyArgs.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Result.cs" />
-    <Compile Include="StackRunner.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelExecute.cs" />
     <Compile Include="VisualState.cs" />

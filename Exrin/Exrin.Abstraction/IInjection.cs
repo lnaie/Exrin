@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface IInjection
+    public interface IInjectionProxy
     {
 
         void Init();

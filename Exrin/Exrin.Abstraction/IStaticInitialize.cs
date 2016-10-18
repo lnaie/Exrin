@@ -1,6 +1,4 @@
 ﻿namespace Exrin.Abstraction
 {
-    public interface IStaticInitialize
-    {
-    }
+    public interface IStaticInitialize { }
 }
