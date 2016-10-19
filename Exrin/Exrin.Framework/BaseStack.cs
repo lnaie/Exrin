@@ -117,7 +117,10 @@
                 {
                     // Pop until we get back to that page
                     while (key != CurrentViewKey)
-                        await Proxy.PopAsync();
+                        ThreadHelper.RunOnUIThread(async () =>
+                        {
+                            await Proxy.PopAsync();
+                        });
                 }
                 else
                 {

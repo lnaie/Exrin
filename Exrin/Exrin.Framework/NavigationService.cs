@@ -41,7 +41,6 @@
             _state.ViewName = viewKey;
         }
 
-
         public async Task Navigate(object stackIdentifier, string viewKey, object args)
         {
             Navigate(new StackOptions() { StackChoice = stackIdentifier });
@@ -68,7 +67,7 @@
 
         public async Task GoBack(object parameter)
         {
-            await _stacks[_currentStack].GoBack(parameter); // TODO: lock to ensure completes before stack changes or navigation
+            await _stacks[_currentStack].GoBack(parameter);
         }
 
         public void RegisterViewContainer<T>() where T : class, IViewContainer
@@ -149,7 +148,7 @@
             _currentStack = options.StackChoice;
 
             // Set new status
-            stack.Proxy.ViewStatus = VisualStatus.Visible; //TODO: make Proxy invisible, do statechange on stack
+            stack.Proxy.ViewStatus = VisualStatus.Visible;
 
             // Switch over services
             _displayService.Init(stack.Proxy);
