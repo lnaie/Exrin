@@ -141,6 +141,9 @@
 
                     ThreadHelper.RunOnUIThread(async () =>
                     {
+                        if (model != null)
+                            await model.OnPreNavigate(args);
+
                         await Proxy.PushAsync(view);
 
                         if (popCurrent) // Pop the one behind without showing it
@@ -168,22 +171,6 @@
                         $"No such key: {key}. Did you forget to call NavigationService.Map?",
                         nameof(key));
             }
-        }
-
-        public async Task<object> BuildView(string key, object args)
-        {
-            IView view = null;
-            if (_viewsByKey.ContainsKey(key))
-            {
-                var type = _viewsByKey[key];
-
-                view = await _viewService.Build(type.Type) as IView;
-
-                if (view == null)
-                    throw new Exception($"Unable to build view {type.ToString()}");
-            }
-
-            return view;
         }
 
         private void proxy_OnPopped(object sender, IViewNavigationArgs e)

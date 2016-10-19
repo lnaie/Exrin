@@ -8,6 +8,7 @@ namespace Exrin.Abstraction
 {
     public interface IViewModel
     {
+        Task OnPreNavigate(object args);
 
         Task OnNavigated(object args);
 
