@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.0.0-beta4</version>
+    <version>1.0.0</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,28 +18,26 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     ** Breaking Changes **
-     1.0.0-beta4
-     - Visual Hierarchy (Support for MasterDetailPage and TabbedPage)
-     - Now supports .NET Standard 1.1
-     - Minor bug fixes
+     First production ready release.
     </releaseNotes>   
+    <dependencies>      
+      <group targetFramework=".NETStandard1.1">
+        <dependency id="NETStandard.Library" version="1.6.0" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <!--Core-->
-    <file src="..\Exrin.Framework\bin\Release\Exrin.Framework.dll" target="lib\netstandard1.1\Exrin.Framework.dll" />
-    <file src="..\Exrin.Framework\bin\Release\Exrin.Framework.pdb" target="lib\netstandard1.1\Exrin.Framework.pdb" />
+    <file src="..\Exrin.Framework\bin\Release\netstandard1.1\Exrin.Framework.dll" target="lib\netstandard1.1\Exrin.Framework.dll" />
+    <file src="..\Exrin.Framework\bin\Release\netstandard1.1\Exrin.Framework.pdb" target="lib\netstandard1.1\Exrin.Framework.pdb" />
   
-    <file src="..\Exrin.Framework\bin\Release\Exrin.Abstraction.dll" target="lib\netstandard1.1\Exrin.Abstraction.dll" />
-    <file src="..\Exrin.Framework\bin\Release\Exrin.Abstraction.pdb" target="lib\netstandard1.1\Exrin.Abstraction.pdb" /> 
+    <file src="..\Exrin.Framework\bin\Release\netstandard1.1\Exrin.Abstraction.dll" target="lib\netstandard1.1\Exrin.Abstraction.dll" />
+    <file src="..\Exrin.Framework\bin\Release\netstandard1.1\Exrin.Abstraction.pdb" target="lib\netstandard1.1\Exrin.Abstraction.pdb" /> 
 
-    <file src="..\Exrin.Insights\bin\Release\Exrin.Insights.dll" target="lib\netstandard1.1\Exrin.Insights.dll" />
-    <file src="..\Exrin.Insights\bin\Release\Exrin.Insights.pdb" target="lib\netstandard1.1\Exrin.Insights.pdb" />
+    <file src="..\Exrin.Insights\bin\Release\netstandard1.1\Exrin.Insights.dll" target="lib\netstandard1.1\Exrin.Insights.dll" />
+    <file src="..\Exrin.Insights\bin\Release\netstandard1.1\Exrin.Insights.pdb" target="lib\netstandard1.1\Exrin.Insights.pdb" />
 
-    <file src="..\Exrin.Common\bin\Release\Exrin.Common.dll" target="lib\netstandard1.1\Exrin.Common.dll" />
-    <file src="..\Exrin.Common\bin\Release\Exrin.Common.pdb" target="lib\netstandard1.1\Exrin.Common.pdb" />
-
-    <file src="..\Exrin.Debug\bin\Release\Exrin.Debug.dll" target="lib\netstandard1.1\Exrin.Debug.dll" />
-    <file src="..\Exrin.Debug\bin\Release\Exrin.Debug.pdb" target="lib\netstandard1.1\Exrin.Debug.pdb" />
+    <file src="..\Exrin.Common\bin\Release\netstandard1.1\Exrin.Common.dll" target="lib\netstandard1.1\Exrin.Common.dll" />
+    <file src="..\Exrin.Common\bin\Release\netstandard1.1\Exrin.Common.pdb" target="lib\netstandard1.1\Exrin.Common.pdb" />
 </files>
 </package>

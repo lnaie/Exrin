@@ -21,8 +21,8 @@
         public IView CurrentView { get; set; }
         public INavigationProxy Proxy { get; private set; }
         public virtual string NavigationStartKey { get; }
-        
-        public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
+
+        public TempBaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
         {
             Proxy = navigationProxy;
             Proxy.OnPopped += proxy_OnPopped;
@@ -83,64 +83,60 @@
 
         public async Task Navigate(string key, object args)
         {
-
-            // Do not navigate to the same view.
-            if (key == CurrentViewKey)
+            await ThreadHelper.RunOnUIThreadAsync(async () =>
             {
+                // Do not navigate to the same view.
+                if (key == CurrentViewKey)
+                {
 
-                if (CurrentView != null)
-                    ThreadHelper.RunOnUIThread(() =>
+                    if (CurrentView != null)
                     {
                         var model = CurrentView.BindingContext as IViewModel;
                         if (model != null)
-                            model.OnNavigated(args); // Do not await.
-                    });
-
-                return;
-            }
-
-            if (_viewsByKey.ContainsKey(key))
-            {
-                var typeDefinition = _viewsByKey[key];
-
-                var view = await _viewService.Build(typeDefinition.Type) as IView;
-
-                if (view == null)
-                    throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
-
-                if (Proxy == null)
-                    throw new Exception($"{nameof(INavigationProxy)} is null. Did you forget to call NavigationService.Init()?");
-
-                Proxy.SetNavigationBar(ShowNavigationBar, view);
-
-                if (_viewKeyTracking.Contains(key))
-                {
-                    // Pop until we get back to that page
-                    while (key != CurrentViewKey)
-                        ThreadHelper.RunOnUIThread(async () =>
-                        {
-                            await Proxy.PopAsync();
-                        });
-                }
-                else
-                {
-                    var model = view.BindingContext as IViewModel;
-
-                    if (model != null)
-                    {
-                        view.Appearing += (s, e) => { model.OnAppearing(); };
-                        view.Disappearing += (s, e) => { model.OnDisappearing(); };
-                        view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
+                            model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
                     }
 
-                    var popCurrent = false;
+                    return;
+                }
 
-                    if (Proxy != null && !string.IsNullOrEmpty(CurrentViewKey))
-                        if (_viewsByKey[CurrentViewKey].NoHistory)
-                            popCurrent = true;
+                if (_viewsByKey.ContainsKey(key))
+                {
+                    var typeDefinition = _viewsByKey[key];
 
-                    ThreadHelper.RunOnUIThread(async () =>
+                    var view = await _viewService.Build(typeDefinition.Type) as IView;
+
+                    if (view == null)
+                        throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
+
+                    if (Proxy == null)
+                        throw new Exception($"{nameof(INavigationProxy)} is null. Did you forget to call NavigationService.Init()?");
+
+                    Proxy.SetNavigationBar(ShowNavigationBar, view);
+
+                    if (_viewKeyTracking.Contains(key))
                     {
+                        // Pop until we get back to that page
+                        while (key != CurrentViewKey)
+                            await Proxy.PopAsync();
+                    }
+                    else
+                    {
+                        var model = view.BindingContext as IViewModel;
+
+                        if (model != null)
+                        {
+                            view.Appearing += (s, e) => { model.OnAppearing(); };
+                            view.Disappearing += (s, e) => { model.OnDisappearing(); };
+                            view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
+                        }
+
+                        var popCurrent = false;
+
+                        if (Proxy != null && !string.IsNullOrEmpty(CurrentViewKey))
+                            if (_viewsByKey[CurrentViewKey].NoHistory)
+                                popCurrent = true;
+
+
                         if (model != null)
                             await model.OnPreNavigate(args);
 
@@ -152,25 +148,23 @@
                             // Remove the top one as the new tracking key hasn't been added yet
                             _viewKeyTracking.RemoveAt(_viewKeyTracking.Count - 1);
                         }
-                    });
 
-                    _viewKeyTracking.Add(key);
+                        _viewKeyTracking.Add(key);
 
-                    CurrentViewKey = key;
+                        CurrentViewKey = key;
 
-                    ThreadHelper.RunOnUIThread(() =>
-                    {
                         if (model != null)
-                            model.OnNavigated(args); // Do not await.
-                    });
+                            model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
+
+                    }
                 }
-            }
-            else
-            {
-                throw new ArgumentException(
-                        $"No such key: {key}. Did you forget to call NavigationService.Map?",
-                        nameof(key));
-            }
+                else
+                {
+                    throw new ArgumentException(
+                            $"No such key: {key}. Did you forget to call NavigationService.Map?",
+                            nameof(key));
+                }
+            });
         }
 
         private void proxy_OnPopped(object sender, IViewNavigationArgs e)
