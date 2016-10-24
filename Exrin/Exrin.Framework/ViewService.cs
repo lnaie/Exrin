@@ -11,6 +11,8 @@
     public class ViewService : IViewService
     {
         private readonly IInjectionProxy _injection = null;
+        private IDictionary<Type, IView> _cachedViews = null;
+        private object _lock = new object();
 
         public ViewService(IInjectionProxy injection)
         {
@@ -51,53 +53,59 @@
             return constructor.Invoke(parameters);
         }
 
-        public Task<IView> Build(Type viewType)
+        public Task<IView> Build(ITypeDefinition definition)
         {
-            ConstructorInfo constructor = null;
-            object[] parameters = null;
-
-            constructor = viewType.GetTypeInfo()
-                .DeclaredConstructors
-                .FirstOrDefault(c => !c.GetParameters().Any());
-
-            parameters = new object[] { };
-
-            if (constructor == null)
-                throw new InvalidOperationException(
-                    $"No suitable constructor found for view {viewType.ToString()}");
-
-            IView view = null;
-
-            ThreadHelper.RunOnUIThread(() =>
+            lock (_lock)
             {
-                view = constructor.Invoke(parameters) as IView;
-            });
+                IView view = null;
 
-            if (view == null)
-                throw new InvalidOperationException(
-                    $"View {viewType.ToString()} does not implement the interface {nameof(IView)}");
+                if (definition.CacheView && _cachedViews.ContainsKey(definition.Type))
+                    view = _cachedViews[definition.Type];
+                else
+                {
+                    ConstructorInfo constructor = null;
+                    object[] parameters = null;
 
-            // Assign Binding Context
-            if (_viewsByType.ContainsKey(viewType))
-            {
-                view.BindingContext = GetBindingContext(viewType);
+                    constructor = definition.Type.GetTypeInfo()
+                        .DeclaredConstructors
+                        .FirstOrDefault(c => !c.GetParameters().Any());
 
-                //// Pass parameter to view model if applicable
-                //var model = view.BindingContext as IViewModel;
-                //if (model != null)
-                //    await model.OnNavigated(parameter);
+                    parameters = new object[] { };
 
-                var multiView = view as IMultiView;
+                    if (constructor == null)
+                        throw new InvalidOperationException(
+                            $"No suitable constructor found for view {definition.Type.ToString()}");
 
-                if (multiView != null)
-                    foreach (var p in multiView.Views)
-                        p.BindingContext = GetBindingContext(p.GetType());
+                    ThreadHelper.RunOnUIThread(() =>
+                    {
+                        view = constructor.Invoke(parameters) as IView;
+                    });
+
+                    if (view == null)
+                        throw new InvalidOperationException(
+                            $"View {definition.Type.ToString()} does not implement the interface {nameof(IView)}");
+
+                    // Assign Binding Context
+                    if (_viewsByType.ContainsKey(definition.Type))
+                    {
+                        view.BindingContext = GetBindingContext(definition.Type);
+
+                        var multiView = view as IMultiView;
+
+                        if (multiView != null)
+                            foreach (var p in multiView.Views)
+                                p.BindingContext = GetBindingContext(p.GetType());
+                    }
+                    else
+                        throw new InvalidOperationException(
+                            "No suitable view model found for view " + definition.Type.ToString());
+
+                    if (definition.CacheView)
+                        _cachedViews.Add(definition.Type, view);
+                }
+
+                return Task.FromResult(view);
             }
-            else
-                throw new InvalidOperationException(
-                    "No suitable view model found for view " + viewType.ToString());
-
-            return Task.FromResult(view);
         }
 
         public void Map(Type viewType, Type viewModelType)

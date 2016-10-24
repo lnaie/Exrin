@@ -40,18 +40,22 @@
         /// <summary>
         /// Will map the View, ViewModel to a key
         /// </summary>
-        protected virtual void NavigationMap<View, ViewModel>(string key, bool noHistory = false) where View : IView
+        protected virtual void NavigationMap<View, ViewModel>(string key, IMapOptions options = null) where View : IView
                                                                                                   where ViewModel : IViewModel
         {
             lock (_viewsByKey)
             {
+                var noHistory = options == null ? false : options.NoHistory;
+                var cacheView = options == null ? false : options.CacheView;
                 // Map Key with View
                 if (!string.IsNullOrEmpty(key))
+                {
+                    var definition = new TypeDefinition() { Type = typeof(View), NoHistory = noHistory, CacheView = cacheView };
                     if (_viewsByKey.ContainsKey(key))
-                        _viewsByKey[key] = new TypeDefinition() { Type = typeof(View), NoHistory = noHistory };
+                        _viewsByKey[key] = definition;
                     else
-                        _viewsByKey.Add(key, new TypeDefinition() { Type = typeof(View), NoHistory = noHistory });
-
+                        _viewsByKey.Add(key, definition);
+                }
                 // Map View and ViewModel
                 _viewService.Map(typeof(View), typeof(ViewModel));
             }
@@ -103,7 +107,7 @@
                 {
                     var typeDefinition = _viewsByKey[key];
 
-                    var view = await _viewService.Build(typeDefinition.Type) as IView;
+                    var view = await _viewService.Build(typeDefinition) as IView;
 
                     if (view == null)
                         throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
