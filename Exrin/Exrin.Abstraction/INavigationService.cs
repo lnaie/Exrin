@@ -26,9 +26,7 @@
         Task GoBack(object parameter);
 
         void RegisterViewContainer<T>() where T : class, IViewContainer;
-        
-        void Rebuild();
-
+      
         object ActiveStackIdentifier { get; }
 
     }

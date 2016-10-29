@@ -71,104 +71,113 @@
 
         public async Task GoBack(object parameter)
         {
-            await ThreadHelper.RunOnUIThreadAsync(async () =>
+            using (var releaser = await _lock.LockAsync())
             {
-                await Proxy.PopAsync(parameter);
-            });
+                await ThreadHelper.RunOnUIThreadAsync(async () =>
+                {
+                    await Proxy.PopAsync(parameter);
+                });
+            }
         }
 
         public async Task GoBack()
         {
-            await ThreadHelper.RunOnUIThreadAsync(async () =>
+            using (var releaser = await _lock.LockAsync())
             {
-                await Proxy.PopAsync();
-            });
+                await ThreadHelper.RunOnUIThreadAsync(async () =>
+                {
+                    await Proxy.PopAsync();
+                });
+            }
         }
 
         public async Task Navigate(string key, object args)
         {
-            await ThreadHelper.RunOnUIThreadAsync(async () =>
+            using (var releaser = await _lock.LockAsync())
             {
-                // Do not navigate to the same view.
-                if (key == CurrentViewKey)
+                await ThreadHelper.RunOnUIThreadAsync(async () =>
                 {
-
-                    if (CurrentView != null)
+                    // Do not navigate to the same view.
+                    if (key == CurrentViewKey)
                     {
-                        var model = CurrentView.BindingContext as IViewModel;
-                        if (model != null)
-                            model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
+
+                        if (CurrentView != null)
+                        {
+                            var model = CurrentView.BindingContext as IViewModel;
+                            if (model != null)
+                                model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
+                        }
+
+                        return;
                     }
 
-                    return;
-                }
-
-                if (_viewsByKey.ContainsKey(key))
-                {
-                    var typeDefinition = _viewsByKey[key];
-
-                    var view = await _viewService.Build(typeDefinition) as IView;
-
-                    if (view == null)
-                        throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
-
-                    if (Proxy == null)
-                        throw new Exception($"{nameof(INavigationProxy)} is null. Did you forget to call NavigationService.Init()?");
-
-                    Proxy.SetNavigationBar(ShowNavigationBar, view);
-
-                    if (_viewKeyTracking.Contains(key))
+                    if (_viewsByKey.ContainsKey(key))
                     {
-                        // Pop until we get back to that page
-                        while (key != CurrentViewKey)
-                            await Proxy.PopAsync();
+                        var typeDefinition = _viewsByKey[key];
+
+                        var view = await _viewService.Build(typeDefinition) as IView;
+
+                        if (view == null)
+                            throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
+
+                        if (Proxy == null)
+                            throw new Exception($"{nameof(INavigationProxy)} is null. Did you forget to call NavigationService.Init()?");
+
+                        Proxy.SetNavigationBar(ShowNavigationBar, view);
+
+                        if (_viewKeyTracking.Contains(key))
+                        {
+                            // Pop until we get back to that page
+                            while (key != CurrentViewKey)
+                                await Proxy.PopAsync();
+                        }
+                        else
+                        {
+                            var model = view.BindingContext as IViewModel;
+
+                            if (model != null)
+                            {
+                                view.Appearing += (s, e) => { model.OnAppearing(); };
+                                view.Disappearing += (s, e) => { model.OnDisappearing(); };
+                                view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
+                            }
+
+                            var popCurrent = false;
+
+                            if (Proxy != null && !string.IsNullOrEmpty(CurrentViewKey))
+                                if (_viewsByKey[CurrentViewKey].NoHistory)
+                                    popCurrent = true;
+
+
+                            if (model != null)
+                                await model.OnPreNavigate(args);
+
+                            await Proxy.PushAsync(view);
+
+                            if (popCurrent) // Pop the one behind without showing it
+                            {
+                                await Proxy.SilentPopAsync(-1);
+                                // Remove the top one as the new tracking key hasn't been added yet
+                                _viewKeyTracking.RemoveAt(_viewKeyTracking.Count - 1);
+                            }
+
+                            _viewKeyTracking.Add(key);
+
+                            CurrentViewKey = key;
+
+                            if (model != null)
+                                model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
+
+                        }
                     }
                     else
                     {
-                        var model = view.BindingContext as IViewModel;
-
-                        if (model != null)
-                        {
-                            view.Appearing += (s, e) => { model.OnAppearing(); };
-                            view.Disappearing += (s, e) => { model.OnDisappearing(); };
-                            view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
-                        }
-
-                        var popCurrent = false;
-
-                        if (Proxy != null && !string.IsNullOrEmpty(CurrentViewKey))
-                            if (_viewsByKey[CurrentViewKey].NoHistory)
-                                popCurrent = true;
-
-
-                        if (model != null)
-                            await model.OnPreNavigate(args);
-
-                        await Proxy.PushAsync(view);
-
-                        if (popCurrent) // Pop the one behind without showing it
-                        {
-                            await Proxy.SilentPopAsync(-1);
-                            // Remove the top one as the new tracking key hasn't been added yet
-                            _viewKeyTracking.RemoveAt(_viewKeyTracking.Count - 1);
-                        }
-
-                        _viewKeyTracking.Add(key);
-
-                        CurrentViewKey = key;
-
-                        if (model != null)
-                            model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
-
+                        throw new ArgumentException(
+                                $"No such key: {key}. Did you forget to call NavigationService.Map?",
+                                nameof(key));
                     }
-                }
-                else
-                {
-                    throw new ArgumentException(
-                            $"No such key: {key}. Did you forget to call NavigationService.Map?",
-                            nameof(key));
-                }
-            });
+                });
+            }
         }
 
         private void proxy_OnPopped(object sender, IViewNavigationArgs e)
@@ -207,10 +216,13 @@
                     {
                         ThreadHelper.RunOnUIThread(async () =>
                         {
-                            await Proxy.SilentPopAsync(0);
-                            var count = _viewKeyTracking.Count;
-                            _viewKeyTracking.RemoveAt(count - 1);
-                            CurrentViewKey = _viewKeyTracking[count - 2];
+                            using (var releaser = await _lock.LockAsync())
+                            {
+                                await Proxy.SilentPopAsync(0);
+                                var count = _viewKeyTracking.Count;
+                                _viewKeyTracking.RemoveAt(count - 1);
+                                CurrentViewKey = _viewKeyTracking[count - 2];
+                            }
                         });
                     }));
         }

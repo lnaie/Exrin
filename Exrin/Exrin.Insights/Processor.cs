@@ -28,7 +28,7 @@
 
             Task.Run(async () =>
             {
-                do //TODO: don't like infinite loops, change to recursion with conditional continue
+                do
                 {
                     try
                     {

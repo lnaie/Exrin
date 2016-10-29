@@ -75,7 +75,7 @@
                     if (insights != null)
                         insights.TrackEvent(name, $"User activated {name}");
                 }
-                catch (Exception ex) // Purposeful bury exception?
+                catch (Exception ex) 
                 {
                     Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
                 }
@@ -168,13 +168,7 @@
                         sender.Result = result;
 
                         // Handle the result
-                        await Task.Run(async () =>
-                            await sender.HandleResult(sender.Result)
-                        ).ContinueWith((t) =>
-                        {
-                            if (t.Exception != null)
-                                throw t.Exception;
-                        });
+                        await sender.HandleResult(sender.Result);
                     }
                     finally
                     {

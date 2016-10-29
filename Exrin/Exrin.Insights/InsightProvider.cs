@@ -42,11 +42,10 @@
 					var insights = await _storage.ReadAllData();
 
                     var deleteList = new List<IInsightData>();
-                    foreach (var data in await Send(insights))
+                    var list = await Send(insights);
+                    foreach (var data in list.ToList())
                         deleteList.Add(data);
-
-                    deleteList = deleteList.ToList(); // Copy List
-
+                    
                     foreach (var item in deleteList)
                         await _storage.Delete(item);
                 }

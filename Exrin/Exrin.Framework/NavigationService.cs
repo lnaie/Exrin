@@ -17,6 +17,7 @@
         private readonly IDisplayService _displayService;
         private readonly IInjectionProxy _injection;
         private Action<object> _setRoot = null;
+        private readonly object _lock = new object();
         
         public NavigationService(IViewService viewService, INavigationState state, IInjectionProxy injection, IDisplayService displayService)
         {
@@ -112,108 +113,102 @@
                 _viewContainers.Add(viewContainer.Identifier, viewContainer);
         }
 
-        public void Rebuild()
-        {
-            ThreadHelper.RunOnUIThread(() =>
-            {
-                var stack = _stacks[_currentStack];
-                _setRoot?.Invoke(stack.Proxy.NativeView);
-            });
-        }
-
         public StackResult Navigate(IStackOptions options)
         {
-            StackResult stackResult = StackResult.StackStarted;
-
-            if (options.StackChoice == null)
-                throw new NullReferenceException($"{nameof(NavigationService)}.{nameof(Navigate)} can not accept a null {nameof(options.StackChoice)}");
-
-            // Don't change to the same stack
-            if (_currentStack == options.StackChoice)
-                return StackResult.None;
-
-            if (!_stacks.ContainsKey(options.StackChoice))
-                throw new NullReferenceException($"{nameof(NavigationService)} does not contain a stack named {options.StackChoice.ToString()}");
-
-            // Current / Previous Stack
-            IStack oldStack = null;
-            if (_currentStack != null)
+            lock (_lock)
             {
-                oldStack = _stacks[_currentStack];
-                oldStack.StateChange(StackStatus.Background);
-            }
+                StackResult stackResult = StackResult.StackStarted;
 
-            var stack = _stacks[options.StackChoice];
+                if (options.StackChoice == null)
+                    throw new NullReferenceException($"{nameof(NavigationService)}.{nameof(Navigate)} can not accept a null {nameof(options.StackChoice)}");
 
-            _currentStack = options.StackChoice;
+                // Don't change to the same stack
+                if (_currentStack == options.StackChoice)
+                    return StackResult.None;
 
-            // Set new status
-            stack.Proxy.ViewStatus = VisualStatus.Visible;
+                if (!_stacks.ContainsKey(options.StackChoice))
+                    throw new NullReferenceException($"{nameof(NavigationService)} does not contain a stack named {options.StackChoice.ToString()}");
 
-            // Switch over services
-            _displayService.Init(stack.Proxy);
-
-            ThreadHelper.RunOnUIThread(async () =>
-            {
-                if (stack.Status == StackStatus.Stopped)
+                // Current / Previous Stack
+                IStack oldStack = null;
+                if (_currentStack != null)
                 {
-                    object args = null;
+                    oldStack = _stacks[_currentStack];
+                    oldStack.StateChange(StackStatus.Background);
+                }
+
+                var stack = _stacks[options.StackChoice];
+
+                _currentStack = options.StackChoice;
+
+                // Set new status
+                stack.Proxy.ViewStatus = VisualStatus.Visible;
+
+                // Switch over services
+                _displayService.Init(stack.Proxy);
+
+                ThreadHelper.RunOnUIThread(async () =>
+                {
+                    if (stack.Status == StackStatus.Stopped)
+                    {
+                        object args = null;
 
                     // If ArgsKey present only pass args along if the StartKey is the same
                     if ((!string.IsNullOrEmpty(options?.ArgsKey) && stack.NavigationStartKey == options?.ArgsKey) || string.IsNullOrEmpty(options?.ArgsKey))
-                    {
-                        stackResult = stackResult | StackResult.ArgsPassed;
-                        args = options?.Args;
+                        {
+                            stackResult = stackResult | StackResult.ArgsPassed;
+                            args = options?.Args;
+                        }
+
+                        var loadStartKey = options?.PredefinedStack == null;
+
+                        if (loadStartKey)
+                            stackResult = stackResult | StackResult.NavigationStarted;
+
+                        await stack.StartNavigation(args: args, loadStartKey: loadStartKey);
                     }
-
-                    var loadStartKey = options?.PredefinedStack == null;
-
-                    if (loadStartKey)
-                        stackResult = stackResult | StackResult.NavigationStarted;
-
-                    await stack.StartNavigation(args: args, loadStartKey: loadStartKey);
-                }
 
                 //  Preload Stack
                 if (options?.PredefinedStack != null)
-                    foreach (var page in options.PredefinedStack)
-                        await Navigate(page.Key, page.Value);
+                        foreach (var page in options.PredefinedStack)
+                            await Navigate(page.Key, page.Value);
 
                 // Find mainview from ViewHierarchy
                 var viewContainer = _viewContainers[_stackViewContainers[options.StackChoice]];
 
-                if (viewContainer is IMasterDetailContainer)
-                {
-                    var masterDetailContainer = viewContainer as IMasterDetailContainer;
-                    if (masterDetailContainer.DetailStack != null)
+                    if (viewContainer is IMasterDetailContainer)
                     {
+                        var masterDetailContainer = viewContainer as IMasterDetailContainer;
+                        if (masterDetailContainer.DetailStack != null)
+                        {
                         // Setup Detail Stack
                         var detailStack = _stacks[masterDetailContainer.DetailStack.StackIdentifier];
 
-                        if (detailStack.Status == StackStatus.Stopped)
-                            await detailStack.StartNavigation();
+                            if (detailStack.Status == StackStatus.Stopped)
+                                await detailStack.StartNavigation();
 
-                        masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
+                            masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
 
                         // Setup Master Stack
                         var masterStack = _stacks[masterDetailContainer.MasterStack.StackIdentifier];
 
-                        if (masterStack.Status == StackStatus.Stopped)
-                            await masterStack.StartNavigation();
+                            if (masterStack.Status == StackStatus.Stopped)
+                                await masterStack.StartNavigation();
 
-                        masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
+                            masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
+                        }
+
                     }
 
-                }
+                    _setRoot?.Invoke(viewContainer.NativeView);
 
-                _setRoot?.Invoke(viewContainer.NativeView);
+                    if (oldStack != null)
+                        await oldStack.StackChanged();
 
-                if (oldStack != null)
-                await oldStack.StackChanged();
+                });
 
-            });
-
-            return stackResult;
+                return stackResult;
+            }
         }
     }
 }
