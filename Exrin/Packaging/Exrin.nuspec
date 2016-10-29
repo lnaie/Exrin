@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.0.1-beta2</version>
+    <version>1.0.1</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,7 +18,9 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     First production ready release.
+     - Minor navigation fix in Android
+     - Performance updates in NavigationService
+     - Cache Views
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
