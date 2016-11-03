@@ -8,6 +8,8 @@
 
         public object StackChoice { get; set; }
 
+        public string ViewKey { get; set; }
+
         public object Args { get; set; }
 
         public string ArgsKey { get; set; }

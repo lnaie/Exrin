@@ -18,7 +18,7 @@
         private readonly IInjectionProxy _injection;
         private Action<object> _setRoot = null;
         private readonly object _lock = new object();
-        
+
         public NavigationService(IViewService viewService, INavigationState state, IInjectionProxy injection, IDisplayService displayService)
         {
             _viewService = viewService;
@@ -26,8 +26,8 @@
             _displayService = displayService;
             _injection = injection;
         }
-    
-        public object ActiveStackIdentifier  { get { return _currentStack; } }
+
+        public object ActiveStackIdentifier { get { return _currentStack; } }
 
         public async Task Navigate(string key)
         {
@@ -134,12 +134,14 @@
                 if (_currentStack != null)
                 {
                     oldStack = _stacks[_currentStack];
-                    oldStack.StateChange(StackStatus.Background);
+                    oldStack.StateChange(StackStatus.Background); // Schedules NoHistoryRemoval
                 }
 
                 var stack = _stacks[options.StackChoice];
 
                 _currentStack = options.StackChoice;
+
+
 
                 // Set new status
                 stack.Proxy.ViewStatus = VisualStatus.Visible;
@@ -153,8 +155,8 @@
                     {
                         object args = null;
 
-                    // If ArgsKey present only pass args along if the StartKey is the same
-                    if ((!string.IsNullOrEmpty(options?.ArgsKey) && stack.NavigationStartKey == options?.ArgsKey) || string.IsNullOrEmpty(options?.ArgsKey))
+                        // If ArgsKey present only pass args along if the StartKey is the same
+                        if ((!string.IsNullOrEmpty(options?.ArgsKey) && stack.NavigationStartKey == options?.ArgsKey) || string.IsNullOrEmpty(options?.ArgsKey))
                         {
                             stackResult = stackResult | StackResult.ArgsPassed;
                             args = options?.Args;
@@ -168,29 +170,29 @@
                         await stack.StartNavigation(args: args, loadStartKey: loadStartKey);
                     }
 
-                //  Preload Stack
-                if (options?.PredefinedStack != null)
+                    //  Preload Stack
+                    if (options?.PredefinedStack != null)
                         foreach (var page in options.PredefinedStack)
                             await Navigate(page.Key, page.Value);
 
-                // Find mainview from ViewHierarchy
-                var viewContainer = _viewContainers[_stackViewContainers[options.StackChoice]];
+                    // Find mainview from ViewHierarchy
+                    var viewContainer = _viewContainers[_stackViewContainers[options.StackChoice]];
 
                     if (viewContainer is IMasterDetailContainer)
                     {
                         var masterDetailContainer = viewContainer as IMasterDetailContainer;
                         if (masterDetailContainer.DetailStack != null)
                         {
-                        // Setup Detail Stack
-                        var detailStack = _stacks[masterDetailContainer.DetailStack.StackIdentifier];
+                            // Setup Detail Stack
+                            var detailStack = _stacks[masterDetailContainer.DetailStack.StackIdentifier];
 
                             if (detailStack.Status == StackStatus.Stopped)
                                 await detailStack.StartNavigation();
 
                             masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
 
-                        // Setup Master Stack
-                        var masterStack = _stacks[masterDetailContainer.MasterStack.StackIdentifier];
+                            // Setup Master Stack
+                            var masterStack = _stacks[masterDetailContainer.MasterStack.StackIdentifier];
 
                             if (masterStack.Status == StackStatus.Stopped)
                                 await masterStack.StartNavigation();
@@ -199,6 +201,9 @@
                         }
 
                     }
+
+                    if (!string.IsNullOrEmpty(options.ViewKey))
+                        await Navigate(options.ViewKey, options.Args);
 
                     _setRoot?.Invoke(viewContainer.NativeView);
 

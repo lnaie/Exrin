@@ -18,7 +18,7 @@
         public StackStatus Status { get; private set; } = StackStatus.Stopped;
         public bool ShowNavigationBar { get; set; }
         public string CurrentViewKey { get; set; }
-        public IView CurrentView { get; set; }
+        private IList<IView> CurrentViewTrack = new List<IView>();
         public INavigationProxy Proxy { get; private set; }
         public virtual string NavigationStartKey { get; }
 
@@ -100,13 +100,11 @@
                     // Do not navigate to the same view.
                     if (key == CurrentViewKey)
                     {
+                        var model = CurrentViewTrack[CurrentViewTrack.Count - 1].BindingContext as IViewModel;
 
-                        if (CurrentView != null)
-                        {
-                            var model = CurrentView.BindingContext as IViewModel;
-                            if (model != null)
-                                model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
-                        }
+                        if (model != null)
+                            model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
+
 
                         return;
                     }
@@ -165,6 +163,8 @@
 
                             CurrentViewKey = key;
 
+                            CurrentViewTrack.Add(view);
+
                             if (model != null)
                                 model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
 
@@ -206,6 +206,7 @@
 
             // Changes the navigation key back to the previous page
             CurrentViewKey = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;
+            CurrentViewTrack.RemoveAt(CurrentViewTrack.Count - 1);
         }
 
         private void NoHistoryRemoval()
@@ -219,9 +220,7 @@
                             using (var releaser = await _lock.LockAsync())
                             {
                                 await Proxy.SilentPopAsync(0);
-                                var count = _viewKeyTracking.Count;
-                                _viewKeyTracking.RemoveAt(count - 1);
-                                CurrentViewKey = _viewKeyTracking[count - 2];
+
                             }
                         });
                     }));

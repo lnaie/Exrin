@@ -18,5 +18,7 @@
         /// If the ArgsKey is blank pass the args through. Otherwise the ArgsKey must match the PageKey being loaded for the args to be passed.
         /// </summary>
         string ArgsKey { get; }
+
+        string ViewKey { get; set; }
     }
 }
