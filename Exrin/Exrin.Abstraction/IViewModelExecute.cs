@@ -14,7 +14,7 @@ namespace Exrin.Abstraction
         /// <summary>
         /// A list of operations to perform in sequence and their associated rollbacks
         /// </summary>
-        List<IOperation> Operations { get; }
+        List<IBaseOperation> Operations { get; }
        
         /// <summary>
         /// The total length allowed for the operations to complete, before a timeout is triggered. Setting to 0 or below will result in no timeout constraint.

@@ -8,9 +8,9 @@
 
         public BaseViewModelExecute() { }
 
-        public BaseViewModelExecute(List<IOperation> operations) { Operations = operations; }
+        public BaseViewModelExecute(List<IBaseOperation> operations) { Operations = operations; }
 
-        public List<IOperation> Operations { get; private set; } = new List<IOperation>();
+        public List<IBaseOperation> Operations { get; private set; } = new List<IBaseOperation>();
 
         public int TimeoutMilliseconds { get; protected set; } = 60000;
 

@@ -116,5 +116,14 @@
                 else
                     _viewsByType.Add(viewType, new TypeDefinition() { Type = viewModelType });
         }
+
+        public Type GetMap(Type viewModelType)
+        {
+            foreach (var type in _viewsByType)
+                if (type.Value.Type == viewModelType)
+                    return type.Key;
+
+            return null;
+        }
     }
 }

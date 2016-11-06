@@ -7,6 +7,8 @@
     {
         void Map(Type viewType, Type viewModelType);
 
+        Type GetMap(Type viewModelType);
+
         Task<IView> Build(ITypeDefinition viewType); 
     }
 }

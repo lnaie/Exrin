@@ -16,6 +16,7 @@
         Task StackChanged();
         Task GoBack();
         Task GoBack(object parameter);
+        Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel;
 
     }
 }

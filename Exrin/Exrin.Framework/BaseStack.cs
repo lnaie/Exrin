@@ -37,6 +37,27 @@
 
         protected virtual void Map() { }
 
+        public async Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel
+        {
+            var viewKey = GetViewKey<TViewModel>();
+
+            if (string.IsNullOrEmpty(viewKey))
+                return;
+
+            await Navigate(viewKey, args);
+        }
+
+        private string GetViewKey<TViewModel>() where TViewModel : class, IViewModel
+        {
+            var type = typeof(TViewModel);
+            var viewType = _viewService.GetMap(type);
+            foreach (var view in _viewsByKey)
+                if (view.Value.Type == viewType)
+                    return view.Key;
+
+            throw new NullReferenceException($"There is no ViewModel type {typeof(TViewModel)}");
+        }
+
         /// <summary>
         /// Will map the View, ViewModel to a key
         /// </summary>
@@ -104,8 +125,7 @@
 
                         if (model != null)
                             model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
-
-
+                        
                         return;
                     }
 
@@ -255,6 +275,7 @@
             }
 
         }
+
     }
 
 }

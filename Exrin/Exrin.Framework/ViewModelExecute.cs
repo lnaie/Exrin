@@ -10,9 +10,9 @@
 
     public static partial class Process
     {
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IOperation execute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "")
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IOperation>() { execute }), name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), name);
         }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
@@ -38,7 +38,7 @@
         private readonly static IDictionary<object, bool> _status = new Dictionary<object, bool>();
 
         private static async Task ViewModelExecute(IExecution sender,
-                 List<IOperation> operations,
+                 List<IBaseOperation> operations,
                  Func<Task> notifyOfActivity = null,
                  Func<Task> notifyActivityFinished = null,
                  Func<Exception, Task<bool>> handleUnhandledException = null,
@@ -75,7 +75,7 @@
                     if (insights != null)
                         insights.TrackEvent(name, $"User activated {name}");
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
                 }
@@ -109,7 +109,7 @@
                     task.CancelAfter(timeoutMilliseconds);
                 }
 
-                IList<IResult> result = new List<IResult>();
+                IList<IResult> results = new List<IResult>();
 
                 try
                 {
@@ -121,10 +121,36 @@
                         if (operation.Rollback != null)
                             rollbacks.Add(operation.Rollback);
 
-                        if (operation.Function != null)
+                        if (operation is IOperation || operation is IChainedOperation)
+                        {
+                            var op = operation as IOperation;
+                            if (op.Function != null)
+                            {
+                                try
+                                {
+                                    await op.Function(results, parameter, task.Token);
+                                }
+                                catch
+                                {
+                                    exceptionState.Value = true; // Stops registered cancel function from running, since this is exception not timeout              
+                                    task?.Cancel(); // Cancel all tasks
+                                    throw; // Go to unhandled exception
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            var op = operation as ISingleOperation;
                             try
                             {
-                                await operation.Function(result, parameter, task.Token);
+                                if (op.Function != null)
+                                {
+                                    var resultList = await op.Function(parameter, task.Token);
+                                    if (resultList != null)
+                                        foreach (var result in resultList)
+                                            results.Add(result);
+                                }
                             }
                             catch
                             {
@@ -132,6 +158,9 @@
                                 task?.Cancel(); // Cancel all tasks
                                 throw; // Go to unhandled exception
                             }
+
+                        }
+
 
                         if (!operation.ChainedRollback)
                             rollbacks.Remove(operation.Rollback);
@@ -165,7 +194,7 @@
                         }
 
                         // Set final result
-                        sender.Result = result;
+                        sender.Result = results;
 
                         // Handle the result
                         await sender.HandleResult(sender.Result);

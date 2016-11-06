@@ -41,6 +41,10 @@
 
             _state.ViewName = viewKey;
         }
+        public async Task Navigate<TViewModel>(object args) where TViewModel: class, IViewModel
+        {            
+            await _stacks[_currentStack].Navigate<TViewModel>(args);
+        }
 
         public async Task Navigate(object stackIdentifier, string viewKey, object args)
         {

@@ -15,6 +15,8 @@
 
         Task Navigate(string key, object args);
 
+        Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel;
+
         Task Navigate(object stackIdentifier, string key, object args);
 
         Task Navigate(string key, object args, IStackOptions options);
