@@ -82,11 +82,7 @@
             }).ConfigureAwait(false);
 
             await Task.Run(async () =>
-            {
-                // Debug Remove Timeout
-                if (App.IsDebugging)
-                    timeoutMilliseconds = 0;
-
+            {              
                 sender.Result = null;
 
                 List<Func<Task>> rollbacks = new List<Func<Task>>();

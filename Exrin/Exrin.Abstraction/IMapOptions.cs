@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 
 namespace Exrin.Abstraction
 {
@@ -12,6 +9,7 @@ namespace Exrin.Abstraction
         /// </summary>
         bool NoHistory { get; }
         bool CacheView { get; }
+        int? Platform { get; }
         // Possible other options
         // PreLoad View - after startup in UI Thread, would need to ensure low priority
     }

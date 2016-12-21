@@ -10,14 +10,14 @@
     public class BaseStack : IStack
     {
         private static AsyncLock _lock = new AsyncLock();
-        private readonly Dictionary<string, TypeDefinition> _viewsByKey = new Dictionary<string, TypeDefinition>();
-        private readonly IList<string> _viewKeyTracking = new List<string>();
+        private readonly Dictionary<Abstraction.Tuple<string, int?>, TypeDefinition> _viewsByKey = new Dictionary<Abstraction.Tuple<string, int?>, TypeDefinition>();
+        private readonly IList<Abstraction.Tuple<string, int?>> _viewKeyTracking = new List<Abstraction.Tuple<string, int?>>();
         private readonly IViewService _viewService;
 
         public object StackIdentifier { get; private set; }
         public StackStatus Status { get; private set; } = StackStatus.Stopped;
         public bool ShowNavigationBar { get; set; }
-        public string CurrentViewKey { get; set; }
+        private Abstraction.Tuple<string, int?> CurrentView { get; set; }
         private IList<IView> CurrentViewTrack = new List<IView>();
         public INavigationProxy Proxy { get; private set; }
         public virtual string NavigationStartKey { get; }
@@ -41,13 +41,10 @@
         {
             var viewKey = GetViewKey<TViewModel>();
 
-            if (string.IsNullOrEmpty(viewKey))
-                return;
-
-            await Navigate(viewKey, args);
+            await Navigate(viewKey.Key, args);
         }
 
-        private string GetViewKey<TViewModel>() where TViewModel : class, IViewModel
+        private Abstraction.Tuple<string, int?> GetViewKey<TViewModel>() where TViewModel : class, IViewModel
         {
             var type = typeof(TViewModel);
             var viewType = _viewService.GetMap(type);
@@ -62,20 +59,23 @@
         /// Will map the View, ViewModel to a key
         /// </summary>
         protected virtual void NavigationMap<View, ViewModel>(string key, IMapOptions options = null) where View : IView
-                                                                                                  where ViewModel : IViewModel
+                                                                                                      where ViewModel : IViewModel
         {
             lock (_viewsByKey)
             {
                 var noHistory = options == null ? false : options.NoHistory;
                 var cacheView = options == null ? false : options.CacheView;
+                var platform = options == null ? null : options.Platform;
+
                 // Map Key with View
                 if (!string.IsNullOrEmpty(key))
                 {
-                    var definition = new TypeDefinition() { Type = typeof(View), NoHistory = noHistory, CacheView = cacheView };
-                    if (_viewsByKey.ContainsKey(key))
-                        _viewsByKey[key] = definition;
+                    var definition = new TypeDefinition() { Type = typeof(View), NoHistory = noHistory, CacheView = cacheView, Platform = platform };
+                    var tupleKey = Abstraction.Tuple.Create(key, platform);
+                    if (_viewsByKey.ContainsKey(tupleKey))
+                        _viewsByKey[tupleKey] = definition;
                     else
-                        _viewsByKey.Add(key, definition);
+                        _viewsByKey.Add(tupleKey, definition);
                 }
                 // Map View and ViewModel
                 _viewService.Map(typeof(View), typeof(ViewModel));
@@ -119,19 +119,37 @@
                 await ThreadHelper.RunOnUIThreadAsync(async () =>
                 {
                     // Do not navigate to the same view.
-                    if (key == CurrentViewKey)
+                    if (key == CurrentView.Key)
                     {
                         var model = CurrentViewTrack[CurrentViewTrack.Count - 1].BindingContext as IViewModel;
 
                         if (model != null)
                             model.OnNavigated(args).ConfigureAwait(false).GetAwaiter(); // Do not await.
-                        
+
                         return;
                     }
 
-                    if (_viewsByKey.ContainsKey(key))
+                    var platformKey = Abstraction.Tuple.Create(key, App.PlatformOptions.Platform);
+                    var genericKey = Abstraction.Tuple.Create(key, (int?)null);
+
+                    Abstraction.Tuple<string, int?> tupleKey = Abstraction.Tuple.Create(string.Empty, (int?)null);
+
+                    TypeDefinition viewKey = null;
+
+                    if (_viewsByKey.ContainsKey(platformKey))
                     {
-                        var typeDefinition = _viewsByKey[key];
+                        tupleKey = platformKey;
+                        viewKey = _viewsByKey[platformKey];
+                    }
+                    else if (_viewsByKey.ContainsKey(genericKey))
+                    {
+                        tupleKey = genericKey;
+                        viewKey = _viewsByKey[genericKey];
+                    }
+
+                    if (viewKey != null)
+                    {
+                        var typeDefinition = viewKey;
 
                         var view = await _viewService.Build(typeDefinition) as IView;
 
@@ -143,10 +161,10 @@
 
                         Proxy.SetNavigationBar(ShowNavigationBar, view);
 
-                        if (_viewKeyTracking.Contains(key))
+                        if (_viewKeyTracking.Contains(tupleKey))
                         {
                             // Pop until we get back to that page
-                            while (key != CurrentViewKey)
+                            while (key != CurrentView.Key)
                                 await Proxy.PopAsync();
                         }
                         else
@@ -162,8 +180,8 @@
 
                             var popCurrent = false;
 
-                            if (Proxy != null && !string.IsNullOrEmpty(CurrentViewKey))
-                                if (_viewsByKey[CurrentViewKey].NoHistory)
+                            if (Proxy != null && !string.IsNullOrEmpty(CurrentView.Key))
+                                if (_viewsByKey[CurrentView].NoHistory)
                                     popCurrent = true;
 
 
@@ -179,9 +197,9 @@
                                 _viewKeyTracking.RemoveAt(_viewKeyTracking.Count - 1);
                             }
 
-                            _viewKeyTracking.Add(key);
+                            _viewKeyTracking.Add(tupleKey);
 
-                            CurrentViewKey = key;
+                            CurrentView = tupleKey;
 
                             CurrentViewTrack.Add(view);
 
@@ -222,17 +240,17 @@
             }
 
             // Remove CurrentViewKey
-            _viewKeyTracking.Remove(CurrentViewKey);
+            _viewKeyTracking.Remove(CurrentView);
 
             // Changes the navigation key back to the previous page
-            CurrentViewKey = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;
+            CurrentView = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;
             CurrentViewTrack.RemoveAt(CurrentViewTrack.Count - 1);
         }
 
         private void NoHistoryRemoval()
         {
-            if (Proxy != null && !string.IsNullOrEmpty(CurrentViewKey))
-                if (_viewsByKey[CurrentViewKey].NoHistory)
+            if (Proxy != null && !string.IsNullOrEmpty(CurrentView.Key))
+                if (_viewsByKey[CurrentView].NoHistory)
                     StackChangeActions.Add(new Action(() =>
                     {
                         ThreadHelper.RunOnUIThread(async () =>

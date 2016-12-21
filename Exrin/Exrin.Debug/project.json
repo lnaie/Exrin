@@ -1,6 +1,8 @@
-﻿{
+{
   "supports": {},
   "dependencies": {
+    "Exrin.Abstraction": "1.0.0-*",
+    "Exrin.Insights": "1.0.0-*",
     "NETStandard.Library": "1.6.0"
   },
   "frameworks": {

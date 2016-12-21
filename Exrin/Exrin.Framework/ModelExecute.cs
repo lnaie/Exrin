@@ -50,11 +50,7 @@
 
             if (sender == null)
                 throw new Exception($"The IModelExecution sender can not be null");
-
-            // Debug Remove Timeout
-            if (App.IsDebugging)
-                timeoutMilliseconds = 0;
-
+          
             // Background thread
             Task insight = Task.Run(() =>
             {
