@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Exrin.Abstraction
+﻿namespace Exrin.Abstraction
 {
+    using System.Threading.Tasks;
+
     public interface IViewModel
     {
-        Task OnPreNavigate(object args);
+        Task OnPreNavigate(object args, Args e);
 
         Task OnNavigated(object args);
 

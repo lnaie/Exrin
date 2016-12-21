@@ -8,7 +8,6 @@
 
     public class VisualState : BindableModel, IVisualState
     {
-
         protected IBaseModel Model { get; set; }
 
         public VisualState(IBaseModel model)

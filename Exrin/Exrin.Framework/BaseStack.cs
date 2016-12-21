@@ -173,6 +173,12 @@
 
                             if (model != null)
                             {
+                                var arg = new Args();
+                                await model.OnPreNavigate(args, arg);
+                                // If user cancelled, stop forward navigation
+                                if (arg.Cancel)
+                                    return;
+
                                 view.Appearing += (s, e) => { model.OnAppearing(); };
                                 view.Disappearing += (s, e) => { model.OnDisappearing(); };
                                 view.OnBackButtonPressed = () => { return model.OnBackButtonPressed(); };
@@ -183,11 +189,7 @@
                             if (Proxy != null && !string.IsNullOrEmpty(CurrentView.Key))
                                 if (_viewsByKey[CurrentView].NoHistory)
                                     popCurrent = true;
-
-
-                            if (model != null)
-                                await model.OnPreNavigate(args);
-
+                            
                             await Proxy.PushAsync(view);
 
                             if (popCurrent) // Pop the one behind without showing it
@@ -239,7 +241,7 @@
                     model.OnBackNavigated(null);
             }
 
-            // Remove CurrentViewKey
+            // Remove CurrentView
             _viewKeyTracking.Remove(CurrentView);
 
             // Changes the navigation key back to the previous page

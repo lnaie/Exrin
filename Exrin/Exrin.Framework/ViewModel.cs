@@ -59,7 +59,7 @@
             return commands[name];
         }
 
-        public virtual Task OnPreNavigate(object args)
+        public virtual Task OnPreNavigate(object args, Args e)
         {
             return Task.FromResult(0);
         }
