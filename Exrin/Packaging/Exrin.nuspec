@@ -18,8 +18,10 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     - Refactor of IOperation (single vs chained)
-     - New Navigate&lt;TViewModel&gt;(args) in NavigationService
+     - PlatformOptions, with platform specific mappings
+     - Cancel a Navigation via OnPreNavigate
+     - Bug Fix: Parameter not passed OnBackNavigate
+     - PCL Profile 111 Compatible
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
