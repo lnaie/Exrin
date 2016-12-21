@@ -5,5 +5,7 @@
         IView PoppedView { get; set; }
 
         IView CurrentView { get; set; } 
+
+        object Parameter { get; set; }
     }
 }

@@ -238,7 +238,7 @@
             {
                 var model = e.CurrentView.BindingContext as IViewModel;
                 if (model != null)
-                    model.OnBackNavigated(null);
+                    model.OnBackNavigated(e.Parameter);
             }
 
             // Remove CurrentView
