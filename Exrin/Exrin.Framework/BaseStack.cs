@@ -10,14 +10,14 @@
     public class BaseStack : IStack
     {
         private static AsyncLock _lock = new AsyncLock();
-        private readonly Dictionary<Abstraction.Tuple<string, int?>, TypeDefinition> _viewsByKey = new Dictionary<Abstraction.Tuple<string, int?>, TypeDefinition>();
-        private readonly IList<Abstraction.Tuple<string, int?>> _viewKeyTracking = new List<Abstraction.Tuple<string, int?>>();
+        private readonly Dictionary<Abstraction.Tuple<string, string>, TypeDefinition> _viewsByKey = new Dictionary<Abstraction.Tuple<string, string>, TypeDefinition>();
+        private readonly IList<Abstraction.Tuple<string, string>> _viewKeyTracking = new List<Abstraction.Tuple<string, string>>();
         private readonly IViewService _viewService;
 
         public object StackIdentifier { get; private set; }
         public StackStatus Status { get; private set; } = StackStatus.Stopped;
         public bool ShowNavigationBar { get; set; }
-        private Abstraction.Tuple<string, int?> CurrentView { get; set; }
+        private Abstraction.Tuple<string, string> CurrentView { get; set; }
         private IList<IView> CurrentViewTrack = new List<IView>();
         public INavigationProxy Proxy { get; private set; }
         public virtual string NavigationStartKey { get; }
@@ -44,7 +44,7 @@
             await Navigate(viewKey.Key, args);
         }
 
-        private Abstraction.Tuple<string, int?> GetViewKey<TViewModel>() where TViewModel : class, IViewModel
+        private Abstraction.Tuple<string, string> GetViewKey<TViewModel>() where TViewModel : class, IViewModel
         {
             var type = typeof(TViewModel);
             var viewType = _viewService.GetMap(type);
@@ -130,9 +130,9 @@
                     }
 
                     var platformKey = Abstraction.Tuple.Create(key, App.PlatformOptions.Platform);
-                    var genericKey = Abstraction.Tuple.Create(key, (int?)null);
+                    var genericKey = Abstraction.Tuple.Create(key, (string)null);
 
-                    Abstraction.Tuple<string, int?> tupleKey = Abstraction.Tuple.Create(string.Empty, (int?)null);
+                    Abstraction.Tuple<string, string> tupleKey = Abstraction.Tuple.Create(string.Empty, (string)null);
 
                     TypeDefinition viewKey = null;
 

@@ -8,6 +8,6 @@
 
         public bool NoHistory { get; set; } = false;
 
-        public int? Platform { get; set; } = null;
+        public string Platform { get; set; } = null;
     }
 }

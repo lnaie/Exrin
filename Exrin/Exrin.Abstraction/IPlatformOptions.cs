@@ -2,6 +2,6 @@
 {
     public interface IPlatformOptions
     {
-        int? Platform { get; }
+        string Platform { get; }
     }
 }

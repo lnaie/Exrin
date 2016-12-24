@@ -20,6 +20,7 @@
     <releaseNotes>
      - Bug Fix: Stack Change, incorrect comparison
      - Bug Fix: Incorrect index on SilentPop
+     - PlatformOption refactor
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

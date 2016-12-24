@@ -12,7 +12,7 @@
 
         public bool CacheView { get; set; }
 
-        public int? Platform { get; set; }
+        public string Platform { get; set; } = null;
 
     }
 }

@@ -3,6 +3,6 @@
     using Abstraction;
     public class PlatformOptions : IPlatformOptions
     {
-        public int? Platform { get; set; } = null;
+        public string Platform { get; set; } = null;
     }
 }
