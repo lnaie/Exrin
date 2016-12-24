@@ -127,7 +127,8 @@
                     throw new NullReferenceException($"{nameof(NavigationService)}.{nameof(Navigate)} can not accept a null {nameof(options.StackChoice)}");
 
                 // Don't change to the same stack
-                if (_currentStack == options.StackChoice)
+                if (_currentStack != null 
+                    && _currentStack.Equals(options.StackChoice))
                     return StackResult.None;
 
                 if (!_stacks.ContainsKey(options.StackChoice))
@@ -144,9 +145,7 @@
                 var stack = _stacks[options.StackChoice];
 
                 _currentStack = options.StackChoice;
-
-
-
+                
                 // Set new status
                 stack.Proxy.ViewStatus = VisualStatus.Visible;
 

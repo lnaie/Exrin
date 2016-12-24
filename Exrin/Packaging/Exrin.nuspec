@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.0.4-beta1</version>
+    <version>1.0.4-beta2</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,10 +18,8 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     - PlatformOptions, with platform specific mappings
-     - Cancel a Navigation via OnPreNavigate
-     - Bug Fix: Parameter not passed OnBackNavigate
-     - PCL Profile 111 Compatible
+     - Bug Fix: Stack Change, incorrect comparison
+     - Bug Fix: Incorrect index on SilentPop
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

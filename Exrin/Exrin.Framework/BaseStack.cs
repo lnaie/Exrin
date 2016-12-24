@@ -194,7 +194,7 @@
 
                             if (popCurrent) // Pop the one behind without showing it
                             {
-                                await Proxy.SilentPopAsync(-1);
+                                await Proxy.SilentPopAsync(1);
                                 // Remove the top one as the new tracking key hasn't been added yet
                                 _viewKeyTracking.RemoveAt(_viewKeyTracking.Count - 1);
                             }

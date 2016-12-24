@@ -24,7 +24,7 @@
         /// <summary>
         /// Will remove from the stack without using a Pop
         /// </summary>
-        /// <param name="indexFromTop">How many from the current page to Pop. e.g. top page is 0, next page back is -1</param>
+        /// <param name="indexFromTop">How many from the current page to Pop. e.g. top page is 0, next page back is 1</param>
         /// <returns></returns>
         Task SilentPopAsync(int indexFromTop);
 
