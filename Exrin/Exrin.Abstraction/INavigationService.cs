@@ -1,6 +1,7 @@
 ﻿namespace Exrin.Abstraction
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface INavigationService
@@ -30,6 +31,8 @@
         void RegisterViewContainer<T>() where T : class, IViewContainer;
       
         object ActiveStackIdentifier { get; }
+
+        Task SilentPop(object stackIdentifier, IList<string> viewKeys);
 
     }
 }

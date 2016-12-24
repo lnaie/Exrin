@@ -218,5 +218,11 @@
                 return stackResult;
             }
         }
+
+        public async Task SilentPop(object stackIdentifier, IList<string> viewKeys)
+        {
+            var stack = _stacks[stackIdentifier];
+            await stack.SilentPop(viewKeys);           
+        }
     }
 }

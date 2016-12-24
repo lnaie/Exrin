@@ -189,7 +189,7 @@
                             if (Proxy != null && !string.IsNullOrEmpty(CurrentView.Key))
                                 if (_viewsByKey[CurrentView].NoHistory)
                                     popCurrent = true;
-                            
+
                             await Proxy.PushAsync(view);
 
                             if (popCurrent) // Pop the one behind without showing it
@@ -296,6 +296,20 @@
 
         }
 
+        public async Task SilentPop(IList<string> viewKeys)
+        {
+            foreach (var key in viewKeys)
+            {
+                var tuple = Abstraction.Tuple.Create(key, App.PlatformOptions?.Platform);
+
+                // Get index in stack
+                var index = _viewsByKey.ToList().FindIndex(x => x.Key.Key == key);
+
+                var indexFromTop = _viewsByKey.Count - index - 1;
+                
+                await Proxy.SilentPopAsync(indexFromTop);
+            }
+        }
     }
 
 }

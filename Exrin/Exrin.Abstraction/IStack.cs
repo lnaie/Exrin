@@ -1,5 +1,6 @@
 ﻿namespace Exrin.Abstraction
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IStack
@@ -17,6 +18,7 @@
         Task GoBack();
         Task GoBack(object parameter);
         Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel;
+        Task SilentPop(IList<string> viewKeys);
 
     }
 }
