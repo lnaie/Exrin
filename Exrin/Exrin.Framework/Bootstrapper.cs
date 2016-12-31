@@ -30,6 +30,8 @@
             if (IsInitialized)
                 return _injection;
 
+            RegisterAssembly(AssemblyAction.Bootstrapper, _injection.GetType().GetTypeInfo().Assembly.GetName());
+
             InitCustom();
 
             InitState();
@@ -62,7 +64,7 @@
             return _injection;
         }
 
-        protected virtual void PostContainerBuild() {}
+        protected virtual void PostContainerBuild() { }
 
         protected virtual void InitCustom() { }
 
@@ -133,21 +135,21 @@
         protected virtual void InitStacks()
         {
             MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterStack), new Type[] { });
-            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IStack));
 
-            foreach (var stack in list)
-                method.MakeGenericMethod(stack.AsType())
-                        .Invoke(this, null);
+            foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+                foreach (var stack in AssemblyHelper.GetTypes(assembly.Value, typeof(IStack)))
+                    method.MakeGenericMethod(stack.AsType())
+                          .Invoke(this, null);
         }
 
         protected virtual void InitViewContainers()
         {
             MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterViewContainer), new Type[] { });
-            var list = AssemblyHelper.GetTypes(_injection.GetType(), typeof(IViewContainer));
 
-            foreach (var container in list)
-                method.MakeGenericMethod(container.AsType())
-                        .Invoke(this, null);
+            foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+                foreach (var container in AssemblyHelper.GetTypes(assembly.Value, typeof(IViewContainer)))
+                    method.MakeGenericMethod(container.AsType())
+                            .Invoke(this, null);
         }
 
         protected virtual void InitModels()
@@ -189,17 +191,19 @@
             if (!_typeAssembly.ContainsKey(@interface))
                 _typeAssembly.Add(@interface, name);
         }
-        
+
         // TODO: Improve perf
         private void RegisterBasedOnInterface(Type @interface)
         {
             MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjectionProxy.RegisterInterface), new Type[] { typeof(InstanceType) });
-            IList<TypeInfo> list = null;
+            IList<TypeInfo> list = new List<TypeInfo>();
 
             if (_typeAssembly.ContainsKey(@interface))
                 list = AssemblyHelper.GetTypes(_typeAssembly[@interface], @interface);
             else
-                list = AssemblyHelper.GetTypes(_injection.GetType(), @interface);
+                foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+                    foreach (var item in AssemblyHelper.GetTypes(assembly.Value, @interface))
+                        list.Add(item);
 
             foreach (var item in list)
             {
@@ -232,7 +236,7 @@
         {
             if (!_injection.IsRegistered<T>())
             {
-                _injection.Register<T>(InstanceType.SingleInstance);             
+                _injection.Register<T>(InstanceType.SingleInstance);
             }
             // Initialize the Stack
             _postRun.Add(() => { _injection.Get<T>().Init(); });

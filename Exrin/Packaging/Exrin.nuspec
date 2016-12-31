@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.0.4-beta3</version>
+    <version>1.0.4</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,7 +18,15 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-     - Added SilentPop method to INavigationService
+      - Enhancement: Bootstrapper Register Assemblies
+      - Enhancement: PlatformOption refactor
+      - Enhancement: PCL Profile 111 Compatible
+      - New Feature: Added SilentPop method to INavigationService
+      - New Feature: PlatformOptions, with platform specific mappings
+      - New Feature: Cancel a Navigation via OnPreNavigate
+      - Bug Fix: Parameter not passed OnBackNavigated
+      - Bug Fix: Stack Change, incorrect comparison
+      - Bug Fix: Incorrect index on SilentPop
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
