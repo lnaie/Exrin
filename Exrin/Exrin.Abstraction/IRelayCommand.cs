@@ -8,5 +8,6 @@
         int Timeout { get; set; }
         Action FinishedCallback { get; set; }
         bool Executing { get; }
+        void OnCanExecuteChanged();
     }
 }

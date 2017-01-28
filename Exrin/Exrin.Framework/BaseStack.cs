@@ -303,11 +303,12 @@
                 var tuple = Abstraction.Tuple.Create(key, App.PlatformOptions?.Platform);
 
                 // Get index in stack
-                var index = _viewsByKey.ToList().FindIndex(x => x.Key.Key == key);
-
-                var indexFromTop = _viewsByKey.Count - index - 1;
-                
+                var index = _viewKeyTracking.IndexOf(_viewKeyTracking.FirstOrDefault(x => x.Key == key));
+                var indexFromTop = _viewKeyTracking.Count - index - 1;
                 await Proxy.SilentPopAsync(indexFromTop);
+
+                // Remove from key tracking
+                _viewKeyTracking.RemoveAt(index);
             }
         }
     }
