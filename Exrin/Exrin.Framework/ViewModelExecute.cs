@@ -10,14 +10,24 @@
 
     public static partial class Process
     {
+
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "")
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), name);
         }
 
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, name);
+        }
+
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
+            return ViewModelExecute(sender, execute, -1, name);
+        }
 
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, [CallerMemberName] string name = "")
+        {
             return new RelayCommand(async (parameter) =>
             {
                 await ViewModelExecute(sender,
@@ -27,7 +37,7 @@
                                         insights: sender.Insights,
                                         notifyActivityFinished: sender.NotifyActivityFinished,
                                         notifyOfActivity: sender.NotifyOfActivity,
-                                        timeoutMilliseconds: execute.TimeoutMilliseconds,
+                                        timeoutMilliseconds: timeout == -1 ? execute.TimeoutMilliseconds : timeout,
                                         name: name,
                                         parameter: parameter);
             })
@@ -82,7 +92,7 @@
             }).ConfigureAwait(false);
 
             await Task.Run(async () =>
-            {              
+            {
                 sender.Result = null;
 
                 List<Func<Task>> rollbacks = new List<Func<Task>>();

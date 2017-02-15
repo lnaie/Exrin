@@ -9,7 +9,7 @@
         {
             _visualizer = visualizer;
         }
-
+        
         public void AddInsight(IInsightData data)
         {
             _visualizer?.AddInsight(data);
