@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     public class Bootstrapper
     {
@@ -34,17 +35,21 @@
 
             InitCustom();
 
-            InitState();
+            IList<Task> tasks = new List<Task>();
 
-            InitInsights();
+            tasks.Add(Task.Run(() => InitState()));
 
-            InitServices();
+            tasks.Add(Task.Run(() => InitInsights()));
 
-            InitStacks();
+            tasks.Add(Task.Run(() => InitServices()));
 
-            InitViewContainers();
+            tasks.Add(Task.Run(() => InitStacks()));
 
-            InitModels();
+            tasks.Add(Task.Run(() => InitViewContainers()));
+
+            tasks.Add(Task.Run(() => InitModels()));
+
+            Task.WhenAll(tasks).Wait();
 
             _injection.Complete();
 

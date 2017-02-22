@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.0.6-beta1</version>
+    <version>1.0.6-beta2</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,8 +18,7 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - Feature: Dialog Option Button Text Options
-      - Feature: Timeout parameter from ViewModelExecute
+      - Perf: Multi-Threaded Bootstrapper
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
