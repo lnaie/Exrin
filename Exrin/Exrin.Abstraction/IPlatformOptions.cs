@@ -3,5 +3,7 @@
     public interface IPlatformOptions
     {
         string Platform { get; }
+
+        bool StateTracking { get; }
     }
 }

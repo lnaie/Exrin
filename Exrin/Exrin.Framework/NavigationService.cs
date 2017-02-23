@@ -14,6 +14,7 @@
         private readonly IDictionary<object, object> _stackViewContainers = new Dictionary<object, object>();
         private readonly IDictionary<object, IViewContainer> _viewContainers = new Dictionary<object, IViewContainer>();
         private object _currentStack = null;
+        private IViewContainer _currentViewContainer = null;
         private readonly IDisplayService _displayService;
         private readonly IInjectionProxy _injection;
         private Action<object> _setRoot = null;
@@ -28,6 +29,8 @@
         }
 
         public object ActiveStackIdentifier { get { return _currentStack; } }
+
+        public IViewContainer ActiveViewContainer { get { return _currentViewContainer; } }
 
         public async Task Navigate(string key)
         {
@@ -204,6 +207,8 @@
                         }
 
                     }
+
+                    _currentViewContainer = viewContainer;
 
                     if (!string.IsNullOrEmpty(options.ViewKey))
                         await Navigate(options.ViewKey, options.Args);

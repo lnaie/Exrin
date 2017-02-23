@@ -32,6 +32,8 @@
       
         object ActiveStackIdentifier { get; }
 
+        IViewContainer ActiveViewContainer { get; }
+
         Task SilentPop(object stackIdentifier, IList<string> viewKeys);
 
     }

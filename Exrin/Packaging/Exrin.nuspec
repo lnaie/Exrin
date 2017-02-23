@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.0.6-beta2</version>
+    <version>1.0.6-beta4</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,7 +18,7 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - Perf: Multi-Threaded Bootstrapper
+      - Visual State Tracking
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

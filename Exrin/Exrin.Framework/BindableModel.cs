@@ -7,12 +7,13 @@
 
     public class BindableModel : INotifyPropertyChanged, IDisposable
     {
-
+        private IDictionary<DateTime, KeyValuePair<string, object>> _propertyValueTrack = null;
         private IDictionary<string, object> _propertyValues = null;
 
         public BindableModel()
         {
             _propertyValues = new Dictionary<string, object>();
+            _propertyValueTrack = new Dictionary<DateTime, KeyValuePair<string, object>>();
         }
 
         //TODO: When C#7 is released, possible replace with Sideways Loading for INPC
@@ -32,7 +33,7 @@
             if (_propertyValues.ContainsKey(propertyName))
             {
                 oldValue = _propertyValues[propertyName];
-                if (oldValue == value) // FLAG: Should I block any non-changing property changes? Maybe an optional condition?
+                if (oldValue == value)
                     return;
 
                 _propertyValues[propertyName] = value;
@@ -40,9 +41,15 @@
             else
                 _propertyValues.Add(propertyName, value);
 
-
+            if (App.PlatformOptions.StateTracking)
+                _propertyValueTrack.Add(DateTime.Now, new KeyValuePair<string, object>(propertyName, value));
 
             OnPropertyChanged(oldValue, value, propertyName);
+        }
+
+        public IDictionary<DateTime, KeyValuePair<string, object>> GetStateHistory()
+        {
+            return _propertyValueTrack;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -78,7 +85,6 @@
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-
         }
     }
 }
