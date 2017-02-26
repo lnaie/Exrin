@@ -15,7 +15,8 @@
         Task Navigate(string key);
 
         Task Navigate(string key, object args);
-        Task Navigate(string viewKey, object args, bool duplicate);
+
+        Task Navigate(string viewKey, object args, bool newInstance);
 
         Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel;
 

@@ -116,14 +116,14 @@
             return Navigate(key, args, false);
         }
 
-        public async Task Navigate(string key, object args, bool duplicate)
+        public async Task Navigate(string key, object args, bool newInstance)
         {
             using (var releaser = await _lock.LockAsync())
             {
                 await ThreadHelper.RunOnUIThreadAsync(async () =>
                 {
                     // Do not navigate to the same view, unless duplicate
-                    if (key == CurrentView.Key && !duplicate)
+                    if (key == CurrentView.Key && !newInstance)
                     {
                         var model = CurrentViewTrack[CurrentViewTrack.Count - 1].BindingContext as IViewModel;
 
@@ -165,7 +165,7 @@
 
                         Proxy.SetNavigationBar(ShowNavigationBar, view);
 
-                        if (_viewKeyTracking.Contains(tupleKey) && !duplicate)
+                        if (_viewKeyTracking.Contains(tupleKey) && !newInstance)
                         {
                             // TODO: SilentPop instead of pre-navigate regular pop
                             // Get Number of pages back

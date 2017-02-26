@@ -40,10 +40,10 @@
         {
             return Navigate(viewKey, args, false);
         }
-        public async Task Navigate(string viewKey, object args, bool duplicate)
+        public async Task Navigate(string viewKey, object args, bool newInstance)
         {
             // Navigate on Current Stack
-            await _stacks[_currentStack].Navigate(viewKey, args);
+            await _stacks[_currentStack].Navigate(viewKey, args, newInstance);
 
             _state.ViewName = viewKey;
         }

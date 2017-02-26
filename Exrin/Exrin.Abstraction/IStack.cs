@@ -13,7 +13,7 @@
         void Init();
         string NavigationStartKey { get; }
         Task Navigate(string key, object args);
-        Task Navigate(string key, object args, bool duplicate);
+        Task Navigate(string key, object args, bool newInstance);
         void StateChange(StackStatus state); // Notifies the stack its state is changing
         Task StackChanged();
         Task GoBack();
