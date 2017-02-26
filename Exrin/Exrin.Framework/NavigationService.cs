@@ -36,8 +36,11 @@
         {
             await Navigate(key, null); //TODO: Possible locks on these functions, especially since state change
         }
-
-        public async Task Navigate(string viewKey, object args)
+        public Task Navigate(string viewKey, object args)
+        {
+            return Navigate(viewKey, args, false);
+        }
+        public async Task Navigate(string viewKey, object args, bool duplicate)
         {
             // Navigate on Current Stack
             await _stacks[_currentStack].Navigate(viewKey, args);
@@ -211,7 +214,7 @@
                     _currentViewContainer = viewContainer;
 
                     if (!string.IsNullOrEmpty(options.ViewKey))
-                        await Navigate(options.ViewKey, options.Args);
+                        await Navigate(options.ViewKey, options.Args, options.NewInstance);
 
                     _setRoot?.Invoke(viewContainer.NativeView);
 

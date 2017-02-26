@@ -35,21 +35,17 @@
 
             InitCustom();
 
-            IList<Task> tasks = new List<Task>();
+            InitState();
 
-            tasks.Add(Task.Run(() => InitState()));
+            InitInsights();
 
-            tasks.Add(Task.Run(() => InitInsights()));
+            InitServices();
 
-            tasks.Add(Task.Run(() => InitServices()));
+            InitStacks();
 
-            tasks.Add(Task.Run(() => InitStacks()));
+            InitViewContainers();
 
-            tasks.Add(Task.Run(() => InitViewContainers()));
-
-            tasks.Add(Task.Run(() => InitModels()));
-
-            Task.WhenAll(tasks).Wait();
+            InitModels();
 
             _injection.Complete();
 

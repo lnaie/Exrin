@@ -7,5 +7,7 @@
         object Key { get; set; }
 
         object Parameter { get; set; }
+
+        bool NewInstance { get; set; }
     }
 }

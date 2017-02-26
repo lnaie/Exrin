@@ -9,6 +9,8 @@
 
         object Args { get; }
 
+        bool NewInstance { get; set; }
+
         /// <summary>
         /// An ordered array with the Page Keys for a stack to be preloaded.The last page on the array will be the visible one.
         /// </summary>

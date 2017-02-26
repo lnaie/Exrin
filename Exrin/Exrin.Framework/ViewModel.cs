@@ -150,11 +150,11 @@
                                     var args = result.Arguments as INavigationArgs;
 
                                     // Determine Stack Change
-                                    var stackResult = _navigationService.Navigate(options: new StackOptions() { StackChoice = args.StackType, Args = args.Parameter, ArgsKey = Convert.ToString(args.Key) });
+                                    var stackResult = _navigationService.Navigate(options: new StackOptions() { StackChoice = args.StackType, Args = args.Parameter, ArgsKey = Convert.ToString(args.Key), NewInstance = args.NewInstance });
 
                                     if (!stackResult.HasFlag(StackResult.ArgsPassed))
                                         // Determine View Load
-                                        await _navigationService.Navigate(Convert.ToString(args.Key), args.Parameter);
+                                        await _navigationService.Navigate(Convert.ToString(args.Key), args.Parameter, args.NewInstance);
 
                                     break;
                                 }

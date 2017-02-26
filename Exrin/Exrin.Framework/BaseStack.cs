@@ -111,15 +111,19 @@
                 });
             }
         }
+        public Task Navigate(string key, object args)
+        {
+            return Navigate(key, args, false);
+        }
 
-        public async Task Navigate(string key, object args)
+        public async Task Navigate(string key, object args, bool duplicate)
         {
             using (var releaser = await _lock.LockAsync())
             {
                 await ThreadHelper.RunOnUIThreadAsync(async () =>
                 {
-                    // Do not navigate to the same view.
-                    if (key == CurrentView.Key)
+                    // Do not navigate to the same view, unless duplicate
+                    if (key == CurrentView.Key && !duplicate)
                     {
                         var model = CurrentViewTrack[CurrentViewTrack.Count - 1].BindingContext as IViewModel;
 
@@ -161,8 +165,12 @@
 
                         Proxy.SetNavigationBar(ShowNavigationBar, view);
 
-                        if (_viewKeyTracking.Contains(tupleKey))
+                        if (_viewKeyTracking.Contains(tupleKey) && !duplicate)
                         {
+                            // TODO: SilentPop instead of pre-navigate regular pop
+                            // Get Number of pages back
+                            // SilentPop them, after navigation
+
                             // Pop until we get back to that page
                             while (key != CurrentView.Key)
                                 await Proxy.PopAsync();
@@ -175,6 +183,7 @@
                             {
                                 var arg = new Args();
                                 await model.OnPreNavigate(args, arg);
+
                                 // If user cancelled, stop forward navigation
                                 if (arg.Cancel)
                                     return;

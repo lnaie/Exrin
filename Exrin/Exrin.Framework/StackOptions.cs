@@ -14,6 +14,8 @@
 
         public string ArgsKey { get; set; }
 
+        public bool NewInstance { get; set; } = false;
+
         public IDictionary<string, object> PredefinedStack { get; set; }
     }
 }

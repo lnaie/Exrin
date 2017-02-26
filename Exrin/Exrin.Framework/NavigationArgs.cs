@@ -11,5 +11,7 @@
 
         public object Parameter { get; set; }
 
+        public bool NewInstance { get; set; }
+
     }
 }
