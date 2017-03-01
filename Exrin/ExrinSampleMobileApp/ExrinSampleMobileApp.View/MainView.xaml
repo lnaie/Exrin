@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:BaseView xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:local="clr-namespace:ExrinSampleMobileApp.View.Base"
+                x:Class="ExrinSampleMobileApp.View.MainView">
+  <Grid Padding="20">
+    <Label Text="Hello, this the main page" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+  </Grid>
+</local:BaseView>
