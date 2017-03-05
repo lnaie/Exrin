@@ -167,11 +167,17 @@
 
                         if (_viewKeyTracking.Contains(tupleKey) && !newInstance)
                         {
-                            // TODO: SilentPop instead of pre-navigate regular pop
-                            // Get Number of pages back
-                            // SilentPop them, after navigation
+                           
+                            // Silent pop those in the middle, then do a pop, so its a single back animation according to the user
+                            var index = 0;
+                            foreach (var item in _viewsByKey)
+                                if (item.Key.Key != key)
+                                    index += 1;
 
-                            // Pop until we get back to that page
+                            for (int i = _viewsByKey.Count - 2; i > index; i--)
+                                await Proxy.SilentPopAsync(i);
+                           
+                            // Now should be single pop to go back to the page.
                             while (key != CurrentView.Key)
                                 await Proxy.PopAsync();
                         }
@@ -269,7 +275,6 @@
                             using (var releaser = await _lock.LockAsync())
                             {
                                 await Proxy.SilentPopAsync(0);
-
                             }
                         });
                     }));

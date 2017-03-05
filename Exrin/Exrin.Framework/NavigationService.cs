@@ -47,8 +47,8 @@
 
             _state.ViewName = viewKey;
         }
-        public async Task Navigate<TViewModel>(object args) where TViewModel: class, IViewModel
-        {            
+        public async Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel
+        {
             await _stacks[_currentStack].Navigate<TViewModel>(args);
         }
 
@@ -133,7 +133,7 @@
                     throw new NullReferenceException($"{nameof(NavigationService)}.{nameof(Navigate)} can not accept a null {nameof(options.StackChoice)}");
 
                 // Don't change to the same stack
-                if (_currentStack != null 
+                if (_currentStack != null
                     && _currentStack.Equals(options.StackChoice))
                     return StackResult.None;
 
@@ -151,7 +151,7 @@
                 var stack = _stacks[options.StackChoice];
 
                 _currentStack = options.StackChoice;
-                
+
                 // Set new status
                 stack.Proxy.ViewStatus = VisualStatus.Visible;
 
@@ -187,6 +187,20 @@
                     // Find mainview from ViewHierarchy
                     var viewContainer = _viewContainers[_stackViewContainers[options.StackChoice]];
 
+                    // Tabbed View
+                    if (viewContainer is ITabbedContainer)
+                    {
+                        var tabbedView = viewContainer as ITabbedContainer;
+
+                        // Must start all stacks on the first tabbed view load
+                        // because when the tab changes, I can't block while I load an individual tab
+                        // I can only block moving to an entire page
+                        foreach (var item in tabbedView.Children)
+                            if (item.Status == StackStatus.Stopped)
+                                await item.StartNavigation(options?.Args);
+                    }
+
+                    // MasterDetail View load
                     if (viewContainer is IMasterDetailContainer)
                     {
                         var masterDetailContainer = viewContainer as IMasterDetailContainer;
@@ -196,7 +210,7 @@
                             var detailStack = _stacks[masterDetailContainer.DetailStack.StackIdentifier];
 
                             if (detailStack.Status == StackStatus.Stopped)
-                                await detailStack.StartNavigation();
+                                await detailStack.StartNavigation(options?.Args);
 
                             masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
 
@@ -204,7 +218,7 @@
                             var masterStack = _stacks[masterDetailContainer.MasterStack.StackIdentifier];
 
                             if (masterStack.Status == StackStatus.Stopped)
-                                await masterStack.StartNavigation();
+                                await masterStack.StartNavigation(options?.Args);
 
                             masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
                         }
@@ -230,7 +244,7 @@
         public async Task SilentPop(object stackIdentifier, IList<string> viewKeys)
         {
             var stack = _stacks[stackIdentifier];
-            await stack.SilentPop(viewKeys);           
+            await stack.SilentPop(viewKeys);
         }
     }
 }
