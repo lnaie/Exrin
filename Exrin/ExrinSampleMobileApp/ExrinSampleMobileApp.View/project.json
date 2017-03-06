@@ -7,6 +7,8 @@
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1"
   },
   "frameworks": {
-    "netstandard1.3": {}
+    "netstandard1.3": {
+      "imports": "portable-net45+win8+wpa81"
+    }
   }
 }
