@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.1.1</version>
+    <version>1.1.2-beta</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,13 +18,9 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - Visual State Tracking (Inspector)
-      - Initial ModelState to VisualState value load
-      - TabbedView delay StartNavigation
-      - SilentPop when traversing multiple pages going back all at once
-      - Back Navigation and Result
-      - Two Way Binding Support for VisualState and ModelState
-      - Implicit Operator for Result to List of IResult
+      - More implicit operators
+      - Extensions
+      - More ViewModelExecute constructor options
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
