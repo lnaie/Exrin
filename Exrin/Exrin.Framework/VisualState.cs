@@ -45,6 +45,41 @@
         public bool IsBusy { get { return _isBusy; } set { _isBusy = value; OnPropertyChanged(); } }
 
         /// <summary>
+        /// This monitors properties in Visual State marked as 2-way binding and propagates to the Model
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VisualState_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            try
+            {
+                // Get ModelState
+                var modelState = Model.GetType().GetRuntimeProperty("ModelState").GetValue(Model);
+
+                // Get VisualState Property
+                var visualStateProperty = this.GetType().GetRuntimeProperty(e.PropertyName);
+                if (visualStateProperty == null)
+                    return;
+
+                var attribute = visualStateProperty.GetCustomAttribute(typeof(BindingAttribute)) as BindingAttribute;
+                if (attribute == null)
+                    return; // No 2 way binding
+
+                if (attribute.BindingType != BindingType.TwoWay)
+                    return; // No 2 way binding
+
+                // Set property on ModelState
+                var value = visualStateProperty.GetValue(this);
+                modelState.GetType().GetRuntimeProperty(e.PropertyName)?.SetValue(modelState, value);
+            }
+            catch
+            {
+                Debug.WriteLine($"Binding of the {nameof(VisualState)} to {nameof(ModelState)} for property {e.PropertyName} failed.");
+            }
+        }
+
+
+        /// <summary>
         /// Will copy the value from the Model State into the Visual State when the Model property changes
         /// </summary>
         /// <param name="propertyName"></param>
@@ -75,12 +110,18 @@
 
         protected void HookEvents()
         {
+            this.PropertyChanged += VisualState_PropertyChanged;
             Model.ModelState.PropertyChanged += OnPropertyChanged;
         }
+
+
+
         public override void Disposing()
         {
+            this.PropertyChanged -= VisualState_PropertyChanged;
             Model.ModelState.PropertyChanged -= OnPropertyChanged;
         }
+
         ~VisualState()
         {
             Dispose(false);

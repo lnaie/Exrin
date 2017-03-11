@@ -14,5 +14,7 @@
             base.Arguments = new NavigationArgs() { StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance };
         }
 
+     
+
     }
 }
