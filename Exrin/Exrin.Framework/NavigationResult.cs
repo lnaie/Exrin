@@ -13,8 +13,5 @@
             base.ResultAction = Abstraction.ResultType.Navigation;
             base.Arguments = new NavigationArgs() { StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance };
         }
-
-     
-
     }
 }

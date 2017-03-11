@@ -1,6 +1,7 @@
 ﻿namespace Exrin.Framework
 {
     using Abstraction;
+    using System.Collections.Generic;
 
     public class Result : IResult
     {
@@ -14,6 +15,11 @@
         {
             ResultAction = resultAction;
             Arguments = arguments;
+        }
+
+        public static implicit operator List<IResult>(Result result)
+        {
+            return new List<IResult>() { result };
         }
     }
 }
