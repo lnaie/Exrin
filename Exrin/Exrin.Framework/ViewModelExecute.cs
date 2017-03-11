@@ -7,9 +7,25 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
-
+    
     public static partial class Process
     {
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
+                IList<IResult> list = result;
+                return Task.FromResult(list);
+                } } }), name);
+        }
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
+                IList<IResult> list = result;         
+                return Task.FromResult(list);
+                } } }), timeout, name);
+        }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "")
         {
