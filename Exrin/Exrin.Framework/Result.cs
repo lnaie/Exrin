@@ -2,6 +2,7 @@
 {
     using Abstraction;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class Result : IResult
     {
@@ -21,5 +22,12 @@
         {
             return new List<IResult>() { result };
         }
+
+        public static implicit operator Task<IList<IResult>>(Result result)
+        {
+            IList<IResult> list = new List<IResult>() { result };
+            return Task.FromResult(list);
+        }
     }
+
 }

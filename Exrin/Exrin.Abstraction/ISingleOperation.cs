@@ -10,6 +10,6 @@
         /// <summary>
         /// The function or operation to be performed inside the execute
         /// </summary>
-        new Func<object, CancellationToken, Task<IList<IResult>>> Function { get; }
+        Func<object, CancellationToken, Task<IList<IResult>>> Function { get; }
     }
 }
