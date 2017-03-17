@@ -1,7 +1,13 @@
 language: csharp
-sudo: required  
-dist: trusty  
-dotnet: 1.0.0-preview2-003121
+sudo: required
+dist: trusty
+mono: none
+dotnet: 1.0.1
+
+branches:
+  only:
+  - master
+
 addons:
   apt:
     sources:
@@ -9,12 +15,6 @@ addons:
       key_url: 'https://apt-mo.trafficmanager.net/keys/microsoft.asc'
     packages:
     - dotnet-dev-1.0.1
-mono:  
-  - none
-
-branches:  
-  only:
-    - master
 
 before_script:
   dotnet restore
