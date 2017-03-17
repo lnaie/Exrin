@@ -74,7 +74,7 @@ namespace Exrin.Framework.Tests.ViewModelExecute
 
             IViewModelExecute vmExecution = new TestViewModelExecute()
             {
-                Operations = new List<IOperation>() {
+                Operations = new List<IBaseOperation>() {
                                                     new Operation() { Function = waitFunction, Rollback = null }
                                                     },
                 TimeoutMilliseconds = timeout

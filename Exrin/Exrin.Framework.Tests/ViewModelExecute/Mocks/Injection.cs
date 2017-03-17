@@ -3,7 +3,7 @@
     using Exrin.Abstraction;
     using System;
 
-    public class Injection : IInjection
+    public class Injection : IInjectionProxy
     {
         public void Complete()
         {
@@ -45,12 +45,12 @@
             throw new NotImplementedException();
         }
 
-        void IInjection.RegisterInstance<I, T>(T instance)
+        void IInjectionProxy.RegisterInstance<I, T>(T instance)
         {
             throw new NotImplementedException();
         }
 
-        void IInjection.RegisterInterface<I, T>(InstanceType type)
+        void IInjectionProxy.RegisterInterface<I, T>(InstanceType type)
         {
             throw new NotImplementedException();
         }

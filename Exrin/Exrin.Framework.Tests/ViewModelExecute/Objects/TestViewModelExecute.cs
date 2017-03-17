@@ -10,9 +10,8 @@ namespace Exrin.Framework.Tests.ViewModelExecute.Objects
 
     public class TestViewModelExecute : IViewModelExecute
     {
-        public List<IOperation> Operations { get; set; }
-
         public int TimeoutMilliseconds { get; set; }
 
+        public List<IBaseOperation> Operations { get; set; }
     }
 }
