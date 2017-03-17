@@ -16,7 +16,7 @@
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;
                 return Task.FromResult(list);
-                } } }), name);
+                } } }), null, name);
         }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, [CallerMemberName] string name = "")
@@ -24,25 +24,63 @@
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;         
                 return Task.FromResult(list);
-                } } }), timeout, name);
+                } } }), timeout, null, name);
         }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "")
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), null, name);
         }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, [CallerMemberName] string name = "")
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, null, name);
         }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
         {
-            return ViewModelExecute(sender, execute, -1, name);
+            return ViewModelExecute(sender, execute, -1, null, name);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, [CallerMemberName] string name = "")
+
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
+                IList<IResult> list = result;
+                return Task.FromResult(list);
+                } } }), canExecute, name);
+        }
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
+                IList<IResult> list = result;
+                return Task.FromResult(list);
+                } } }), timeout, canExecute, name);
+        }
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), name, canExecute);
+        }
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, canExecute, name);
+        }
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, execute, -1, canExecute, name);
+        }
+
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        {
+            return ViewModelExecute(sender, execute, timeout, canExecute, name);
+        }
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
         {
             return new RelayCommand(async (parameter) =>
             {
@@ -56,7 +94,7 @@
                                         timeoutMilliseconds: timeout == -1 ? execute.TimeoutMilliseconds : timeout,
                                         name: name,
                                         parameter: parameter);
-            })
+            }, canExecute)
             { Timeout = execute.TimeoutMilliseconds };
 
         }
