@@ -62,7 +62,7 @@
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, Func<object, bool> canExecute, [CallerMemberName] string name = "")
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), name, canExecute);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), canExecute, name);
         }
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
@@ -74,12 +74,7 @@
         {
             return ViewModelExecute(sender, execute, -1, canExecute, name);
         }
-
-
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
-        {
-            return ViewModelExecute(sender, execute, timeout, canExecute, name);
-        }
+                      
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
         {
             return new RelayCommand(async (parameter) =>
