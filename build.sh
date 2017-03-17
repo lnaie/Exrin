@@ -9,9 +9,9 @@ if [ -d $artifactsFolder ]; then
   rm -R $artifactsFolder
 fi
 
-dotnet restore
+dotnet restore Exrin
 
-dotnet build
+dotnet build Exrin
 
 revision=${TRAVIS_JOB_ID:=1}  
 revision=$(printf "%04d" $revision) 
