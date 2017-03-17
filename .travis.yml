@@ -3,7 +3,7 @@ sudo: required
 dist: trusty  
 dotnet: 1.0.0-preview3-004056
 env:  
-  - DOTNETCORE=1.1
+  - DOTNETCORE=1
 mono:  
   - none
 os:  
