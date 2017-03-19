@@ -32,15 +32,15 @@ Exrin is an extended Xamarin Forms MVVM Framework designed to enable teams to de
 
 [Tesla App](https://github.com/adamped/Tesla-Mobile-App) - Shows more advanced usage of Exrin with TabbedPages and MasterDetailPage.
 
-** 3rd Party App Samples **
+**3rd Party App Samples**
 
 [Exrin Providers](https://github.com/maximrub/ExrinProviders) - An intermediate example of Exrin.
 
-** Visual Studio Template **
+**Visual Studio Template**
 
 [Exrin Template](https://marketplace.visualstudio.com/items?itemName=AdamPedley.ExrinTemplate) - Jump start your Exrin App with the template
 
-** Video Introduction **
+**Video Introduction**
 
 [Introduction to Exrin](https://www.youtube.com/watch?v=VCmetoNpL4M) - A walkthrough on how the template is setup and how Exrin is designed to work.
 
