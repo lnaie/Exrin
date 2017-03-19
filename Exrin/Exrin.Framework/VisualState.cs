@@ -12,10 +12,8 @@
 
         public VisualState(IBaseModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException($"{nameof(VisualState)} can not have a null {nameof(IBaseModel)}");
+            Model = model ?? throw new ArgumentNullException($"{nameof(VisualState)} can not have a null {nameof(IBaseModel)}");
 
-            Model = model;
             HookEvents();
             MapProperties();
         }

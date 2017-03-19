@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.1.2-beta</version>
+    <version>1.1.2</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -21,6 +21,7 @@
       - More implicit operators
       - Extensions
       - More ViewModelExecute constructor options
+      - CanExecute parameter in overrides
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

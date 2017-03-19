@@ -1,5 +1,5 @@
 ﻿
-![Exrin](http://exrin.azurewebsites.net/wp-content/uploads/2016/03/exrin_128.png)
+![Exrin](https://exrin.net/wp-content/uploads/2016/03/exrin_128.png)
 
 [![Build Status](https://travis-ci.org/exrin/Exrin.svg?branch=master)](https://travis-ci.org/exrin/Exrin)
 [![Nuget](https://img.shields.io/nuget/v/Exrin.svg?style=flat-square)](https://www.nuget.org/packages/Exrin) 
@@ -32,13 +32,25 @@ Exrin is an extended Xamarin Forms MVVM Framework designed to enable teams to de
 
 [Tesla App](https://github.com/adamped/Tesla-Mobile-App) - Shows more advanced usage of Exrin with TabbedPages and MasterDetailPage.
 
+** 3rd Party App Samples **
+
+[Exrin Providers](https://github.com/maximrub/ExrinProviders) - An intermediate example of Exrin.
+
+** Visual Studio Template **
+
+[Exrin Template](https://marketplace.visualstudio.com/items?itemName=AdamPedley.ExrinTemplate) - Jump start your Exrin App with the template
+
+** Video Introduction **
+
+[Introduction to Exrin](https://www.youtube.com/watch?v=VCmetoNpL4M) - A walkthrough on how the template is setup and how Exrin is designed to work.
+
 # Frequently Asked Questions
 
 1. Is this another MVVM Framework?
 Yes and no. It contains all the MVVM helpers you would need however you can use another MVVM framework with Exrin if you choose.
 
 2. What IoC does it use?
-None, you inject your own IoC and DI Framework when configuring your app. After using a few on different projects, I prefer AutoFac.
+None, you use your own IoC and DI Framework when configuring your app. After using a few on different projects, I prefer AutoFac.
 
 3. Does Exrin have any dependencies?
 No. That was a critical design point. Exrin does not depend on anything. Having a package that locks you into another package version has become increasing frustrating and Exrin will not be a part of that.
