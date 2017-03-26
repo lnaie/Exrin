@@ -13,16 +13,25 @@
     {
         protected readonly AsyncLock _lock = new AsyncLock();
         protected readonly IInjectionProxy _injection;
-        private readonly Action<object> _setRoot;
+        private static Action<object> _setRoot;
         protected readonly IList<Action> _postRun = new List<Action>();
         private readonly IDictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
         private readonly IList<KeyValuePair<AssemblyAction, AssemblyName>> _assemblies = new List<KeyValuePair<AssemblyAction, AssemblyName>>();
         private static bool IsInitialized { get; set; } = false;
+        private static Func<object> _getRoot;
 
         public Bootstrapper(IInjectionProxy injection, Action<object> setRoot)
         {
             _injection = injection;
             _setRoot = setRoot;
+            _injection.Init();
+        }
+
+        public Bootstrapper(IInjectionProxy injection, Action<object> setRoot, Func<object> getRoot)
+        {
+            _injection = injection;
+            _setRoot = setRoot;
+            _getRoot = getRoot;
             _injection.Init();
         }
 
@@ -117,7 +126,10 @@
             if (!_injection.IsRegistered<INavigationService>())
             {
                 _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
-                _postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot); });
+                if (_getRoot == null)
+                    _postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot); }); // TODO: remove at next major version 2.0.
+                else
+                    _postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot, _getRoot); });
             }
 
             if (!_injection.IsRegistered<IDisplayService>())
@@ -184,7 +196,8 @@
 
         public void RegisterAssembly(AssemblyAction action, AssemblyName name)
         {
-            _assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, name));
+            if (_assemblies.Count(x => x.Key == action && x.Value.FullName == name.FullName) == 0) // Check if its already added
+                _assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, name));
         }
 
         public void RegisterTypeAssembly(Type @interface, AssemblyName name)

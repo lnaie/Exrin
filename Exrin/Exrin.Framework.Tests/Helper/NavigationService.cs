@@ -38,6 +38,11 @@ namespace Exrin.Framework.Tests.Helper
             throw new NotImplementedException();
         }
 
+        public void Init(Action<object> setRoot, Func<object> rootPage)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task LoadStack(Dictionary<string, object> definitions)
         {
             throw new NotImplementedException();

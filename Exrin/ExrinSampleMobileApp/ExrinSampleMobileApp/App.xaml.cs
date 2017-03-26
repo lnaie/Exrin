@@ -25,6 +25,7 @@ namespace ExrinSampleMobileApp
                         {
                             StackChoice = Stacks.Authentication
                         });
+           
         }
 
         protected override void OnStart()

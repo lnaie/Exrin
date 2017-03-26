@@ -10,7 +10,10 @@
         /// Provides the action to set the main root of the visual hierarchy. e.g. (view) => { MainPage = view as Page }
         /// </summary>
         /// <param name="setRoot"></param>
+        [Obsolete("Please use void Init(object rootPage);")]
         void Init(Action<object> setRoot);
+        
+        void Init(Action<object> setRoot, Func<object> rootPage);
 
         Task Navigate(string key);
 

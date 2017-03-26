@@ -19,6 +19,7 @@
         private readonly IInjectionProxy _injection;
         private Action<object> _setRoot = null;
         private readonly object _lock = new object();
+        private Func<object> _getRoot;
 
         public NavigationService(IViewService viewService, INavigationState state, IInjectionProxy injection, IDisplayService displayService)
         {
@@ -66,8 +67,15 @@
             await Navigate(viewKey, args);
         }
 
+        [Obsolete()]
         public void Init(Action<object> setRoot)
         {
+            _setRoot = setRoot;
+        }
+
+        public void Init(Action<object> setRoot, Func<object> getRoot)
+        {
+            _getRoot = getRoot;
             _setRoot = setRoot;
         }
 
@@ -135,7 +143,23 @@
                 // Don't change to the same stack
                 if (_currentStack != null
                     && _currentStack.Equals(options.StackChoice))
+                {
+                    if (_getRoot != null)
+                    {
+                        if (_getRoot() == null)
+                        {
+                            // Set Root Page
+                            ThreadHelper.RunOnUIThread(() =>
+                            {
+                                var viewContainer = _viewContainers[_stackViewContainers[options.StackChoice]];
+                                _setRoot?.Invoke(viewContainer?.NativeView);
+                            });
+                        }
+                    }
+
                     return StackResult.None;
+                }
+
 
                 if (!_stacks.ContainsKey(options.StackChoice))
                     throw new NullReferenceException($"{nameof(NavigationService)} does not contain a stack named {options.StackChoice.ToString()}");
@@ -222,7 +246,6 @@
 
                             masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
                         }
-
                     }
 
                     _currentViewContainer = viewContainer;
@@ -230,7 +253,7 @@
                     if (!string.IsNullOrEmpty(options.ViewKey))
                         await Navigate(options.ViewKey, options.Args, options.NewInstance);
 
-                    _setRoot?.Invoke(viewContainer.NativeView);
+                    _setRoot?.Invoke(viewContainer?.NativeView);
 
                     if (oldStack != null)
                         await oldStack.StackChanged();
