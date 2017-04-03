@@ -170,11 +170,11 @@
                            
                             // Silent pop those in the middle, then do a pop, so its a single back animation according to the user
                             var index = 0;
-                            foreach (var item in _viewsByKey)
-                                if (item.Key.Key != key)
+                            foreach (var item in _viewKeyTracking)
+                                if (item.Key != key)
                                     index += 1;
 
-                            for (int i = _viewsByKey.Count - 2; i > index; i--)
+                            for (int i = _viewKeyTracking.Count - 2; i > index; i--)
                                 await Proxy.SilentPopAsync(i);
                            
                             // Now should be single pop to go back to the page.
