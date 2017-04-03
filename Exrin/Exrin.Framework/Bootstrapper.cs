@@ -7,7 +7,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
 
     public class Bootstrapper
     {
@@ -53,6 +52,8 @@
             InitStacks();
 
             InitViewContainers();
+
+            InitViewProcessors();
 
             InitModels();
 
@@ -102,7 +103,7 @@
 
             if (!_injection.IsRegistered<IInsightsProcessor>())
                 _injection.RegisterInterface<IInsightsProcessor, Processor>(InstanceType.SingleInstance);
-        }
+        }        
 
         protected virtual void StartInsights(IList<IInsightsProvider> providers)
         {
@@ -163,6 +164,11 @@
                 foreach (var container in AssemblyHelper.GetTypes(assembly.Value, typeof(IViewContainer)))
                     method.MakeGenericMethod(container.AsType())
                             .Invoke(this, null);
+        }
+
+        public virtual void InitViewProcessors()
+        {
+            RegisterBasedOnInterface(typeof(IViewProcessor));
         }
 
         protected virtual void InitModels()
