@@ -22,6 +22,8 @@ namespace ExrinSampleMobileApp.Logic.Stack
         protected override void Map()
         {
             base.NavigationMap<MainView, MainViewModel>(nameof(Main.Main));
+            base.NavigationMap<AboutView, AboutViewModel>(nameof(Main.About));
+            base.NavigationMap<SettingsView, SettingsViewModel>(nameof(Main.Settings));
         }
 
         public override string NavigationStartKey

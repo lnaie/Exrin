@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,7 +18,8 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - Bootstrapper upgrade to handle more scenario's
+      - ViewProcessors for sharing code across Operations and ViewModels
+      - Bug Fix: SilentPop on Stack BackTrack
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

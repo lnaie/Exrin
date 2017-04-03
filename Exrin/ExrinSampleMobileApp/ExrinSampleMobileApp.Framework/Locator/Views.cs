@@ -7,6 +7,8 @@
 
     public enum Main
     {
-        Main
+        Main,
+        About,
+        Settings
     }
 }

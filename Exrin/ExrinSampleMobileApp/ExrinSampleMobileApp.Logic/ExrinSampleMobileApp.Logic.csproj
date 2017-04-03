@@ -44,12 +44,19 @@
     <Compile Include="Model\AuthModel.cs" />
     <Compile Include="Model\MainModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\AboutOperation.cs" />
+    <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="ViewModel\BackToMainOperation.cs" />
     <Compile Include="ViewModel\LoginOperation.cs">
       <DependentUpon>LoginViewModel.cs</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\SettingsOperation.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="VisualState\LoginVisualState.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="VisualState\AboutVisualState.cs" />
+    <Compile Include="VisualState\SettingsVisualState.cs" />
     <Compile Include="VisualState\MainVisualState.cs" />
   </ItemGroup>
   <ItemGroup>

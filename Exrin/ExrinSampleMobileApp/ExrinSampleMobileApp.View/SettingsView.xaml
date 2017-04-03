@@ -2,9 +2,9 @@
 <local:BaseView xmlns="http://xamarin.com/schemas/2014/forms"
                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                 xmlns:local="clr-namespace:ExrinSampleMobileApp.View.Base"
-                x:Class="ExrinSampleMobileApp.View.MainView">
+                x:Class="ExrinSampleMobileApp.View.SettingsView">
   <StackLayout Padding="20">
-    <Label Text="Hello, this the main page" HorizontalTextAlignment="Center" />
-    <Button Text="About Page" Command="{Binding AboutCommand}" />
+    <Label Text="Hello, this the settings page" HorizontalTextAlignment="Center" />
+    <Button Text="Back To Main" Command="{Binding BackToMainCommand}" />
   </StackLayout>
 </local:BaseView>

@@ -6,22 +6,19 @@ using ExrinSampleMobileApp.Logic.VisualState;
 
 namespace ExrinSampleMobileApp.Logic.ViewModel
 {
-    public class MainViewModel : BaseViewModel
+    public class SettingsViewModel : BaseViewModel
     {
-        private IMainModel _model;
-        public MainViewModel(IMainModel model, IExrinContainer exrinContainer)
-            : base(exrinContainer, new MainVisualState(model))
+        public SettingsViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new SettingsVisualState(model))
         {
-            _model = model;
         }
 
-        public IRelayCommand AboutCommand
+        public IRelayCommand BackToMainCommand
         {
             get
             {
                 return GetCommand(() =>
                 {
-                    return Execution.ViewModelExecute(new AboutOperation());
+                    return Execution.ViewModelExecute(new BackToMainOperation());
                 });
             }
         }
