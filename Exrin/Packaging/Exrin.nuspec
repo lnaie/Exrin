@@ -18,8 +18,7 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - ViewProcessors for sharing code across Operations and ViewModels
-      - Bug Fix: SilentPop on Stack BackTrack
+      - GetAssemblyName Extension
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

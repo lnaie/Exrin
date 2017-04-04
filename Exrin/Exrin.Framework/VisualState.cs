@@ -109,7 +109,8 @@
         protected void HookEvents()
         {
             this.PropertyChanged += VisualState_PropertyChanged;
-            Model.ModelState.PropertyChanged += OnPropertyChanged;
+            if (Model?.ModelState != null)
+                Model.ModelState.PropertyChanged += OnPropertyChanged;
         }
 
 
@@ -117,7 +118,8 @@
         public override void Disposing()
         {
             this.PropertyChanged -= VisualState_PropertyChanged;
-            Model.ModelState.PropertyChanged -= OnPropertyChanged;
+            if (Model?.ModelState != null)
+                Model.ModelState.PropertyChanged -= OnPropertyChanged;
         }
 
         ~VisualState()
