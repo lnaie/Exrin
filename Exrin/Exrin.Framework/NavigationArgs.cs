@@ -13,5 +13,7 @@
 
         public bool NewInstance { get; set; }
 
+        public bool PopSource { get; set; }
+
     }
 }

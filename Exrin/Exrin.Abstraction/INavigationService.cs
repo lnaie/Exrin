@@ -21,6 +21,8 @@
 
         Task Navigate(string viewKey, object args, bool newInstance);
 
+        Task Navigate(string viewKey, object args, bool newInstance, bool popSource);
+
         Task Navigate<TViewModel>(object args) where TViewModel : class, IViewModel;
 
         Task Navigate(object stackIdentifier, string key, object args);

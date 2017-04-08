@@ -156,7 +156,7 @@
 
                                         if (!stackResult.HasFlag(StackResult.ArgsPassed))
                                             // Determine View Load
-                                            await _navigationService.Navigate(Convert.ToString(args.Key), args.Parameter, args.NewInstance);
+                                            await _navigationService.Navigate(Convert.ToString(args.Key), args.Parameter, args.NewInstance, args.PopSource);
 
                                     }
                                     else if (result.Arguments is IBackNavigationArgs)

@@ -13,5 +13,11 @@
             base.ResultAction = Abstraction.ResultType.Navigation;
             base.Arguments = new NavigationArgs() { StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance };
         }
+
+        public NavigationResult(object stackType, object key, object parameter, bool newInstance, bool popSource)
+        {
+            base.ResultAction = Abstraction.ResultType.Navigation;
+            base.Arguments = new NavigationArgs() { StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance, PopSource = popSource };
+        }
     }
 }

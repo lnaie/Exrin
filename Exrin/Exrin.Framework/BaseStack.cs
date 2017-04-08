@@ -113,10 +113,10 @@
         }
         public Task Navigate(string key, object args)
         {
-            return Navigate(key, args, false);
+            return Navigate(key, args, false, false);
         }
 
-        public async Task Navigate(string key, object args, bool newInstance)
+        public async Task Navigate(string key, object args, bool newInstance, bool popSource)
         {
             using (var releaser = await _lock.LockAsync())
             {
@@ -166,17 +166,21 @@
                         Proxy.SetNavigationBar(ShowNavigationBar, view);
 
                         if (_viewKeyTracking.Contains(tupleKey) && !newInstance)
-                        {
-                           
+                        {                           
                             // Silent pop those in the middle, then do a pop, so its a single back animation according to the user
                             var index = 0;
                             foreach (var item in _viewKeyTracking)
                                 if (item.Key != key)
                                     index += 1;
-
-                            for (int i = _viewKeyTracking.Count - 2; i > index; i--)
+                                else
+                                    break;
+                            var count = _viewKeyTracking.Count;
+                            for (int i = count - 2; i > index; i--)
+                            {
                                 await Proxy.SilentPopAsync(i);
-                           
+                                _viewKeyTracking.RemoveAt(i);
+                            }
+
                             // Now should be single pop to go back to the page.
                             while (key != CurrentView.Key)
                                 await Proxy.PopAsync();
@@ -207,7 +211,7 @@
 
                             await Proxy.PushAsync(view);
 
-                            if (popCurrent) // Pop the one behind without showing it
+                            if (popCurrent || popSource) // Pop the one behind without showing it
                             {
                                 await Proxy.SilentPopAsync(1);
                                 // Remove the top one as the new tracking key hasn't been added yet

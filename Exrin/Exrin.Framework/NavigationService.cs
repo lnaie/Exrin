@@ -41,10 +41,14 @@
         {
             return Navigate(viewKey, args, false);
         }
-        public async Task Navigate(string viewKey, object args, bool newInstance)
+        public Task Navigate(string viewKey, object args, bool newInstance)
+        {
+            return Navigate(viewKey, args, false, false);
+        }
+        public async Task Navigate(string viewKey, object args, bool newInstance, bool popSource)
         {
             // Navigate on Current Stack
-            await _stacks[_currentStack].Navigate(viewKey, args, newInstance);
+            await _stacks[_currentStack].Navigate(viewKey, args, newInstance, popSource);
 
             _state.ViewName = viewKey;
         }
