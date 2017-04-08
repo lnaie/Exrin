@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.2.2-beta1</version>
+    <version>1.2.2</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -19,6 +19,7 @@
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
       - GetAssemblyName Extension
+      - Several navigation bug fixes
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
