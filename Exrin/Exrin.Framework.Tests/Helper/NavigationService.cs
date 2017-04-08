@@ -83,6 +83,11 @@ namespace Exrin.Framework.Tests.Helper
             throw new NotImplementedException();
         }
 
+        public Task Navigate(string viewKey, object args, bool newInstance, bool popSource)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task SilentPop(object stackIdentifier, IList<string> viewKeys)
         {
             throw new NotImplementedException();
