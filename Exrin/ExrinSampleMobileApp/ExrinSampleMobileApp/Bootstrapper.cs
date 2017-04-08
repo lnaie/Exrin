@@ -9,12 +9,8 @@ namespace ExrinSampleMobileApp
     public class Bootstrapper : Exrin.Framework.Bootstrapper
     {
         private static Bootstrapper _instance = null;
-        private Func<object> _rootGet;
-        private Action<object> _rootSet;
         public Bootstrapper(IInjectionProxy injection, Action<object> setRoot, Func<object> getRoot)
             : base(injection, setRoot, getRoot) {
-            _rootGet = getRoot;
-            _rootSet = setRoot;
         }
 
         public static Bootstrapper GetInstance()

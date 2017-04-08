@@ -1,4 +1,5 @@
-﻿using Exrin.Abstraction;
+﻿using System.Threading.Tasks;
+using Exrin.Abstraction;
 using Exrin.Framework;
 using ExrinSampleMobileApp.Framework.Abstraction.Model;
 using ExrinSampleMobileApp.Logic.Base;
@@ -13,6 +14,16 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
             : base(exrinContainer, new MainVisualState(model))
         {
             _model = model;
+        }
+
+        public override Task OnNavigated(object args)
+        {
+            return base.OnNavigated(args);
+        }
+
+        public override Task OnBackNavigated(object args)
+        {
+            return base.OnBackNavigated(args);
         }
 
         public IRelayCommand AboutCommand

@@ -19,7 +19,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
             {
                 return (parameter, token) =>
                 {
-                    return new NavigationResult(Stacks.Main, Main.Main);
+                    return new NavigationResult(Stacks.Main, Main.Main, new BackToMainOperation(), false);
                 };
             }
         }
