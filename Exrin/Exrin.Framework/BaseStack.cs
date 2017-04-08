@@ -154,16 +154,10 @@
                     if (viewKey != null)
                     {
                         var typeDefinition = viewKey;
-
-                        var view = await _viewService.Build(typeDefinition) as IView;
-
-                        if (view == null)
-                            throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
-
+                        
                         if (Proxy == null)
                             throw new Exception($"{nameof(INavigationProxy)} is null. Did you forget to call NavigationService.Init()?");
-
-                        Proxy.SetNavigationBar(ShowNavigationBar, view);
+                                                
 
                         if (_viewKeyTracking.Contains(tupleKey) && !newInstance)
                         {                           
@@ -187,6 +181,13 @@
                         }
                         else
                         {
+                            var view = await _viewService.Build(typeDefinition) as IView;
+
+                            if (view == null)
+                                throw new Exception(String.Format("Unable to build view {0}", typeDefinition.Type.ToString()));
+
+                            Proxy.SetNavigationBar(ShowNavigationBar, view);
+
                             var model = view.BindingContext as IViewModel;
 
                             if (model != null)
