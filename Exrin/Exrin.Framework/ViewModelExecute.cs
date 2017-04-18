@@ -183,7 +183,7 @@
                             {
                                 try
                                 {
-                                    await op.Function(results, parameter, task.Token);
+									await op.Function(results, parameter, task.Token);
                                 }
                                 catch
                                 {
@@ -201,8 +201,8 @@
                             {
                                 if (op.Function != null)
                                 {
-                                    var resultList = await op.Function(parameter, task.Token);
-                                    if (resultList != null)
+									var resultList = await op.Function(parameter, task.Token);
+									if (resultList != null)
                                         foreach (var result in resultList)
                                             results.Add(result);
                                 }
@@ -265,7 +265,10 @@
                         }
                         catch (Exception e)
                         {
-                            var handled = await handleUnhandledException(e);
+							if (handleUnhandledException == null)
+								throw;
+
+							var handled = await handleUnhandledException(e);
                             if (!handled)
                                 throw;
                         }

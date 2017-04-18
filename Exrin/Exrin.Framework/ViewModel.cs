@@ -41,7 +41,8 @@
                 HandleTimeout = TimeoutHandle,
                 NotifyOfActivity = NotifyActivity,
                 NotifyActivityFinished = NotifyActivityFinished,
-                HandleResult = HandleResult
+                HandleResult = HandleResult,
+				HandleUnhandledException = (e) => { return Task.FromResult(false); }
             };
 
         }
