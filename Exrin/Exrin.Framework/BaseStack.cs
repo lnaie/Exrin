@@ -172,17 +172,19 @@
                             var count = _viewKeyTracking.Count;
                             for (int i = count - 2; i > index; i--)
                             {
-                                await Proxy.SilentPopAsync(i);
-                                _viewKeyTracking.RemoveAt(i);
+                                await Proxy.SilentPopAsync(1);
+                                _viewKeyTracking.RemoveAt(i);								
                             }
 
                             // Now should be single pop to go back to the page.
                             while (key != CurrentView.Key)
                             {
-                                if (args == null)
-                                    await Proxy.PopAsync();
-                                else
-                                    await Proxy.PopAsync(args);
+								if (args == null)
+								{
+									await Proxy.PopAsync();
+								}
+								else
+									await Proxy.PopAsync(args);
                             }
                         }
                         else
