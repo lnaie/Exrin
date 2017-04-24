@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,8 +18,7 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - GetAssemblyName Extension
-      - Several navigation bug fixes
+      - Bug Fix: Navigating to previous page
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
