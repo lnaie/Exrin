@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:BaseView xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:local="clr-namespace:ExrinSampleMobileApp.View.Base"
+                x:Class="ExrinSampleMobileApp.View.DetailView">
+	<StackLayout Padding="20">
+		<Label Text="Hello, this the Detail page" HorizontalTextAlignment="Center" />
+		<Button Text="About Page" Command="{Binding GoToAboutCommand}" />
+	</StackLayout>
+</local:BaseView>

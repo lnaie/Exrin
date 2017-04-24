@@ -8,9 +8,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 {
     public class AboutViewModel : BaseViewModel
     {
-        public AboutViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new AboutVisualState(model))
-        {
-        }
+		public AboutViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new AboutVisualState(model)) { }
 
         public IRelayCommand SettingsCommand
         {

@@ -9,6 +9,8 @@
     {
         Main,
         About,
-        Settings
+        Settings,
+		List,
+		Detail
     }
 }

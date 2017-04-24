@@ -26,7 +26,7 @@ namespace ExrinSampleMobileApp.Proxy
             if (OnPopped != null)
             {
                 var poppedPage = e.Page as IView;
-                var currentPage = _page.CurrentPage as IView;
+				var currentPage = _page.CurrentPage as IView;
                 var parameter = _argQueue.Count > 0 ? _argQueue.Dequeue() : null;
                 OnPopped(this, new ViewNavigationArgs() { Parameter = parameter, CurrentView = currentPage, PoppedView = poppedPage });
             }
@@ -88,8 +88,9 @@ namespace ExrinSampleMobileApp.Proxy
 
         public Task SilentPopAsync(int indexFromTop)
         {
-            _page.Navigation.RemovePage(_page.Navigation.NavigationStack[_page.Navigation.NavigationStack.Count - indexFromTop - 1]);
-            return Task.FromResult(true);
+			var page = _page.Navigation.NavigationStack[_page.Navigation.NavigationStack.Count - indexFromTop - 1];
+			_page.Navigation.RemovePage(page);
+			 return Task.FromResult(true);
         }
     }
 }
