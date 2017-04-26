@@ -43,7 +43,7 @@
         }
         public Task Navigate(string viewKey, object args, bool newInstance)
         {
-            return Navigate(viewKey, args, false, false);
+            return Navigate(viewKey, args, newInstance, false);
         }
         public async Task Navigate(string viewKey, object args, bool newInstance, bool popSource)
         {
