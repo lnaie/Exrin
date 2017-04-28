@@ -164,7 +164,7 @@
                                     {
                                         var args = result.Arguments as IBackNavigationArgs;
 
-                                        if (args.Parameter != null)
+                                        if (args.Parameter == null)
                                             await _navigationService.GoBack();
                                         else
                                             await _navigationService.GoBack(args.Parameter);
