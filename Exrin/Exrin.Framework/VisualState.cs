@@ -93,7 +93,6 @@
 			}
 		}
 
-
 		/// <summary>
 		/// Will copy the value from the Model State into the Visual State when the Model property changes
 		/// </summary>
