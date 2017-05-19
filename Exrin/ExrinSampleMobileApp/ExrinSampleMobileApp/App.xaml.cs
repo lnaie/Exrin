@@ -10,23 +10,31 @@ using Xamarin.Forms;
 namespace ExrinSampleMobileApp
 {
     using Framework.Locator;
+	using System.Threading.Tasks;
 
-    public partial class App : Application
+	public partial class App : Application
     {
         public App(IPlatformBootstrapper platform)
         {
             InitializeComponent();
 
-            // Intializes everything and sets the MainPage to the navigation option set.
-            Bootstrapper.GetInstance()
-                        .Init()
-                        .Get<INavigationService>()
-                        .Navigate(new StackOptions()
-                        {
-                            StackChoice = Stacks.Authentication
-                        });
-           
-        }
+			// Intializes everything and sets the MainPage to the navigation option set.
+			var navService = Bootstrapper.GetInstance()
+						.Init()
+						.Get<INavigationService>();
+                        
+			navService.Navigate(new StackOptions()
+			 {
+				 StackChoice = Stacks.Main
+			 });
+
+			var inspector = new Exrin.Inspector.Inspector(navService);
+
+			Task.Run(async () => {
+				await inspector.Init("127.0.0.1", 8888);
+			});
+			
+		}
 
         protected override void OnStart()
         {

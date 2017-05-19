@@ -2,6 +2,8 @@
 {
     public interface INavigationArgs: IResultArgs
     {
+		object ContainerId { get; set; }
+
         object StackType { get; set; }
 
         object Key { get; set; }

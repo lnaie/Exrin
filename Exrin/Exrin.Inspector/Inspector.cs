@@ -7,80 +7,89 @@ using System.Threading.Tasks;
 
 namespace Exrin.Inspector
 {
-    public class Inspector : IInspector
-    {
-        private readonly INavigationService _navigationService;
+	public class Inspector : IInspector
+	{
+		private readonly INavigationService _navigationService;
 
-        public Inspector(INavigationService navigationService)
-        {
-            _navigationService = navigationService;
-        }
+		public Inspector(INavigationService navigationService)
+		{
+			_navigationService = navigationService;
+		}
 
-        public async Task<bool> Init(string host, int port)
-        {
-            await Task.Run(() => RunServer(host, port));
+		public async Task<bool> Init(string host, int port)
+		{
+			await Task.Run(() =>
+			RunServer(host, port)
+			);
 
-            return true;
+			return true;
 
-            // Get Current Stack, Current NavigationStack, CurrentPage, CurrentBindingContext, convert to IViewModel, get IVisualState
+			// Get Current Stack, Current NavigationStack, CurrentPage, CurrentBindingContext, convert to IViewModel, get IVisualState
 
-            // Get Instance of VisualState base class
+			// Get Instance of VisualState base class
 
-            // Serialize all property data
+			// Serialize all property data
 
-            // Send as response over socket.
-            
-        }
+			// Send as response over socket.
 
-        private async Task RunServer(string host, int port)
-        {
-            TcpListener listener = new TcpListener(IPAddress.Parse(host), port);
+		}
 
-            listener.Start();
+		private async Task RunServer(string host, int port)
+		{
+			try
+			{
+				TcpListener listener = new TcpListener(IPAddress.Parse(host), port);
 
-            var client = await listener.AcceptTcpClientAsync();
-            
-            using (var stream = client.GetStream())
-                while (client.Connected)
-                {
-                    if (stream.DataAvailable)
-                    {
-                        var b = new byte[stream.Length];
-                        await stream.ReadAsync(b, 0, Convert.ToInt32(stream.Length));
+				listener.Start();
 
-                        ProcessData(System.Text.Encoding.UTF8.GetString(b));
-                    }
-                    await Task.Delay(200);
-                }
+				var client = await listener.AcceptTcpClientAsync();
 
-            listener.Stop();
-        }
+				using (var stream = client.GetStream())
+					while (client.Connected)
+					{
+						if (stream.DataAvailable)
+						{
+							var b = new byte[stream.Length];
+							await stream.ReadAsync(b, 0, Convert.ToInt32(stream.Length));
 
-        private void ProcessData(string data)
-        {
-            if (string.IsNullOrEmpty(data))
-                return;
+							ProcessData(System.Text.Encoding.UTF8.GetString(b));
+						}
+						await Task.Delay(200);
+					}
 
-            
-        }
+				listener.Stop();
+			}
+			catch (Exception ex)
+			{
 
-        private IList<IPropertyState> GetCurrentVisualState()
-        {
-            return null;
-        }
+			}
+		}
+
+		private void ProcessData(string data)
+		{
+			if (string.IsNullOrEmpty(data))
+				return;
 
 
-        // Server (mobile), Desktop Client (WPF)
+		}
 
-        // Inspector load from app.xaml.cs
+		private IList<IPropertyState> GetCurrentVisualState()
+		{
+			return null;
+		}
 
-        // Hook onto navigation service on page load and inject the visual state reference
 
-        // Get base list of properties and value changes
+		// Server (mobile), Desktop Client (WPF)
 
-        // Use reflection to change them (plus disable replay mapping)
+		// Inspector load from app.xaml.cs
 
-        // Trigger replay from socket server
+		// Hook onto navigation service on page load and inject the visual state reference
 
-    }
+		// Get base list of properties and value changes
+
+		// Use reflection to change them (plus disable replay mapping)
+
+		// Trigger replay from socket server
+
+	}
 }

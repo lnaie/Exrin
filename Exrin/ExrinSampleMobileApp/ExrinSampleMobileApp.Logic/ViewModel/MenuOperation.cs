@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace ExrinSampleMobileApp.Logic.ViewModel
 {
-    public class BackToMainOperation : ISingleOperation
+    public class MenuOperation : ISingleOperation
     {
-        public BackToMainOperation() { }
+        public MenuOperation() { }
 
         public Func<object, CancellationToken, Task<IList<IResult>>> Function
         {
             get
             {
                 return (parameter, token) =>
-                {
-                    return new NavigationResult(Stacks.Main, Main.Detail, new DetailOperation(), true);
+                {                    
+                    return new NavigationResult(ContainerChildren.Main, Stacks.Second, Second.Detail);
                 };
             }
         }

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="3.4">
     <id>Exrin</id>
-    <version>1.2.4</version>
+    <version>1.3.0-beta1</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,7 +18,8 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
-      - Bug Fix: Navigating to previous page
+      - Bug Fix: Disposal of VisualState
+			- Feature: Switch root page of container
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

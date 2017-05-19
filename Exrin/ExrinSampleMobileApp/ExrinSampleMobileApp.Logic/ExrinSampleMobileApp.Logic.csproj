@@ -44,7 +44,9 @@
     <Compile Include="Model\AuthModel.cs" />
     <Compile Include="Model\MainModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\MenuOperation.cs" />
     <Compile Include="ViewModel\AboutOperation.cs" />
+    <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\AboutViewModel.cs" />
     <Compile Include="ViewModel\DetailOperation.cs" />
     <Compile Include="ViewModel\BackToMainOperation.cs" />
@@ -56,6 +58,7 @@
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\SettingsOperation.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="VisualState\MenuVisualState.cs" />
     <Compile Include="VisualState\ListVisualState.cs" />
     <Compile Include="VisualState\DetailVisualState.cs" />
     <Compile Include="VisualState\LoginVisualState.cs" />

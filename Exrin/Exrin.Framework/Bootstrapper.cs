@@ -1,267 +1,273 @@
 ﻿namespace Exrin.Framework
 {
-    using Abstraction;
-    using Common;
-    using Insights;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+	using Abstraction;
+	using Common;
+	using Insights;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Reflection;
 
-    public class Bootstrapper
-    {
-        protected readonly AsyncLock _lock = new AsyncLock();
-        protected readonly IInjectionProxy _injection;
-        private static Action<object> _setRoot;
-        protected readonly IList<Action> _postRun = new List<Action>();
-        private readonly IDictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
-        private readonly IList<KeyValuePair<AssemblyAction, AssemblyName>> _assemblies = new List<KeyValuePair<AssemblyAction, AssemblyName>>();
-        private static bool IsInitialized { get; set; } = false;
-        private static Func<object> _getRoot;
+	public class Bootstrapper
+	{
+		protected readonly AsyncLock _lock = new AsyncLock();
+		protected readonly IInjectionProxy _injection;
+		private static Action<object> _setRoot;
+		protected readonly IList<Action> _postRun = new List<Action>();
+		private readonly IDictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
+		private readonly IList<KeyValuePair<AssemblyAction, AssemblyName>> _assemblies = new List<KeyValuePair<AssemblyAction, AssemblyName>>();
+		private static bool IsInitialized { get; set; } = false;
+		private static Func<object> _getRoot;
 
-        public Bootstrapper(IInjectionProxy injection, Action<object> setRoot)
-        {
-            _injection = injection;
-            _setRoot = setRoot;
-            _injection.Init();
-        }
+		public Bootstrapper(IInjectionProxy injection, Action<object> setRoot)
+		{
+			_injection = injection;
+			_setRoot = setRoot;
+			_injection.Init();
+		}
 
-        public Bootstrapper(IInjectionProxy injection, Action<object> setRoot, Func<object> getRoot)
-        {
-            _injection = injection;
-            _setRoot = setRoot;
-            _getRoot = getRoot;
-            _injection.Init();
-        }
+		public Bootstrapper(IInjectionProxy injection, Action<object> setRoot, Func<object> getRoot)
+		{
+			_injection = injection;
+			_setRoot = setRoot;
+			_getRoot = getRoot;
+			_injection.Init();
+		}
 
-        public IInjectionProxy Init()
-        {
-            if (IsInitialized)
-                return _injection;
+		public IInjectionProxy Init()
+		{
+			if (IsInitialized)
+				return _injection;
 
-            RegisterAssembly(AssemblyAction.Bootstrapper, _injection.GetType().GetTypeInfo().Assembly.GetName());
+			RegisterAssembly(AssemblyAction.Bootstrapper, _injection.GetType().GetTypeInfo().Assembly.GetName());
 
-            InitCustom();
+			InitCustom();
 
-            InitState();
+			InitState();
 
-            InitInsights();
+			InitInsights();
 
-            InitServices();
+			InitServices();
 
-            InitStacks();
+			InitStacks();
 
-            InitViewContainers();
+			InitViewContainers();
 
-            InitViewProcessors();
+			InitViewProcessors();
 
-            InitModels();
+			InitModels();
 
-            _injection.Complete();
+			_injection.Complete();
 
-            foreach (var action in _postRun)
-                action();
+			foreach (var action in _postRun)
+				action();
 
-            RegisterAssembly(AssemblyAction.StaticInitialize, _injection.GetType().GetTypeInfo().Assembly.GetName());
+			RegisterAssembly(AssemblyAction.StaticInitialize, _injection.GetType().GetTypeInfo().Assembly.GetName());
 
-            PostContainerBuild();
+			PostContainerBuild();
 
-            StaticInitialize();
+			StaticInitialize();
 
-            StartInsights(null);
+			StartInsights(null);
 
-            IsInitialized = true;
+			IsInitialized = true;
 
-            return _injection;
-        }
+			return _injection;
+		}
 
-        protected virtual void PostContainerBuild() { }
+		protected virtual void PostContainerBuild() { }
 
-        protected virtual void InitCustom() { }
+		protected virtual void InitCustom() { }
 
-        protected virtual void InitState()
-        {
-            if (!_injection.IsRegistered<INavigationReadOnlyState>())
-            {
-                var state = new NavigationState();
-                _injection.RegisterInstance<INavigationState, NavigationState>(state);
-                _injection.RegisterInstance<INavigationReadOnlyState, NavigationState>(state);
-            }
-        }
+		protected virtual void InitState()
+		{
+			if (!_injection.IsRegistered<INavigationReadOnlyState>())
+			{
+				var state = new NavigationState();
+				_injection.RegisterInstance<INavigationState, NavigationState>(state);
+				_injection.RegisterInstance<INavigationReadOnlyState, NavigationState>(state);
+			}
+		}
 
-        protected virtual void InitInsights()
-        {
+		protected virtual void InitInsights()
+		{
 
-            if (!_injection.IsRegistered<IInsightStorage>())
-                _injection.RegisterInterface<IInsightStorage, MemoryInsightStorage>(InstanceType.SingleInstance);
+			if (!_injection.IsRegistered<IInsightStorage>())
+				_injection.RegisterInterface<IInsightStorage, MemoryInsightStorage>(InstanceType.SingleInstance);
 
-            if (!_injection.IsRegistered<IDeviceInfo>())
-                _injection.RegisterInterface<IDeviceInfo, DeviceInfo>(InstanceType.SingleInstance);
+			if (!_injection.IsRegistered<IDeviceInfo>())
+				_injection.RegisterInterface<IDeviceInfo, DeviceInfo>(InstanceType.SingleInstance);
 
-            if (!_injection.IsRegistered<IApplicationInsights>())
-                _injection.RegisterInterface<IApplicationInsights, ApplicationInsights>(InstanceType.SingleInstance);
+			if (!_injection.IsRegistered<IApplicationInsights>())
+				_injection.RegisterInterface<IApplicationInsights, ApplicationInsights>(InstanceType.SingleInstance);
 
-            if (!_injection.IsRegistered<IInsightsProcessor>())
-                _injection.RegisterInterface<IInsightsProcessor, Processor>(InstanceType.SingleInstance);
-        }        
+			if (!_injection.IsRegistered<IInsightsProcessor>())
+				_injection.RegisterInterface<IInsightsProcessor, Processor>(InstanceType.SingleInstance);
+		}
 
-        protected virtual void StartInsights(IList<IInsightsProvider> providers)
-        {
-            var processor = _injection.Get<IInsightsProcessor>();
+		protected virtual void StartInsights(IList<IInsightsProvider> providers)
+		{
+			var processor = _injection.Get<IInsightsProcessor>();
 
-            if (providers != null)
-                foreach (var provider in providers)
-                    processor.RegisterService(provider.ToString(), provider);
+			if (providers != null)
+				foreach (var provider in providers)
+					processor.RegisterService(provider.ToString(), provider);
 
-            _injection.Get<IInsightsProcessor>().Start();
-        }
+			_injection.Get<IInsightsProcessor>().Start();
+		}
 
-        /// <summary>
-        /// Will initialize the basic navigation and display services and anything implementing the IService interface.
-        /// </summary>
-        protected virtual void InitServices()
-        {
-            if (!_injection.IsRegistered<IViewService>())
-                _injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
+		/// <summary>
+		/// Will initialize the basic navigation and display services and anything implementing the IService interface.
+		/// </summary>
+		protected virtual void InitServices()
+		{
+			if (!_injection.IsRegistered<IViewService>())
+				_injection.RegisterInterface<IViewService, ViewService>(InstanceType.SingleInstance);
 
-            if (!_injection.IsRegistered<INavigationService>())
-            {
-                _injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
-                if (_getRoot == null)
-                    _postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot); }); // TODO: remove at next major version 2.0.
-                else
-                    _postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot, _getRoot); });
-            }
+			if (!_injection.IsRegistered<INavigationService>())
+			{
+				_injection.RegisterInterface<INavigationService, NavigationService>(InstanceType.SingleInstance);
+				if (_getRoot == null)
+					_postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot); }); // TODO: remove at next major version 2.0.
+				else
+					_postRun.Add(() => { _injection.Get<INavigationService>().Init(_setRoot, _getRoot); });
+			}
 
-            if (!_injection.IsRegistered<IDisplayService>())
-                _injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
+			if (!_injection.IsRegistered<IDisplayService>())
+				_injection.RegisterInterface<IDisplayService, DisplayService>(InstanceType.SingleInstance);
 
-            if (!_injection.IsRegistered<IErrorHandlingService>())
-                _injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
+			if (!_injection.IsRegistered<IErrorHandlingService>())
+				_injection.RegisterInterface<IErrorHandlingService, ErrorHandlingService>(InstanceType.SingleInstance);
 
-            if (!_injection.IsRegistered<IExrinContainer>())
-                _injection.RegisterInterface<IExrinContainer, ExrinContainer>(InstanceType.SingleInstance);
+			if (!_injection.IsRegistered<IExrinContainer>())
+				_injection.RegisterInterface<IExrinContainer, ExrinContainer>(InstanceType.SingleInstance);
 
-            // Register anything with IService implemented
-            RegisterBasedOnInterface(typeof(IService));
-        }
+			// Register anything with IService implemented
+			RegisterBasedOnInterface(typeof(IService));
+		}
 
-        protected virtual void InitStacks()
-        {
-            MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterStack), new Type[] { });
+		protected virtual void InitStacks()
+		{
+			MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterStack), new Type[] { });
 
-            foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
-                foreach (var stack in AssemblyHelper.GetTypes(assembly.Value, typeof(IStack)))
-                    method.MakeGenericMethod(stack.AsType())
-                          .Invoke(this, null);
-        }
+			foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+				foreach (var stack in AssemblyHelper.GetTypes(assembly.Value, typeof(IStack)))
+					method.MakeGenericMethod(stack.AsType())
+						  .Invoke(this, null);
+		}
 
-        protected virtual void InitViewContainers()
-        {
-            MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterViewContainer), new Type[] { });
+		protected virtual void InitViewContainers()
+		{
+			MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterViewContainer), new Type[] { });
 
-            foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
-                foreach (var container in AssemblyHelper.GetTypes(assembly.Value, typeof(IViewContainer)))
-                    method.MakeGenericMethod(container.AsType())
-                            .Invoke(this, null);
-        }
+			foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+				foreach (var container in AssemblyHelper.GetTypes(assembly.Value, typeof(IViewContainer)))
+					method.MakeGenericMethod(container.AsType())
+							.Invoke(this, null);
+		}
 
-        public virtual void InitViewProcessors()
-        {
-            RegisterBasedOnInterface(typeof(IViewProcessor));
-        }
+		public virtual void InitViewProcessors()
+		{
+			RegisterBasedOnInterface(typeof(IViewProcessor));
+		}
 
-        protected virtual void InitModels()
-        {
-            RegisterBasedOnInterface(typeof(IBaseModel));
-        }
+		protected virtual void InitModels()
+		{
+			RegisterBasedOnInterface(typeof(IBaseModel));
+		}
 
-        /// <summary>
-        /// Goes through the assembly and create a new instance of each IStaticInitialize
-        /// to inject static values
-        /// </summary>
-        /// <param name="name"></param>
-        public void StaticInitialize()
-        {
-            foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.StaticInitialize))
-            {
-                foreach (var type in AssemblyHelper.GetTypes(assembly.Value, typeof(IStaticInitialize)))
-                {
-                    var useConstructor = type.DeclaredConstructors.Where(c => c.CustomAttributes.Any(x => x.AttributeType == typeof(StaticInitialize))).First();
+		/// <summary>
+		/// Goes through the assembly and create a new instance of each IStaticInitialize
+		/// to inject static values
+		/// </summary>
+		/// <param name="name"></param>
+		public void StaticInitialize()
+		{
+			foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.StaticInitialize))
+			{
+				foreach (var type in AssemblyHelper.GetTypes(assembly.Value, typeof(IStaticInitialize)))
+				{
+					var useConstructor = type.DeclaredConstructors.Where(c => c.CustomAttributes.Any(x => x.AttributeType == typeof(StaticInitialize))).First();
 
-                    List<object> parameters = new List<object>();
-                    foreach (var parameter in useConstructor.GetParameters())
-                    {
-                        parameters.Add(_injection.Get(parameter.ParameterType));
-                    }
+					List<object> parameters = new List<object>();
+					foreach (var parameter in useConstructor.GetParameters())
+					{
+						parameters.Add(_injection.Get(parameter.ParameterType));
+					}
 
-                    Activator.CreateInstance(type.AsType(), parameters.ToArray());
-                }
-            }
-        }
+					Activator.CreateInstance(type.AsType(), parameters.ToArray());
+				}
+			}
+		}
 
-        public void RegisterAssembly(AssemblyAction action, AssemblyName name)
-        {
-            if (_assemblies.Count(x => x.Key == action && x.Value.FullName == name.FullName) == 0) // Check if its already added
-                _assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, name));
-        }
+		public void RegisterAssembly(AssemblyAction action, AssemblyName name)
+		{
+			if (_assemblies.Count(x => x.Key == action && x.Value.FullName == name.FullName) == 0) // Check if its already added
+				_assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, name));
+		}
 
-        public void RegisterTypeAssembly(Type @interface, AssemblyName name)
-        {
-            if (!_typeAssembly.ContainsKey(@interface))
-                _typeAssembly.Add(@interface, name);
-        }
+		public void RegisterTypeAssembly(Type @interface, AssemblyName name)
+		{
+			if (!_typeAssembly.ContainsKey(@interface))
+				_typeAssembly.Add(@interface, name);
+		}
 
-        // TODO: Improve perf
-        private void RegisterBasedOnInterface(Type @interface)
-        {
-            MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjectionProxy.RegisterInterface), new Type[] { typeof(InstanceType) });
-            IList<TypeInfo> list = new List<TypeInfo>();
+		// TODO: Improve perf
+		private void RegisterBasedOnInterface(Type @interface)
+		{
+			MethodInfo method = _injection.GetType().GetRuntimeMethod(nameof(IInjectionProxy.RegisterInterface), new Type[] { typeof(InstanceType) });
+			IList<TypeInfo> list = new List<TypeInfo>();
 
-            if (_typeAssembly.ContainsKey(@interface))
-                list = AssemblyHelper.GetTypes(_typeAssembly[@interface], @interface);
-            else
-                foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
-                    foreach (var item in AssemblyHelper.GetTypes(assembly.Value, @interface))
-                        list.Add(item);
+			if (_typeAssembly.ContainsKey(@interface))
+				list = AssemblyHelper.GetTypes(_typeAssembly[@interface], @interface);
+			else
+				foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+					foreach (var item in AssemblyHelper.GetTypes(assembly.Value, @interface))
+						list.Add(item);
 
-            foreach (var item in list)
-            {
-                var typeArg = item.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == @interface)));
-                if (typeArg != null)
-                    method.MakeGenericMethod(typeArg, item.AsType())
-                        .Invoke(_injection, new object[] { InstanceType.SingleInstance });
-            }
-        }
+			foreach (var item in list)
+			{
+				var typeArg = item.ImplementedInterfaces.FirstOrDefault(x => (x.GetTypeInfo().ImplementedInterfaces.Any(y => y == @interface)));
+				if (typeArg != null)
+					method.MakeGenericMethod(typeArg, item.AsType())
+						.Invoke(_injection, new object[] { InstanceType.SingleInstance });
+			}
+		}
 
-        private void RegisterModel<T>() where T : class, IBaseModel
-        {
-            _injection.Register<T>(InstanceType.SingleInstance);
-        }
+		private void RegisterModel<T>() where T : class, IBaseModel
+		{
+			_injection.Register<T>(InstanceType.SingleInstance);
+		}
 
 
-        public void RegisterViewContainer<T>() where T : class, IViewContainer
-        {
-            if (!_injection.IsRegistered<T>())
-            {
-                _injection.Register<T>(InstanceType.SingleInstance);
+		public void RegisterViewContainer<T>() where T : class, IViewContainer
+		{
+			if (!_injection.IsRegistered<T>())
+			{
+				_injection.Register<T>(InstanceType.SingleInstance);
 
-                // Register the View Container
-                _postRun.Add(() => { _injection.Get<INavigationService>().RegisterViewContainer<T>(); });
-            }
+				// Register the View Container
+				_postRun.Add(() => { _injection.Get<INavigationService>().RegisterViewContainer<T>(); });
+			}
 
-        }
+		}
 
-        public void RegisterStack<T>() where T : class, IStack
-        {
-            if (!_injection.IsRegistered<T>())
-            {
-                _injection.Register<T>(InstanceType.SingleInstance);
-            }
-            // Initialize the Stack
-            _postRun.Add(() => { _injection.Get<T>().Init(); });
+		public void RegisterStack<T>() where T : class, IStack
+		{
+			if (!_injection.IsRegistered<T>())
+			{
+				_injection.Register<T>(InstanceType.SingleInstance);
+			}
+			// Initialize the Stack
+			_postRun.Add(() =>
+			{
+				var stack = _injection.Get<T>();
+				stack.Init();
+				var navService = _injection.Get<INavigationService>();
+				navService.RegisterStack(stack);
+			});
 
-        }
+		}
 
-    }
+	}
 }

@@ -2,6 +2,7 @@
 using Exrin.Framework;
 using ExrinSampleMobileApp.Framework.Locator;
 using ExrinSampleMobileApp.Framework.Locator.Views;
+using ExrinSampleMobileApp.Logic.VisualState;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,7 +12,10 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 {
     public class SettingsOperation : ISingleOperation
     {
-        public SettingsOperation() { }
+		private readonly IVisualState _visualState;
+        public SettingsOperation(IVisualState visualState) {
+			_visualState = visualState;
+		}
 
         public Func<object, CancellationToken, Task<IList<IResult>>> Function
         {
@@ -19,7 +23,8 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
             {
                 return (parameter, token) =>
                 {
-                    return new NavigationResult(Stacks.Main, Main.Settings);
+					((AboutVisualState)_visualState).MyProperty = null;
+					return new NavigationResult(Stacks.Main, Main.Settings);
                 };
             }
         }

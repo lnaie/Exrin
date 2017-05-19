@@ -6,10 +6,10 @@ using ExrinSampleMobileApp.Logic.VisualState;
 
 namespace ExrinSampleMobileApp.Logic.ViewModel
 {
-    public class AboutViewModel : BaseViewModel
+	public class MenuViewModel : BaseViewModel
     {
-		public AboutViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new AboutVisualState(model)) {
-			((AboutVisualState)VisualState).MyProperty = new System.Net.Http.HttpClient();
+		public MenuViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new MenuVisualState(model)) {
+			
 		}
 
         public IRelayCommand SettingsCommand
@@ -17,9 +17,8 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
             get
             {
                 return GetCommand(() =>
-                {
-					
-					return Execution.ViewModelExecute(new SettingsOperation(VisualState));
+                {					
+					return Execution.ViewModelExecute(new MenuOperation());
                 });
             }
         }

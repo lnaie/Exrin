@@ -13,4 +13,13 @@
 		List,
 		Detail
     }
+	public enum Second
+	{
+		Detail
+	}
+
+	public enum Menu
+	{
+		Main
+	}
 }

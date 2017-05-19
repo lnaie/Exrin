@@ -7,6 +7,7 @@
             this.InitializeComponent();
 
             LoadApplication(new ExrinSampleMobileApp.App(new Bootstrapper()));
+						
         }
     }
 }

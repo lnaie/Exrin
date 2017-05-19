@@ -10,7 +10,7 @@
         /// Provides the action to set the main root of the visual hierarchy. e.g. (view) => { MainPage = view as Page }
         /// </summary>
         /// <param name="setRoot"></param>
-        [Obsolete("Please use void Init(object rootPage);")]
+        [Obsolete("Please use void Init(Action<object> setRoot, object rootPage);")]
         void Init(Action<object> setRoot);
         
         void Init(Action<object> setRoot, Func<object> rootPage);
@@ -31,7 +31,13 @@
 
         StackResult Navigate(IStackOptions options);
 
-        Task GoBack();
+		Task Navigate(object containerId, object stackIdentifier, string key, object args);
+
+		Task Navigate(object containerId, string key, object args, IStackOptions options);
+
+		StackResult Navigate(object containerId, IStackOptions options);
+
+		Task GoBack();
 
         Task GoBack(object parameter);
 
@@ -42,6 +48,8 @@
         IViewContainer ActiveViewContainer { get; }
 
         Task SilentPop(object stackIdentifier, IList<string> viewKeys);
+
+		void RegisterStack(IStack stack);
 
     }
 }
