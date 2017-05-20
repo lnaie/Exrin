@@ -31,11 +31,11 @@
 
         StackResult Navigate(IStackOptions options);
 
-		Task Navigate(object containerId, object stackIdentifier, string key, object args);
+		Task Navigate(object containerId, object regionId, object stackIdentifier, string key, object args);
 
-		Task Navigate(object containerId, string key, object args, IStackOptions options);
+		Task Navigate(object containerId, object regionId, string key, object args, IStackOptions options);
 
-		StackResult Navigate(object containerId, IStackOptions options);
+		StackResult Navigate(object containerId, object regionId, IStackOptions options);
 
 		Task GoBack();
 

@@ -72,16 +72,16 @@
 			await Navigate(viewKey, args);
 		}
 
-		public async Task Navigate(object containerId, object stackIdentifier, string viewKey, object args)
+		public async Task Navigate(object containerId, object regionId, object stackIdentifier, string viewKey, object args)
 		{
-			Navigate(containerId, new StackOptions() { StackChoice = stackIdentifier });
+			Navigate(containerId, regionId, new StackOptions() { StackChoice = stackIdentifier });
 
 			await Navigate(viewKey, args);
 		}
 
-		public async Task Navigate(object containerId, string viewKey, object args, IStackOptions options)
+		public async Task Navigate(object containerId, object regionId, string viewKey, object args, IStackOptions options)
 		{
-			Navigate(containerId, options);
+			Navigate(containerId, regionId, options);
 
 			await Navigate(viewKey, args);
 		}
@@ -157,9 +157,9 @@
 
 		public StackResult Navigate(IStackOptions options)
 		{
-			return Navigate(containerId: null, options: options);
+			return Navigate(containerId: null, regionId: null, options: options);
 		}
-		public StackResult Navigate(object containerId, IStackOptions options)
+		public StackResult Navigate(object containerId, object regionId, IStackOptions options)
 		{
 			lock (_lock)
 			{
@@ -188,7 +188,7 @@
 					return StackResult.None;
 				}
 
-				if (!_stacks.ContainsKey(options.StackChoice) && containerId == null)
+				if (!_stacks.ContainsKey(options.StackChoice) && regionId == null)
 					throw new NullReferenceException($"{nameof(NavigationService)} does not contain a stack named {options.StackChoice.ToString()}");
 
 				// Current / Previous Stack
@@ -238,12 +238,12 @@
 					IViewContainer viewContainer = null;
 
 					// Find mainview from ViewHierarchy
-					object viewContainerKey = containerId;
-					if (containerId != null)
+					object viewContainerKey = regionId;
+					if (containerId != null && regionId != null)
 					{
-						foreach (var container in _viewContainers)
-								if (container.Value.ContainerMapping.Any(x => x.Key.ToString() == containerId.ToString()))
-									viewContainer = container.Value;
+						var container = _viewContainers[containerId.ToString()];
+						if (container.RegionMapping.Any(x => x.Key.ToString() == regionId.ToString()))
+							viewContainer = container;
 					}
 					else
 						viewContainer = _viewContainers[_stackViewContainers[stack.StackIdentifier]];
@@ -261,8 +261,8 @@
 								await item.StartNavigation(options?.Args);
 					}
 
-					var containerSwitch = viewContainer.ContainerMapping.Any(x => x.Key.ToString() == Convert.ToString(containerId));
-					KeyValuePair<object, ContainerType>? containerType = viewContainer.ContainerMapping.FirstOrDefault(x => x.Key.ToString() == Convert.ToString(containerId));
+					var containerSwitch = viewContainer.RegionMapping.Any(x => x.Key.ToString() == Convert.ToString(regionId));
+					KeyValuePair<object, ContainerType>? containerType = viewContainer.RegionMapping.FirstOrDefault(x => x.Key.ToString() == Convert.ToString(regionId));
 
 					// MasterDetail View load
 					if (viewContainer is IMasterDetailContainer)

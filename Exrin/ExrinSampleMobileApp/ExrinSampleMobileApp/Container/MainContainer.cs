@@ -1,6 +1,5 @@
 ﻿namespace ExrinSampleMobileApp.Container
 {
-	using System;
 	using Exrin.Abstraction;
 	using ExrinSampleMobileApp.Proxy;
 	using Framework.Locator;
@@ -9,18 +8,18 @@
 
 	public class MainContainer : Exrin.Framework.ViewContainer, IMasterDetailContainer
     {
-		private Xamarin.Forms.MasterDetailPage page;
+		private MasterDetailPage page;
 		public MainContainer(MainStack mainStack, MenuStack menuStack)
 			: base(Containers.Main.ToString(), mainStack.Proxy.NativeView)
 		{
-			page = new Xamarin.Forms.MasterDetailPage();
+			page = new MasterDetailPage();
 			var mdp = new MasterDetailProxy(page);
 			NativeView = mdp.View;
 			Proxy = mdp;
 			DetailStack = mainStack;
 			MasterStack = menuStack;
-			ContainerMapping.Add(ContainerChildren.Menu, ContainerType.Master);
-			ContainerMapping.Add(ContainerChildren.Main, ContainerType.Detail);
+			RegionMapping.Add(Regions.Menu, ContainerType.Master);
+			RegionMapping.Add(Regions.Main, ContainerType.Detail);
 		}
 
 		public IStack DetailStack { get; set; }

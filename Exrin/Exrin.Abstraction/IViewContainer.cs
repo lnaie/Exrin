@@ -6,6 +6,6 @@ namespace Exrin.Abstraction
     {
         string Identifier { get; }
         object NativeView { get; }
-		IDictionary<object, ContainerType> ContainerMapping { get; }
+		IDictionary<object, ContainerType> RegionMapping { get; }
     }
 }

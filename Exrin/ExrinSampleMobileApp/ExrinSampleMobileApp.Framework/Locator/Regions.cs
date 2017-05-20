@@ -1,6 +1,6 @@
 ﻿namespace ExrinSampleMobileApp.Framework.Locator
 {
-	public enum ContainerChildren
+	public enum Regions
 	{
 		Menu,
 		Main

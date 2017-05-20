@@ -6,6 +6,8 @@
     {
 		public object ContainerId { get; set; }
 
+		public object RegionId { get; set; }
+
 		public object StackType { get; set; }
 
         public object Key { get; set; }

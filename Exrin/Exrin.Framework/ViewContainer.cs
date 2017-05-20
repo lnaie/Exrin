@@ -20,6 +20,6 @@
 
 		public object NativeView { get; set; }
 
-		public IDictionary<object, ContainerType> ContainerMapping { get; } = new Dictionary<object, ContainerType>();
+		public IDictionary<object, ContainerType> RegionMapping { get; } = new Dictionary<object, ContainerType>();
 	}
 }

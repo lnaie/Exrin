@@ -20,22 +20,22 @@
             base.Arguments = new NavigationArgs() { StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance, PopSource = popSource };
         }
 
-		public NavigationResult(object containerId, object stackType, object key)
+		public NavigationResult(object containerId, object regionId, object stackType, object key)
 		{
 			base.ResultAction = Abstraction.ResultType.Navigation;
-			base.Arguments = new NavigationArgs() { ContainerId = containerId, StackType = stackType, Key = key };
+			base.Arguments = new NavigationArgs() { ContainerId = containerId, RegionId = regionId, StackType = stackType, Key = key };
 		}
 
-		public NavigationResult(object containerId, object stackType, object key, object parameter, bool newInstance)
+		public NavigationResult(object containerId, object regionId, object stackType, object key, object parameter, bool newInstance)
 		{
 			base.ResultAction = Abstraction.ResultType.Navigation;
-			base.Arguments = new NavigationArgs() { ContainerId = containerId, StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance };
+			base.Arguments = new NavigationArgs() { ContainerId = containerId, RegionId = regionId, StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance };
 		}
 
-		public NavigationResult(object containerId, object stackType, object key, object parameter, bool newInstance, bool popSource)
+		public NavigationResult(object containerId, object regionId, object stackType, object key, object parameter, bool newInstance, bool popSource)
 		{
 			base.ResultAction = Abstraction.ResultType.Navigation;
-			base.Arguments = new NavigationArgs() { ContainerId = containerId, StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance, PopSource = popSource };
+			base.Arguments = new NavigationArgs() { ContainerId = containerId, RegionId = regionId, StackType = stackType, Key = key, Parameter = parameter, NewInstance = newInstance, PopSource = popSource };
 		}
 	}
 }

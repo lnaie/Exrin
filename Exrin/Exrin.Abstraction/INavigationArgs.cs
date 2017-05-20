@@ -4,7 +4,9 @@
     {
 		object ContainerId { get; set; }
 
-        object StackType { get; set; }
+		object RegionId { get; set; }
+
+		object StackType { get; set; }
 
         object Key { get; set; }
 

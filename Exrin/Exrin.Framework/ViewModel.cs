@@ -165,7 +165,7 @@
 
 										// Determine Stack Change
 										var options = new StackOptions() { StackChoice = args.StackType, Args = args.Parameter, ArgsKey = Convert.ToString(args.Key), NewInstance = args.NewInstance };
-										var stackResult = args.ContainerId != null ? _navigationService.Navigate(args.ContainerId, options) : _navigationService.Navigate(options: options);
+										var stackResult = args.ContainerId != null ? _navigationService.Navigate(args.ContainerId, args.RegionId, options) : _navigationService.Navigate(options: options);
 
 										if (!stackResult.HasFlag(StackResult.ArgsPassed))
 											// Determine View Load

@@ -44,7 +44,7 @@
     <Compile Include="Abstraction\Model\IAuthModel.cs" />
     <Compile Include="Abstraction\Model\IMainModel.cs" />
     <Compile Include="AssemblyRegister.cs" />
-    <Compile Include="Locator\ContainerChildren.cs" />
+    <Compile Include="Locator\Regions.cs" />
     <Compile Include="Locator\Containers.cs" />
     <Compile Include="Locator\Stacks.cs" />
     <Compile Include="Locator\Views.cs" />
