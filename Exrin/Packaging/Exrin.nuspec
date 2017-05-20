@@ -19,7 +19,7 @@
     <tags>xamarin, xamarin.forms, enterprise</tags>
     <releaseNotes>
       - Bug Fix: Disposal of VisualState
-			- Feature: Switch root page of container
+			- Feature: Switch stack inside region of container
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

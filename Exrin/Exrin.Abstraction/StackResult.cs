@@ -8,6 +8,7 @@
         None = 1,
         ArgsPassed = 2,
         StackStarted = 4,
-        NavigationStarted = 8
+        NavigationStarted = 8,
+		Skipped = 16
     }
 }

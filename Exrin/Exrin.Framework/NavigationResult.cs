@@ -2,7 +2,13 @@
 {
     public class NavigationResult: Result
     {
-        public NavigationResult(object stackType, object key )
+		public NavigationResult(object key)
+		{
+			base.ResultAction = Abstraction.ResultType.Navigation;
+			base.Arguments = new NavigationArgs() { Key = key };
+		}
+
+		public NavigationResult(object stackType, object key )
         {
             base.ResultAction = Abstraction.ResultType.Navigation;
             base.Arguments = new NavigationArgs() { StackType = stackType, Key = key };
