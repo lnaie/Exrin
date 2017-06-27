@@ -5,6 +5,7 @@
                 x:Class="ExrinSampleMobileApp.View.MainView">
   <StackLayout Padding="20">
     <Label Text="Hello, this the main page" HorizontalTextAlignment="Center" />
+		<ListView ItemsSource="{Binding VisualState.ObservableList}" />
     <Button Text="About Page" Command="{Binding AboutCommand}" />
   </StackLayout>
 </local:BaseView>

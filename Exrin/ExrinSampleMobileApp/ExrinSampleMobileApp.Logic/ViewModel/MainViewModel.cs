@@ -32,7 +32,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
             {
                 return GetCommand(() =>
                 {
-                    return Execution.ViewModelExecute(new AboutOperation());
+                    return Execution.ViewModelExecute(new AboutOperation(VisualState as MainVisualState));
                 });
             }
         }
