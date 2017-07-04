@@ -10,8 +10,8 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
     {
         private readonly IAuthModel _model;
 
-        public ListViewModel(IAuthModel model, IExrinContainer exrinContainer) :
-           base(exrinContainer, new ListVisualState(model))
+        public ListViewModel(IAuthModel model) :
+           base(new ListVisualState(model))
         {
             _model = model;
         }

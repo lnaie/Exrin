@@ -50,7 +50,14 @@
                 throw new InvalidOperationException(
                     $"No suitable constructor found for ViewModel {viewModelType.ToString()}");
 
-            return constructor.Invoke(parameters);
+            var context = constructor.Invoke(parameters);
+
+			// ICompositional
+			var container = _injection.Get(typeof(IExrinContainer)) as IExrinContainer;
+
+			(context as IComposition).SetContainer(container);
+
+			return context;
         }
 
         public Task<IView> Build(ITypeDefinition definition)

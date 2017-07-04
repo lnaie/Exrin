@@ -153,8 +153,7 @@
 		{
 			_stacks.Add(stack.StackIdentifier, stack);
 		}
-
-
+		
 		public StackResult Navigate(IStackOptions options)
 		{
 			return Navigate(containerId: null, regionId: null, options: options);

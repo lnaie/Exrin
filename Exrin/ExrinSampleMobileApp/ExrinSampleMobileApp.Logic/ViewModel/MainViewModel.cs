@@ -10,8 +10,8 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
     public class MainViewModel : BaseViewModel
     {
         private IMainModel _model;
-        public MainViewModel(IMainModel model, IExrinContainer exrinContainer)
-            : base(exrinContainer, new MainVisualState(model))
+        public MainViewModel(IMainModel model)
+            : base(new MainVisualState(model))
         {
             _model = model;
         }

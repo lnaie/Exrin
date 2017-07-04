@@ -8,7 +8,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 {
     public class AboutViewModel : BaseViewModel
     {
-		public AboutViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new AboutVisualState(model)) {
+		public AboutViewModel(IMainModel model) : base(new AboutVisualState(model)) {
 			((AboutVisualState)VisualState).MyProperty = new System.Net.Http.HttpClient();
 		}
 

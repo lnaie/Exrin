@@ -8,7 +8,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 {
     public class SettingsViewModel : BaseViewModel
     {
-        public SettingsViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new SettingsVisualState(model))
+        public SettingsViewModel(IMainModel model) : base(new SettingsVisualState(model))
         {
         }
 

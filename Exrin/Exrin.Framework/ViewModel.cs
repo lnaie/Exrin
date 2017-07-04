@@ -7,13 +7,66 @@
 	using System.Runtime.CompilerServices;
 	using System.Threading.Tasks;
 
-	public abstract class ViewModel : BindableModel, IViewModel
+
+	public abstract class ViewModel : BindableModel, IViewModel, IComposition
 	{
 		protected IExecution Execution { get; set; }
-		protected readonly IDisplayService _displayService = null;
-		protected readonly INavigationService _navigationService = null;
-		protected readonly IErrorHandlingService _errorHandlingService = null;
-		protected readonly IApplicationInsights _applicationInsights = null;
+
+		[Obsolete("Please use NavigationService. Obsolete as of version 2.0.0.")]
+		protected INavigationService _navigationService => NavigationService;
+		[Obsolete("Please use ErrorHandlingService. Obsolete as of version 2.0.0.")]
+		protected IErrorHandlingService _errorHandlingService => ErrorHandlingService;
+		[Obsolete("Please use ApplicationInsights. Obsolete as of version 2.0.0.")]
+		protected IApplicationInsights _applicationInsights => ApplicationInsights;
+		[Obsolete("Please use DisplayService. Obsolete as of version 2.0.0.")]
+		protected IDisplayService _displayService => DisplayService;
+
+		protected INavigationService NavigationService { get; private set; }
+		protected IErrorHandlingService ErrorHandlingService { get; private set; }
+		protected IApplicationInsights ApplicationInsights { get; private set; }
+		protected IDisplayService DisplayService { get; private set; }
+
+		public ViewModel()
+		{
+			Execution = new Execution()
+			{
+				HandleTimeout = TimeoutHandle,
+				NotifyOfActivity = NotifyActivity,
+				NotifyActivityFinished = NotifyActivityFinished,
+				HandleResult = HandleResult,
+				HandleUnhandledException = (e) => { return Task.FromResult(false); }
+			};
+		}
+		void IComposition.SetContainer(IExrinContainer exrinContainer)
+		{
+			if (_containerSet)
+				return;
+
+			if (exrinContainer == null)
+				throw new ArgumentNullException(nameof(IExrinContainer));
+
+			ApplicationInsights = exrinContainer.ApplicationInsights;
+			DisplayService = exrinContainer.DisplayService;
+			NavigationService = exrinContainer.NavigationService;
+			ErrorHandlingService = exrinContainer.ErrorHandlingService;
+
+			_containerSet = true;
+		}
+		private bool _containerSet = false;
+
+		public ViewModel(IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
+		{
+			Execution = new Execution()
+			{
+				HandleTimeout = TimeoutHandle,
+				NotifyOfActivity = NotifyActivity,
+				NotifyActivityFinished = NotifyActivityFinished,
+				HandleResult = HandleResult,
+				HandleUnhandledException = (e) => { return Task.FromResult(false); }
+			};
+
+			VisualState = visualState;
+		}
 
 		public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
 		{
@@ -21,20 +74,13 @@
 			if (exrinContainer == null)
 				throw new ArgumentNullException(nameof(IExrinContainer));
 
-			_applicationInsights = exrinContainer.ApplicationInsights;
-			_displayService = exrinContainer.DisplayService;
-			_navigationService = exrinContainer.NavigationService;
-			_errorHandlingService = exrinContainer.ErrorHandlingService;
+			ApplicationInsights = exrinContainer.ApplicationInsights;
+			DisplayService = exrinContainer.DisplayService;
+			NavigationService = exrinContainer.NavigationService;
+			ErrorHandlingService = exrinContainer.ErrorHandlingService;
+			_containerSet = true;
 
 			VisualState = visualState;
-
-			if (VisualState != null)
-				Task.Run(() => visualState.Init())
-					.ContinueWith((task) =>
-					{
-						if (task.Exception != null)
-							_applicationInsights.TrackException(task.Exception);
-					});
 
 			Execution = new Execution()
 			{
@@ -49,7 +95,26 @@
 
 		public VisualStatus ViewStatus { get; private set; } = VisualStatus.Unseen;
 
-		public IVisualState VisualState { get; set; }
+		private IVisualState _visualState;
+		public IVisualState VisualState
+		{
+			get
+			{
+				return _visualState;
+			}
+			set
+			{
+				_visualState = value;
+
+				Task.Run(() => _visualState?.Init())
+					.ContinueWith((task) =>
+					{
+						if (task.Exception != null)
+							ApplicationInsights?.TrackException(task.Exception);
+					});
+			}
+		}
+
 
 		private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
 		public IRelayCommand GetCommand(Func<IRelayCommand> create, [CallerMemberName] string name = "")
@@ -100,7 +165,7 @@
 			{
 				return async () =>
 				{
-					await _displayService.ShowDialog("Timeout", "Operation failed to complete within an acceptable amount of time");
+					await DisplayService.ShowDialog("Timeout", "Operation failed to complete within an acceptable amount of time");
 				};
 			}
 		}
@@ -168,11 +233,11 @@
 										StackResult stackResult = StackResult.Skipped;
 
 										if (args.StackType != null)
-											stackResult = args.ContainerId != null ? _navigationService.Navigate(args.ContainerId, args.RegionId, options) : _navigationService.Navigate(options: options);
-										
+											stackResult = args.ContainerId != null ? NavigationService.Navigate(args.ContainerId, args.RegionId, options) : NavigationService.Navigate(options: options);
+
 										if (!stackResult.HasFlag(StackResult.ArgsPassed) || stackResult.HasFlag(StackResult.Skipped))
 											// Determine View Load
-											await _navigationService.Navigate(Convert.ToString(args.Key), args.Parameter, args.NewInstance, args.PopSource);
+											await NavigationService.Navigate(Convert.ToString(args.Key), args.Parameter, args.NewInstance, args.PopSource);
 
 									}
 									else if (result.Arguments is IBackNavigationArgs)
@@ -180,19 +245,19 @@
 										var args = result.Arguments as IBackNavigationArgs;
 
 										if (args.Parameter == null)
-											await _navigationService.GoBack();
+											await NavigationService.GoBack();
 										else
-											await _navigationService.GoBack(args.Parameter);
+											await NavigationService.GoBack(args.Parameter);
 									}
 
 									break;
 								}
 							case ResultType.Error:
-								await _errorHandlingService.HandleError(result.Arguments as Exception);
+								await ErrorHandlingService.HandleError(result.Arguments as Exception);
 								break;
 							case ResultType.Display:
 								var displayArgs = result.Arguments as IDisplayArgs;
-								await _displayService.ShowDialog(displayArgs.Title ?? "Error", displayArgs.Message);
+								await DisplayService.ShowDialog(displayArgs.Title ?? "Error", displayArgs.Message);
 								break;
 							case ResultType.PropertyUpdate:
 								var propertyArg = result.Arguments as IPropertyArgs;
@@ -206,8 +271,8 @@
 								}
 								catch (Exception ex)
 								{
-									await _errorHandlingService.HandleError(ex);
-									await _displayService.ShowDialog("Error", $"Unable to update property {propertyArg.Name}");
+									await ErrorHandlingService.HandleError(ex);
+									await DisplayService.ShowDialog("Error", $"Unable to update property {propertyArg.Name}");
 								}
 
 								break;

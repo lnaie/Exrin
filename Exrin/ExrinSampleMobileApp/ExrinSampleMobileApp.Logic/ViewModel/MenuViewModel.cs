@@ -8,7 +8,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 {
 	public class MenuViewModel : BaseViewModel
     {
-		public MenuViewModel(IExrinContainer exrinContainer, IMainModel model) : base(exrinContainer, new MenuVisualState(model)) {
+		public MenuViewModel(IMainModel model) : base(new MenuVisualState(model)) {
 			
 		}
 
