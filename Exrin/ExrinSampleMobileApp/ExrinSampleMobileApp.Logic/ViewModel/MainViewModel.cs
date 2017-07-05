@@ -4,6 +4,8 @@ using Exrin.Framework;
 using ExrinSampleMobileApp.Framework.Abstraction.Model;
 using ExrinSampleMobileApp.Logic.Base;
 using ExrinSampleMobileApp.Logic.VisualState;
+using ExrinSampleMobileApp.Framework.Locator;
+using ExrinSampleMobileApp.Framework.Locator.Views;
 
 namespace ExrinSampleMobileApp.Logic.ViewModel
 {
@@ -11,7 +13,6 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
     {
         private IMainModel _model;
         public MainViewModel(IMainModel model)
-            : base(new MainVisualState(model))
         {
             _model = model;
         }
@@ -25,14 +26,17 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
         {
             return base.OnBackNavigated(args);
         }
-
+		
         public IRelayCommand AboutCommand
         {
             get
             {
                 return GetCommand(() =>
                 {
-                    return Execution.ViewModelExecute(new AboutOperation(VisualState as MainVisualState));
+                    return Execution.ViewModelExecute((parameter, token) =>
+					{
+						return new NavigationResult(Stacks.Main, Main.About);
+					});
                 });
             }
         }

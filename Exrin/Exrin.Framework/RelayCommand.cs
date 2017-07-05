@@ -1,11 +1,13 @@
 ﻿namespace Exrin.Framework
 {
-    using Abstraction;
-    using System;
-    using System.Threading.Tasks;
-    using System.Windows.Input;
+	using Abstraction;
+	using System;
+	using System.Threading.Tasks;
+	using System.Windows.Input;
+	using System.Collections.Generic;
+	using System.Threading;
 
-    public class RelayCommand : ICommand, IRelayCommand
+	public class RelayCommand : ICommand, IRelayCommand
     {
         private readonly Func<object, bool> _canExecute = null;
         private readonly Func<object, Task> _action = null;
@@ -36,7 +38,10 @@
         public bool Executing { get; private set; } = false;
         public Action FinishedCallback { get; set; } = null;
         public int Timeout { get; set; }
-        public event EventHandler CanExecuteChanged;
+
+		public Func<object, CancellationToken, Task<IList<IResult>>> Function { get; internal set; }
+
+		public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {

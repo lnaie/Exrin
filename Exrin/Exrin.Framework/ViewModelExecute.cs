@@ -10,8 +10,32 @@
     
     public static partial class Process
     {
+		public static IRelayCommand ViewModelExecute(this IExecution sender, Func<object, CancellationToken, Task<IList<IResult>>> operation, int timeout = 10000, [CallerMemberName] string name = "")
+		{
+			var operationList = new List<IBaseOperation>()
+			{
+				new SingleOperation() { Function = operation }
+			};
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "")
+			var execute = new BaseViewModelExecute(operationList);
+
+			return new RelayCommand(async (parameter) =>
+			{
+				await ViewModelExecute(sender,
+										operations: execute.Operations,
+										handleTimeout: sender.HandleTimeout,
+										handleUnhandledException: sender.HandleUnhandledException,
+										insights: sender.Insights,
+										notifyActivityFinished: sender.NotifyActivityFinished,
+										notifyOfActivity: sender.NotifyOfActivity,
+										timeoutMilliseconds: timeout,
+										name: name,
+										parameter: parameter);
+			})
+			{ Timeout = timeout, Function= operation };
+		}
+		
+		public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "")
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;
@@ -26,6 +50,8 @@
                 return Task.FromResult(list);
                 } } }), timeout, null, name);
         }
+
+
 
         public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "")
         {
