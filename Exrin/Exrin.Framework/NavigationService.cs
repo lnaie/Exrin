@@ -245,7 +245,19 @@
 							viewContainer = container;
 					}
 					else
-						viewContainer = _viewContainers[_stackViewContainers[stack.StackIdentifier]];
+					{
+						if (_stackViewContainers.ContainsKey(stack.StackIdentifier))
+							viewContainer = _viewContainers[_stackViewContainers[stack.StackIdentifier]];
+						else
+						{
+							// Create single container
+							viewContainer = new SingleViewContainer(Guid.NewGuid().ToString(), stack);
+							
+							// Add to list
+							_viewContainers.Add(viewContainer.Identifier, viewContainer);
+						}
+
+					}
 
 					// Tabbed View
 					if (viewContainer is ITabbedContainer)

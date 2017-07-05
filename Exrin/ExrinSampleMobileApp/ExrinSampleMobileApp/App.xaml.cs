@@ -25,7 +25,7 @@ namespace ExrinSampleMobileApp
                         
 			navService.Navigate(new StackOptions()
 			 {
-				 StackChoice = Stacks.Main
+				 StackChoice = Stacks.Authentication
 			 });
 
 			var inspector = new Exrin.Inspector.Inspector(navService);
