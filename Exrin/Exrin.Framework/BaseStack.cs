@@ -22,7 +22,16 @@
         public INavigationProxy Proxy { get; private set; }
         public virtual string NavigationStartKey { get; }
 
-        public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
+		public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier, string startKey)
+		{
+			Proxy = navigationProxy;
+			Proxy.OnPopped += proxy_OnPopped;
+			StackIdentifier = stackIdentifier;
+			_viewService = viewService;
+			NavigationStartKey = startKey;
+		}
+
+			public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
         {
             Proxy = navigationProxy;
             Proxy.OnPopped += proxy_OnPopped;

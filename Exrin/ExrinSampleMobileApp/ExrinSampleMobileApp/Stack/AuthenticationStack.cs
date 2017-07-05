@@ -13,7 +13,7 @@ namespace ExrinSampleMobileApp.Logic.Stack
     public class AuthenticationStack : BaseStack
     {
         public AuthenticationStack(IViewService viewService)
-            : base(new NavigationProxy(new NavigationPage()), viewService, Stacks.Authentication)
+            : base(new NavigationProxy(), viewService, Stacks.Authentication, nameof(Authentication.Login))
         {
             ShowNavigationBar = false;
         }
@@ -22,12 +22,5 @@ namespace ExrinSampleMobileApp.Logic.Stack
             base.NavigationMap<LoginView, LoginViewModel>(nameof(Authentication.Login));
         }
 
-        public override string NavigationStartKey
-        {
-            get
-            {
-                return nameof(Authentication.Login);
-            }
-        }
     }
 }

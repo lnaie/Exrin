@@ -6,10 +6,12 @@ namespace ExrinSampleMobileApp.Proxy
 	public class MasterDetailProxy : IMasterDetailProxy
 	{
 		private MasterDetailPage _mdp;
+		
 		public MasterDetailProxy(MasterDetailPage masterDetailPage)
 		{
 			View = _mdp = masterDetailPage;
 		}
+
 		public object DetailNativeView
 		{
 			get

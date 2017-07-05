@@ -14,7 +14,7 @@ namespace ExrinSampleMobileApp.Logic.Stack
     {
 
         public MainStack(IViewService viewService)
-            : base(new NavigationProxy(new NavigationPage()), viewService, Stacks.Main)
+            : base(new NavigationProxy(), viewService, Stacks.Main)
         {
             ShowNavigationBar = false;
         }

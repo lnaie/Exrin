@@ -15,6 +15,12 @@ namespace ExrinSampleMobileApp.Proxy
         private Queue<object> _argQueue = new Queue<object>();
         public VisualStatus ViewStatus { get; set; } = VisualStatus.Unseen;
 
+		public NavigationProxy()
+		{
+			_page = new NavigationPage();
+			_page.Popped += _page_Popped;
+		}
+
         public NavigationProxy(NavigationPage page)
         {
             _page = page;
