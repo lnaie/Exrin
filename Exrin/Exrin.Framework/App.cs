@@ -9,11 +9,10 @@
     {
         // TODO: Refactor, instead of static instance, should be injected
         internal static IPlatformOptions PlatformOptions = new PlatformOptions();
-
-        [Obsolete("Please use Init(IPlatformOptions options)")]
+		
         public static void Init()
         {
-            Init(SynchronizationContext.Current);
+			ThreadHelper.Init(SynchronizationContext.Current);
         }
 
         public static void Init(IPlatformOptions options)

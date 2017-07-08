@@ -41,7 +41,6 @@
     </Compile>
     <Compile Include="AssemblyRegister.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Container\AuthenticationContainer.cs" />
     <Compile Include="Container\MainContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy\InjectionProxy.cs" />

@@ -3,14 +3,13 @@ using Exrin.Framework;
 using ExrinSampleMobileApp.Logic.ViewModel;
 using ExrinSampleMobileApp.Proxy;
 using ExrinSampleMobileApp.View;
-using Xamarin.Forms;
 
 namespace ExrinSampleMobileApp.Logic.Stack
 {
-    using Framework.Locator;
-    using Framework.Locator.Views;
+	using Framework.Locator;
+	using Framework.Locator.Views;
 
-    public class MainStack : BaseStack
+	public class MainStack : BaseStack
     {
 
         public MainStack(IViewService viewService)
