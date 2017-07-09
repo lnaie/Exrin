@@ -43,10 +43,6 @@
 
         void RegisterViewContainer<T>() where T : class, IViewContainer;
       
-        object ActiveStackIdentifier { get; }
-
-        IViewContainer ActiveViewContainer { get; }
-
         Task SilentPop(object stackIdentifier, IList<string> viewKeys);
 
 		void RegisterStack(IStack stack);

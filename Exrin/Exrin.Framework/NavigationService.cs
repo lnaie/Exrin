@@ -30,10 +30,6 @@
 			_injection = injection;
 		}
 
-		public object ActiveStackIdentifier { get { return _currentStack; } }
-
-		public IViewContainer ActiveViewContainer { get { return _currentViewContainer; } }
-
 		public async Task Navigate(string key)
 		{
 			await Navigate(viewKey: key, args: null);
