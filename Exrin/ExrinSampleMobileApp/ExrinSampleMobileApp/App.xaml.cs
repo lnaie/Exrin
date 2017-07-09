@@ -5,6 +5,7 @@ using Xamarin.Forms;
 namespace ExrinSampleMobileApp
 {
 	using Framework.Locator;
+	using System;
 	using System.Threading.Tasks;
 
 	public partial class App : Application
@@ -27,7 +28,14 @@ namespace ExrinSampleMobileApp
 
 			Task.Run(async () =>
 			{
-				await inspector.Init("127.0.0.1", 8888);
+				try
+				{
+					await inspector.Init("10.0.2.15", 8888);
+				}
+				catch (Exception ex)
+				{
+					var message = ex.Message;
+				}
 			});
 
 		}

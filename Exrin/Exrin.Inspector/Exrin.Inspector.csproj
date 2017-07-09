@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj" />
     <ProjectReference Include="..\Exrin.Framework\Exrin.Framework.csproj" />
   </ItemGroup>

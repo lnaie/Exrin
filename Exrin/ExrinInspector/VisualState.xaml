@@ -9,6 +9,6 @@
       Title="VisualState">
 
     <Grid>
-        
-    </Grid>
+		<Label Content="I'm VisualState" />
+	</Grid>
 </Page>
