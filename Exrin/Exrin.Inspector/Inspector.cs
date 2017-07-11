@@ -1,7 +1,9 @@
 ﻿using Exrin.Abstraction;
+using Exrin.Framework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -45,17 +47,23 @@ namespace Exrin.Inspector
 					{
 						if (stream.DataAvailable)
 						{
-							var b = new byte[stream.Length];
-							await stream.ReadAsync(b, 0, Convert.ToInt32(stream.Length));
-
-							ProcessData(System.Text.Encoding.UTF8.GetString(b), stream);
+							byte[] resp = new byte[2048];
+							var memStream = new MemoryStream();
+							int bytes = stream.Read(resp, 0, resp.Length);
+							while (bytes > 0)
+							{
+								memStream.Write(resp, 0, bytes);
+								bytes = 0;
+								if (stream.DataAvailable)
+									bytes = stream.Read(resp, 0, resp.Length);
+							}
+							
+							ProcessData(System.Text.Encoding.UTF8.GetString(memStream.ToArray()), stream);
 						}
 						await Task.Delay(200);
 					}
 
 				listener.Stop();
-
-				
 			}
 			catch
 			{
@@ -65,7 +73,6 @@ namespace Exrin.Inspector
 			// Start Listening Again, on new thread, don't wait
 			await Task.Factory.StartNew(async () => await RunServer(host, port));
 		}
-
 
 		private string _data = string.Empty;
 		public const char EOT = '\u0004';
@@ -98,6 +105,14 @@ namespace Exrin.Inspector
 				foreach (var item in list)
 					ProcessCommand(item, stream);
 			}
+			else
+			{
+				foreach (var item in split)
+					ProcessCommand(item, stream);
+
+				_data = string.Empty;
+			}
+			
 		}
 
 		private void ProcessCommand(string item, NetworkStream stream)
@@ -120,9 +135,10 @@ namespace Exrin.Inspector
 			{
 				// Conversion Exception
 			}
-			catch   
+			catch   (Exception ex)
 			{
 				// Unknown error, ignore for the moment, and continue on
+				var msg = ex.Message;
 			}
 		}
 
@@ -136,25 +152,33 @@ namespace Exrin.Inspector
 		private VisualStateResponse GetVisualStateResponse()
 		{
 			// Get the current View
-			var visualState = GetCurrentVisualState();
-
+			var visualState = GetCurrentVisualState() as BindableModel;
+		
 			var propertyList = new List<PropertyState>();
-
-			foreach (var propertyInfo in visualState.GetType().GetRuntimeProperties())
+			
+			foreach (var property in visualState.GetStateHistory())
 			{
-				var property = propertyInfo.GetValue(visualState);
-				propertyList.Add(new PropertyState() { Name = propertyInfo.Name });
+				var propertyName = property.Value.Key;
+				if (!propertyList.Any(x => x.Name == propertyName))
+					propertyList.Add(new PropertyState() { Name = propertyName, ValueChanges = new Dictionary<DateTime, object>() });
+
+				propertyList.Single(x => x.Name == propertyName).ValueChanges.Add(property.Key, property.Value.Value);
+
 			}
 
-			return new VisualStateResponse() { Type = CommandType.VisualState };
+			return new VisualStateResponse() { Type = CommandType.VisualState, Properties = propertyList };
 		}
-
-
+		
 		private IVisualState GetCurrentVisualState()
 		{
-			var stack = _navigationService.GetType().GetRuntimeField("_currentStack").GetValue(_navigationService) as IStack;
+			// ISSUE - requires concrete class
+			var stackIdentifier = (_navigationService as NavigationService).GetType().GetRuntimeFields().First(x=>x.Name == "_currentStack").GetValue(_navigationService) as object;
+			var stacks = (_navigationService as NavigationService).GetType().GetRuntimeFields().First(x => x.Name == "_stacks").GetValue(_navigationService) as IDictionary<object, IStack>;
+			var stack = stacks[stackIdentifier] as IStack;
 
-			var viewModel = stack.Proxy.NativeView.GetType().GetRuntimeProperty("BindingContext").GetValue(stack.Proxy.NativeView) as IViewModel;
+			var currentPage = stack.Proxy.NativeView.GetType().GetRuntimeProperty("CurrentPage").GetValue(stack.Proxy.NativeView);
+
+			var viewModel = currentPage.GetType().GetRuntimeProperty("BindingContext").GetValue(currentPage) as IViewModel;
 
 			return viewModel.VisualState;
 		}

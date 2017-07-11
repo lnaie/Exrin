@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.Reflection;
 	using System.Runtime.CompilerServices;
 
 	public class BindableModel : INotifyPropertyChanged, IDisposable
@@ -14,6 +15,18 @@
 		{
 			_propertyValues = new Dictionary<string, object>();
 			_propertyValueTrack = new Dictionary<DateTime, KeyValuePair<string, object>>();
+
+			if (App.PlatformOptions.StateTracking)
+				LoadDefaults();
+		}
+
+		private void LoadDefaults()
+		{
+			foreach (var propertyInfo in this.GetType().GetRuntimeProperties())
+			{
+				var property = propertyInfo.GetValue(this);
+				Set(property, propertyInfo.Name);
+			}
 		}
 
 		//TODO: When C#7 is released, possible replace with Sideways Loading for INPC

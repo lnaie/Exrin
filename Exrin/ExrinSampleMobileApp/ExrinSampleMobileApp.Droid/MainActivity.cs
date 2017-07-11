@@ -14,7 +14,7 @@ namespace ExrinSampleMobileApp.Droid
             base.OnCreate(bundle);
 
             Forms.Init(this, bundle);
-            Exrin.Framework.App.Init(new PlatformOptions() { Platform = Device.RuntimePlatform });
+            Exrin.Framework.App.Init(new PlatformOptions() { Platform = Device.RuntimePlatform, StateTracking = true });
 
             LoadApplication(new App(new Bootstrapper()));
         }

@@ -42,7 +42,7 @@ namespace ExrinInspector
 				var data = JsonConvert.SerializeObject(command) + Inspector.EOT;
 				WriteString(stream, data);
 
-				NavigationService.GetNavigationService(this).Navigate(new VisualState());
+				//NavigationService.GetNavigationService(this).Navigate(new VisualState());
 
 			}, cancellationToken.Token).ContinueWith((t) =>
 			{
