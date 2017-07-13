@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExrinInspector"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="517.544" Source="Connect.xaml">
+        Title="Exrin Inspector" Height="400" Width="517.544" Source="Connect.xaml">
 
 </NavigationWindow>
