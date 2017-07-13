@@ -9,10 +9,13 @@
       Title="Connect" Width="466.667">
 
 	<Grid>
-		<Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="179,190,0,0" VerticalAlignment="Top" Width="120" Click="Button_Click"/>
-		<TextBox x:Name="PortTextBlock" HorizontalAlignment="Left" Height="23" Margin="179,149,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-		<TextBox x:Name="IPAddressTextBlock" HorizontalAlignment="Left" Height="23" Margin="179,79,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-		<TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="179,58,0,0" TextWrapping="Wrap" Text="IP Address" VerticalAlignment="Top"/>
-		<TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="179,128,0,0" TextWrapping="Wrap" Text="Port" VerticalAlignment="Top"/>
+		<TextBox x:Name="IPAddressTextBlock" HorizontalAlignment="Left" Height="23" Margin="179,161,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+		<TextBox x:Name="PortTextBlock" HorizontalAlignment="Left" Height="23" Margin="179,231,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+		<Button x:Name="ConnectButton" Content="Connect" HorizontalAlignment="Left" Margin="179,272,0,0" VerticalAlignment="Top" Width="120" Click="Button_Click"/>
+
+		<TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="179,140,0,0" TextWrapping="Wrap" Text="IP Address" VerticalAlignment="Top"/>
+		<TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="179,210,0,0" TextWrapping="Wrap" Text="Port" VerticalAlignment="Top"/>
+		<Image HorizontalAlignment="Right" Height="100" Margin="0,23,178.4,0" VerticalAlignment="Top" Width="100" Source="exrin.png"/>
 	</Grid>
 </Page>

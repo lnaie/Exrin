@@ -31,7 +31,7 @@ namespace Exrin.Inspector
 
 			return true;
 		}
-
+		private bool _continueListening = true;
 		private async Task RunServer(string host, int port)
 		{
 			try
@@ -40,28 +40,15 @@ namespace Exrin.Inspector
 
 				listener.Start();
 
-				var client = await listener.AcceptTcpClientAsync();
+				while (_continueListening)
+				{
+					// TODO: This code does not actually support multiple clients yet.
+					// The Processing of data is global, not per client.
 
-				using (var stream = client.GetStream())
-					while (client.Connected)
-					{
-						if (stream.DataAvailable)
-						{
-							byte[] resp = new byte[2048];
-							var memStream = new MemoryStream();
-							int bytes = stream.Read(resp, 0, resp.Length);
-							while (bytes > 0)
-							{
-								memStream.Write(resp, 0, bytes);
-								bytes = 0;
-								if (stream.DataAvailable)
-									bytes = stream.Read(resp, 0, resp.Length);
-							}
-							
-							ProcessData(System.Text.Encoding.UTF8.GetString(memStream.ToArray()), stream);
-						}
-						await Task.Delay(200);
-					}
+					var client = await listener.AcceptTcpClientAsync();
+
+					await Task.Factory.StartNew(async () => await ListenToClient(client));
+				}
 
 				listener.Stop();
 			}
@@ -72,6 +59,30 @@ namespace Exrin.Inspector
 
 			// Start Listening Again, on new thread, don't wait
 			await Task.Factory.StartNew(async () => await RunServer(host, port));
+		}
+
+		private async Task ListenToClient(TcpClient client)
+		{
+			using (var stream = client.GetStream())
+				while (client.Connected)
+				{
+					if (stream.DataAvailable)
+					{
+						byte[] resp = new byte[2048];
+						var memStream = new MemoryStream();
+						int bytes = stream.Read(resp, 0, resp.Length);
+						while (bytes > 0)
+						{
+							memStream.Write(resp, 0, bytes);
+							bytes = 0;
+							if (stream.DataAvailable)
+								bytes = stream.Read(resp, 0, resp.Length);
+						}
+
+						ProcessData(System.Text.Encoding.UTF8.GetString(memStream.ToArray()), stream);
+					}
+					await Task.Delay(200);
+				}
 		}
 
 		private string _data = string.Empty;
