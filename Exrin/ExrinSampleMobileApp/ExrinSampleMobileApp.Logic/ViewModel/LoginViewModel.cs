@@ -8,7 +8,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 {
     public class LoginViewModel : BaseViewModel
     {
-        private readonly IAuthModel _model;
+        private readonly IAuthModel _model = null;
 
         public LoginViewModel(IAuthModel model) :
            base(new LoginVisualState(model))

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="3.4">
+    <id>Exrin.Inspector</id>
+    <version>2.0.0-preview</version>
+    <title>Exrin Inspector</title>
+    <authors>Adam Pedley</authors>
+    <owners>Adam Pedley</owners>
+    <licenseUrl>https://github.com/exrin/exrin/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/exrin/exrin</projectUrl>
+    <iconUrl>https://exrin.net/wp-content/uploads/2016/03/exrin_128.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>
+      Enterprise Xamarin Forms Framework
+    </summary>
+    <description>
+      Provides the ability for the Exrin Inspector to connect to your Mobile application, and report on Visual State.
+    </description>
+    <tags>xamarin, xamarin.forms, enterprise, exrin</tags>
+    <releaseNotes>
+    </releaseNotes>   
+    <dependencies>      
+      <group targetFramework=".NETStandard1.3">
+      	<dependency id="Newtonsoft.Json" version="10.0.3" />
+	<dependency id="Exrin" version="2.0.0-beta1" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <!--Core-->
+    <file src="..\Exrin.Inspector\bin\Release\netstandard1.3\Exrin.Inspector.dll" target="lib\netstandard1.3\Exrin.Inspector.dll" />
+    <file src="..\Exrin.Inspector\bin\Release\netstandard1.3\Exrin.Inspector.pdb" target="lib\netstandard1.3\Exrin.Inspector.pdb" />
+</files>
+</package>

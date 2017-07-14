@@ -6,8 +6,8 @@
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
-    <licenseUrl>https://github.com/adamped/exrin/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/adamped/exrin</projectUrl>
+    <licenseUrl>https://github.com/exrin/exrin/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/exrin/exrin</projectUrl>
     <iconUrl>https://exrin.net/wp-content/uploads/2016/03/exrin_128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>
@@ -16,10 +16,11 @@
     <description>
       Enterprise Xamarin Forms Framework
     </description>
-    <tags>xamarin, xamarin.forms, enterprise</tags>
+    <tags>xamarin, xamarin.forms, enterprise, exrin</tags>
     <releaseNotes>
 			This release is backward compatible
 			- Feature: Refactored and reduced API complexity
+			- Includes support for Exrin.Inspector
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">

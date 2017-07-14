@@ -24,13 +24,15 @@
 		{
 			foreach (var propertyInfo in this.GetType().GetRuntimeProperties())
 			{
-				var property = propertyInfo.GetValue(this);
-				Set(property, propertyInfo.Name);
+				try
+				{
+					var property = propertyInfo.GetValue(this);
+					Set(property, propertyInfo.Name);
+				}
+				catch { }
 			}
 		}
-
-		//TODO: When C#7 is released, possible replace with Sideways Loading for INPC
-
+		
 		public T Get<T>([CallerMemberName] string propertyName = "")
 		{
 			if (_propertyValues.ContainsKey(propertyName))
@@ -88,10 +90,7 @@
 			PropertyChanged?.Invoke(this, new PropertyValueChangedEventArgs(name, oldValue, newValue));
 		}
 
-		public virtual void Disposing()
-		{
-
-		}
+		public virtual void Disposing() { }
 
 		private bool _disposed = false;
 		protected void Dispose(bool disposing)

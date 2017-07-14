@@ -26,17 +26,7 @@ namespace ExrinSampleMobileApp
 
 			var inspector = new Exrin.Inspector.Inspector(navService);
 
-			Task.Run(async () =>
-			{
-				try
-				{
-					await inspector.Init("10.0.2.15", 8888);
-				}
-				catch (Exception ex)
-				{
-					var message = ex.Message;
-				}
-			});
+			Task.Run(() => inspector.Init("10.0.2.15", 8888));
 
 		}
 

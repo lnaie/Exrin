@@ -54,7 +54,7 @@
 		}
 		private bool _containerSet = false;
 
-		public ViewModel(IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
+		public ViewModel(IVisualState visualState, [CallerFilePath] string caller = "ViewModel")
 		{
 			Execution = new Execution()
 			{
@@ -68,7 +68,7 @@
 			VisualState = visualState;
 		}
 
-		public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = nameof(ViewModel))
+		public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = "ViewModel")
 		{
 
 			if (exrinContainer == null)
@@ -119,6 +119,12 @@
 		private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
 		public IRelayCommand GetCommand(Func<IRelayCommand> create, [CallerMemberName] string name = "")
 		{
+			// This is actually to prevent a possible odd compiler optimization bug on Android.
+			// Still trying to determine actual cause, but this stops the get in a command property
+			// running before the constructor finishes.
+			if (Execution == null)
+				return null;
+
 			if (!commands.ContainsKey(name))
 				commands.Add(name, create());
 

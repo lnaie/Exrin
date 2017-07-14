@@ -5,7 +5,7 @@
                 x:Class="ExrinSampleMobileApp.View.LoginView">
   <Grid Padding="20">
     <StackLayout>
-      <Button Text="Login" Command="{Binding LoginCommand}" />
+      <Button Text="Login" Command="{Binding LoginCommand}" CommandParameter="1" />
     </StackLayout>
   </Grid>
 </local:BaseView>
