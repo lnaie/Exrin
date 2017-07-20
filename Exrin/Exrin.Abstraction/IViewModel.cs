@@ -20,5 +20,10 @@
 
         IVisualState VisualState { get; set; }
 
+		/// <summary>
+		/// Delay before setting IsBusy in milliseconds.
+		/// </summary>
+		int IsBusyDelay { get; set; }
+
     }
 }

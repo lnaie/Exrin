@@ -28,14 +28,7 @@
 
 		public ViewModel()
 		{
-			Execution = new Execution()
-			{
-				HandleTimeout = TimeoutHandle,
-				NotifyOfActivity = NotifyActivity,
-				NotifyActivityFinished = NotifyActivityFinished,
-				HandleResult = HandleResult,
-				HandleUnhandledException = (e) => { return Task.FromResult(false); }				
-			};
+			SetExecution();
 		}
 		void IComposition.SetContainer(IExrinContainer exrinContainer)
 		{
@@ -56,16 +49,9 @@
 
 		public ViewModel(IVisualState visualState, [CallerFilePath] string caller = "ViewModel")
 		{
-			Execution = new Execution()
-			{
-				HandleTimeout = TimeoutHandle,
-				NotifyOfActivity = NotifyActivity,
-				NotifyActivityFinished = NotifyActivityFinished,
-				HandleResult = HandleResult,
-				HandleUnhandledException = (e) => { return Task.FromResult(false); }
-			};
-
 			VisualState = visualState;
+
+			SetExecution();
 		}
 
 		public ViewModel(IExrinContainer exrinContainer, IVisualState visualState, [CallerFilePath] string caller = "ViewModel")
@@ -82,15 +68,21 @@
 
 			VisualState = visualState;
 
+			SetExecution();
+
+		}
+
+		private void SetExecution()
+		{
 			Execution = new Execution()
 			{
 				HandleTimeout = TimeoutHandle,
 				NotifyOfActivity = NotifyActivity,
 				NotifyActivityFinished = NotifyActivityFinished,
 				HandleResult = HandleResult,
-				HandleUnhandledException = (e) => { return Task.FromResult(false); }
+				HandleUnhandledException = (e) => { return Task.FromResult(false); },
+				PreCheck = null
 			};
-
 		}
 
 		public VisualStatus ViewStatus { get; private set; } = VisualStatus.Unseen;
@@ -176,8 +168,15 @@
 			}
 		}
 
+		/// <summary>
+		/// Delay before setting IsBusy in milliseconds.
+		/// Default is 400ms
+		/// </summary>
+		public int IsBusyDelay { get; set; } = 400;
+
 		private object _lock = new object();
 		private bool _isBusy = false;
+		private bool _settingBusy = false;
 		protected Func<Task> NotifyActivity
 		{
 			get
@@ -189,8 +188,14 @@
 
 					Task.Run(async () =>
 					{
-						await Task.Delay(400);
-						VisualState.IsBusy = _isBusy;
+						lock (_lock)
+							_settingBusy = true;
+
+						await Task.Delay(IsBusyDelay);
+
+						lock (_lock)
+							if (_settingBusy)
+								VisualState.IsBusy = _isBusy;
 					});
 
 					return Task.FromResult(0);
@@ -206,7 +211,10 @@
 				return () =>
 				{
 					lock (_lock)
+					{
 						_isBusy = false;
+						_settingBusy = false;
+					}
 
 					VisualState.IsBusy = _isBusy;
 
