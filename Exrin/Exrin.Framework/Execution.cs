@@ -23,5 +23,6 @@
 
         public Func<Task> NotifyOfActivity { get; set; }
 
-    }
+		public Func<Task<bool>> PreCheck { get; set; }
+	}
 }

@@ -34,7 +34,7 @@
 				NotifyOfActivity = NotifyActivity,
 				NotifyActivityFinished = NotifyActivityFinished,
 				HandleResult = HandleResult,
-				HandleUnhandledException = (e) => { return Task.FromResult(false); }
+				HandleUnhandledException = (e) => { return Task.FromResult(false); }				
 			};
 		}
 		void IComposition.SetContainer(IExrinContainer exrinContainer)

@@ -45,5 +45,10 @@ namespace Exrin.Abstraction
         /// A reference to the Insights object to allow the framework to record any events
         /// </summary>
         IApplicationInsights Insights { get; }
-    }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		Func<Task<bool>> PreCheck { get; set; }
+	}
 }

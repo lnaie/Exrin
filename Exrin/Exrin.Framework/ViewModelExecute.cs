@@ -151,7 +151,7 @@
                 throw new Exception($"{nameof(notifyOfActivity)} is null: You must notify the user that something is happening");
 
             await notifyOfActivity();
-
+			
             // Background thread
             var insightTask = Task.Run(() =>
             {
@@ -165,6 +165,17 @@
                     Debug.WriteLine($"insights.TrackEvent({name}) {ex.Message}");
                 }
             }).ConfigureAwait(false);
+
+			if (sender.PreCheck != null)
+			{
+				var result = await Task.Run(async () =>
+				{
+					return await sender.PreCheck();
+				});
+
+				if (result == false)
+					return; // Exit execution
+			}
 
             await Task.Run(async () =>
             {
