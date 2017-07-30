@@ -17,8 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj" />
-    <ProjectReference Include="..\Exrin.Insights\Exrin.Insights.csproj" />
+    <ProjectReference Include="..\Exrin.Framework\Exrin.csproj" />
   </ItemGroup>
 
 </Project>

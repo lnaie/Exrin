@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
-    <AssemblyName>Exrin.Framework</AssemblyName>
+    <AssemblyName>Exrin</AssemblyName>
     <PackageId>Exrin.Framework</PackageId>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -15,11 +15,5 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Exrin.Abstraction\Exrin.Abstraction.csproj" />
-    <ProjectReference Include="..\Exrin.Common\Exrin.Common.csproj" />
-    <ProjectReference Include="..\Exrin.Insights\Exrin.Insights.csproj" />
-  </ItemGroup>
 
 </Project>
