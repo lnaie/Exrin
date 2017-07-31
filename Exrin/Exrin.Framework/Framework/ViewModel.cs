@@ -273,23 +273,25 @@
 								var displayArgs = result.Arguments as IDisplayArgs;
 								await DisplayService.ShowDialog(displayArgs.Title ?? "Error", displayArgs.Message);
 								break;
-							case ResultType.PropertyUpdate:
-								var propertyArg = result.Arguments as IPropertyArgs;
-								if (propertyArg == null)
-									break;
+								//TODO: Look to make useful or remove
+								// Unlikely anymore uses this.
+							//case ResultType.PropertyUpdate:
+							//	var propertyArg = result.Arguments as IPropertyArgs;
+							//	if (propertyArg == null)
+							//		break;
 
-								try
-								{
-									var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
-									propertyInfo.SetValue(this, propertyArg.Value);
-								}
-								catch (Exception ex)
-								{
-									await ErrorHandlingService.HandleError(ex);
-									await DisplayService.ShowDialog("Error", $"Unable to update property {propertyArg.Name}");
-								}
+							//	try
+							//	{
+							//		var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
+							//		propertyInfo.SetValue(this, propertyArg.Value);
+							//	}
+							//	catch (Exception ex)
+							//	{
+							//		await ErrorHandlingService.HandleError(ex);
+							//		await DisplayService.ShowDialog("Error", $"Unable to update property {propertyArg.Name}");
+							//	}
 
-								break;
+							//	break;
 						}
 				};
 			}

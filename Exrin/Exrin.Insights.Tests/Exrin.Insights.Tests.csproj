@@ -49,10 +49,6 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Exrin.Debug\Exrin.Debug.csproj">
-      <Project>{f97c0ec3-4992-42a4-a18e-08e4076de090}</Project>
-      <Name>Exrin.Debug</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Exrin.Framework\Exrin.csproj">
       <Project>{ff2e4654-1f48-4f8f-b9ba-fa4d8cb22f78}</Project>
       <Name>Exrin</Name>
