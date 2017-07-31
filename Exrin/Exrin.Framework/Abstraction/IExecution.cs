@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Exrin.Abstraction
 {
-    /// <summary>
-    /// To be given to an execution instance on each View Model
-    /// </summary>
-    public interface IExecution
+	/// <summary>
+	/// To be given to an execution instance on each View Model
+	/// </summary>
+	public interface IExecution
     {
         /// <summary>
         /// The end result of all operations
@@ -47,8 +45,8 @@ namespace Exrin.Abstraction
         IApplicationInsights Insights { get; }
 
 		/// <summary>
-		/// 
+		/// A function that runs a precheck, before it runs the operation
 		/// </summary>
-		Func<Task<bool>> PreCheck { get; set; }
+		Func<object, Task<bool>> PreCheck { get; set; }
 	}
 }

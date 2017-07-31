@@ -10,7 +10,7 @@
     
     public static partial class Process
     {
-		public static IRelayCommand ViewModelExecute(this IExecution sender, Func<object, CancellationToken, Task<IList<IResult>>> operation, int timeout = 10000, [CallerMemberName] string name = "")
+		public static IRelayCommand ViewModelExecute(this IExecution sender, Func<object, CancellationToken, Task<IList<IResult>>> operation, int timeout = 10000, [CallerMemberName] string name = "", object precheck = null)
 		{
 			var operationList = new List<IBaseOperation>()
 			{
@@ -30,80 +30,79 @@
 										notifyOfActivity: sender.NotifyOfActivity,
 										timeoutMilliseconds: timeout,
 										name: name,
-										parameter: parameter);
+										parameter: parameter,
+										precheck: precheck);
 			})
 			{ Timeout = timeout, Function= operation };
 		}
 		
-		public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "")
+		public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;
                 return Task.FromResult(list);
-                } } }), null, name);
+                } } }), null, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;         
                 return Task.FromResult(list);
-                } } }), timeout, null, name);
+                } } }), timeout, null, name, precheck);
         }
 
 
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, [CallerMemberName] string name = "", object precheck = null)
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), null, name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), null, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, [CallerMemberName] string name = "", object precheck = null)
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, null, name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, null, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, [CallerMemberName] string name = "", object precheck = null)
         {
-            return ViewModelExecute(sender, execute, -1, null, name);
+            return ViewModelExecute(sender, execute, -1, null, name, precheck);
         }
-
-
-
-        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+		
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;
                 return Task.FromResult(list);
-                } } }), canExecute, name);
+                } } }), canExecute, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;
                 return Task.FromResult(list);
-                } } }), timeout, canExecute, name);
+                } } }), timeout, canExecute, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), canExecute, name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), canExecute, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IBaseOperation execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
-            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, canExecute, name);
+            return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { execute }), timeout, canExecute, name, precheck);
         }
 
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
-            return ViewModelExecute(sender, execute, -1, canExecute, name);
+            return ViewModelExecute(sender, execute, -1, canExecute, name, precheck);
         }
                       
-        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "")
+        public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
-            return new RelayCommand(async (parameter) =>
+            return new RelayCommand(async (param) =>
             {
                 await ViewModelExecute(sender,
                                         operations: execute.Operations,
@@ -114,7 +113,8 @@
                                         notifyOfActivity: sender.NotifyOfActivity,
                                         timeoutMilliseconds: timeout == -1 ? execute.TimeoutMilliseconds : timeout,
                                         name: name,
-                                        parameter: parameter);
+                                        parameter: param,
+										precheck: precheck);
             }, canExecute)
             { Timeout = execute.TimeoutMilliseconds };
 
@@ -131,7 +131,8 @@
                  int timeoutMilliseconds = 0,
                  IApplicationInsights insights = null,
                  string name = "",
-                 object parameter = null)
+                 object parameter = null,
+				 object precheck = null)
         {
             // If currently executing, ignore the latest request
             lock (sender)
@@ -170,7 +171,7 @@
 			{
 				var result = await Task.Run(async () =>
 				{
-					return await sender.PreCheck();
+					return await sender.PreCheck(precheck);
 				});
 
 				if (result == false)
@@ -229,7 +230,6 @@
                                     throw; // Go to unhandled exception
                                 }
                             }
-
                         }
                         else
                         {
