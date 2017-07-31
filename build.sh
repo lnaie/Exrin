@@ -11,9 +11,6 @@ fi
 
 dotnet restore Exrin
 
-dotnet build Exrin/Exrin.Abstraction
-dotnet build Exrin/Exrin.Common
-dotnet build Exrin/Exrin.Insights
 dotnet build Exrin/Exrin.Framework
 
 revision=${TRAVIS_JOB_ID:=1}  
