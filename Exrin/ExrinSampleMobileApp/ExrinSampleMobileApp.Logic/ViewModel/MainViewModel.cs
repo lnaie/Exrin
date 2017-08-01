@@ -15,6 +15,13 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
         public MainViewModel(IMainModel model)
         {
             _model = model;
+
+			Execution.PreCheck = async (arg) =>
+			{
+				await Task.Delay(1000);
+
+				return true;
+			};
         }
 
         public override Task OnNavigated(object args)
@@ -35,6 +42,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
                 {
                     return Execution.ViewModelExecute((parameter, token) =>
 					{
+						// Anything I want in here. Example of NavigationResult shown.
 						return new NavigationResult(Stacks.Main, Main.About);
 					});
                 });

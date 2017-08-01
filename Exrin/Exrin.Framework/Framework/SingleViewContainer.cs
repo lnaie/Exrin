@@ -9,8 +9,6 @@
 			Stack = stack;
 		}
 
-	
-
 		public IStack Stack { get; set; }
 	}
 }

@@ -172,7 +172,7 @@
 				var result = await Task.Run(async () =>
 				{
 					return await sender.PreCheck(precheck);
-				});
+				}).ConfigureAwait(false);
 
 				if (result == false)
 					return; // Exit execution

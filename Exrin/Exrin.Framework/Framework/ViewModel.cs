@@ -3,7 +3,6 @@
 	using Abstraction;
 	using System;
 	using System.Collections.Generic;
-	using System.Reflection;
 	using System.Runtime.CompilerServices;
 	using System.Threading.Tasks;
 
@@ -271,7 +270,7 @@
 								break;
 							case ResultType.Display:
 								var displayArgs = result.Arguments as IDisplayArgs;
-								await DisplayService.ShowDialog(displayArgs.Title ?? "Error", displayArgs.Message);
+								await DisplayService.ShowDialog(displayArgs.Title ?? "Dialog", displayArgs.Message);
 								break;
 								//TODO: Look to make useful or remove
 								// Unlikely anymore uses this.
