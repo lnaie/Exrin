@@ -69,6 +69,10 @@
       <Project>{20cb63fa-528b-4b56-8a63-74c3f5f2f11d}</Project>
       <Name>Exrin.Inspector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ExrinSampleMobileApp.Isolate1\ExrinSampleMobileApp.Isolate1.csproj">
+      <Project>{a135958c-c18f-4385-9737-fb89b95f187c}</Project>
+      <Name>ExrinSampleMobileApp.Isolate1</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExrinSampleMobileApp.Framework\ExrinSampleMobileApp.Framework.csproj">
       <Project>{ACE7FE1E-68CC-42E8-841C-89F48283EB07}</Project>
       <Name>ExrinSampleMobileApp.Framework</Name>

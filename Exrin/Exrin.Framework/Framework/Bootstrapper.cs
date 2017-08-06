@@ -41,6 +41,8 @@
 
 			RegisterAssembly(AssemblyAction.Bootstrapper, _injection.GetType().GetTypeInfo().Assembly.GetName());
 
+			InitProxies();
+
 			InitCustom();
 
 			InitState();
@@ -73,6 +75,18 @@
 			IsInitialized = true;
 
 			return _injection;
+		}
+
+		protected virtual void InitProxies()
+		{
+			// Just does certain Proxies at this point
+
+			MethodInfo method = GetType().GetRuntimeMethod(nameof(RegisterProxy), new Type[] { });
+
+			foreach (var assembly in _assemblies.Where(x => x.Key == AssemblyAction.Bootstrapper))
+				foreach (var proxy in AssemblyHelper.GetTypes(assembly.Value, new List<Type>() { typeof(INavigationProxy), typeof(IMasterDetailProxy), typeof(ITabbedViewProxy)}))
+					method.MakeGenericMethod(proxy.Key, proxy.Value.AsType())
+						  .Invoke(this, null);
 		}
 
 		protected virtual void PostContainerBuild() { }
@@ -206,6 +220,12 @@
 				_assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, name));
 		}
 
+		public void RegisterAssembly(AssemblyAction action, IIsolate isolate)
+		{
+			if (_assemblies.Count(x => x.Key == action && x.Value.FullName == isolate.Name.FullName) == 0) // Check if its already added
+				_assemblies.Add(new KeyValuePair<AssemblyAction, AssemblyName>(action, isolate.Name));
+		}
+		
 		public void RegisterTypeAssembly(Type @interface, AssemblyName name)
 		{
 			if (!_typeAssembly.ContainsKey(@interface))
@@ -250,6 +270,13 @@
 				_postRun.Add(() => { _injection.Get<INavigationService>().RegisterViewContainer<T>(); });
 			}
 
+		}
+
+		public void RegisterProxy<I, T>() where T : class, I
+											 where I : class
+		{
+			if (!_injection.IsRegistered<T>())
+				_injection.RegisterInterface<I, T>(InstanceType.EachResolve);
 		}
 
 		public void RegisterStack<T>() where T : class, IStack

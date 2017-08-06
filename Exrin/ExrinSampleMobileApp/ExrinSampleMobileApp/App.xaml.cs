@@ -4,6 +4,7 @@ using Xamarin.Forms;
 
 namespace ExrinSampleMobileApp
 {
+	using ExrinSampleMobileApp.Framework.Locator;
 	using Framework.Locator;
 	using System;
 	using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace ExrinSampleMobileApp
 
 			navService.Navigate(new StackOptions()
 			{
-				StackChoice = Stacks.Authentication
+				StackChoice = Stacks.MainTwo
 			});
 
 			var inspector = new Exrin.Inspector.Inspector(navService);

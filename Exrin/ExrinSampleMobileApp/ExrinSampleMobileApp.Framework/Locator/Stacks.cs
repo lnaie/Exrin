@@ -7,6 +7,7 @@ namespace ExrinSampleMobileApp.Framework.Locator
         Authentication = 1,
         Main = 2,
 		Menu = 4,
-		Second = 8
+		Second = 8,
+		MainTwo = 16
     }
 }

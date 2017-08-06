@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Exrin</id>
+    <version>2.0.0-beta2</version>
+    <title>Exrin</title>
+    <authors>Adam Pedley</authors>
+    <owners>Adam Pedley</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/exrin/exrin/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/exrin/exrin</projectUrl>
+    <iconUrl>https://exrin.net/wp-content/uploads/2016/03/exrin_128.png</iconUrl>
+    <description>Enterprise Xamarin Forms Framework</description>
+    <summary>Enterprise Xamarin Forms Framework</summary>
+    <releaseNotes>This release is backward compatible
+			- Feature: Refactored and reduced API complexity
+			- Includes support for Exrin.Inspector
+			- Precheck on Operations
+			- IsBusy flag, customizable delay and bug fix
+			- Single Assembly</releaseNotes>
+    <tags>xamarin, xamarin.forms, enterprise, exrin</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard1.1" />
+    </dependencies>
+  </metadata>
+</package>

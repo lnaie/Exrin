@@ -22,6 +22,9 @@ namespace ExrinSampleMobileApp
             _instance.RegisterAssembly(AssemblyAction.Bootstrapper, new Logic.AssemblyRegister().GetType().GetTypeInfo().Assembly.GetName());
             _instance.RegisterAssembly(AssemblyAction.Bootstrapper, new View.AssemblyRegister().GetType().GetTypeInfo().Assembly.GetName());
 
+			// Isolates
+			_instance.RegisterAssembly(AssemblyAction.Bootstrapper, new Isolate1.Isolate());
+
             return _instance;
         }
 

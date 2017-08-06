@@ -3,11 +3,12 @@ using Exrin.Framework;
 using ExrinSampleMobileApp.Framework.Abstraction.Model;
 using ExrinSampleMobileApp.Logic.Base;
 using ExrinSampleMobileApp.Logic.VisualState;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ExrinSampleMobileApp.Logic.ViewModel
 {
-    public class AboutViewModel : BaseViewModel
+	public class AboutViewModel : BaseViewModel
     {
 		public AboutViewModel(IMainModel model) : base(new AboutVisualState(model)) {
 			((AboutVisualState)VisualState).MyProperty = new System.Net.Http.HttpClient();
@@ -21,9 +22,21 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
                 return GetCommand(() =>
                 {
 					
-					return Execution.ViewModelExecute(new SettingsOperation(VisualState), precheck:new object());
+					return Execution.ViewModelExecute(new ViewModelExecute());
                 });
             }
         }
     }
+
+	public class ViewModelExecute : IViewModelExecute
+	{
+		public List<IBaseOperation> Operations => new List<IBaseOperation>()
+		{
+			new SettingsOperation(null),
+			new BackToMainOperation()
+		};
+
+		public int TimeoutMilliseconds => 10000;
+	}
+
 }
