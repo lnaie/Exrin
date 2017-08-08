@@ -9,7 +9,7 @@
 	public class VisualState : BindableModel, IVisualState
 	{
 		protected IBaseModel Model { get; set; }
-
+		public VisualState() { }
 		public VisualState(IBaseModel model)
 		{
 			Model = model ?? throw new ArgumentNullException($"{nameof(VisualState)} can not have a null {nameof(IBaseModel)}");
