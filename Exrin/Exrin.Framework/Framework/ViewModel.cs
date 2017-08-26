@@ -3,6 +3,7 @@
 	using Abstraction;
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.Runtime.CompilerServices;
 	using System.Threading.Tasks;
 
@@ -79,12 +80,16 @@
 				NotifyOfActivity = NotifyActivity,
 				NotifyActivityFinished = NotifyActivityFinished,
 				HandleResult = HandleResult,
-				HandleUnhandledException = (e) => { return Task.FromResult(false); },
+				HandleUnhandledException = (e) =>
+				{
+					Debug.WriteLine($"{e.Message} {e.StackTrace}");
+					return Task.FromResult(false);
+				},
 				PreCheck = null
 			};
 		}
-
-		public VisualStatus ViewStatus { get; private set; } = VisualStatus.Unseen;
+		private VisualStatus _viewStatus = VisualStatus.Unseen;
+		public VisualStatus ViewStatus { get { return _viewStatus; } private set { _viewStatus = value; OnPropertyChanged(); } }
 
 		private IVisualState _visualState;
 		public IVisualState VisualState
@@ -191,7 +196,7 @@
 						await Task.Delay(IsBusyDelay);
 
 						lock (_lock)
-							if (_settingBusy)
+							if (_settingBusy && VisualState != null)
 								VisualState.IsBusy = _isBusy;
 					});
 
@@ -213,7 +218,8 @@
 						_settingBusy = false;
 					}
 
-					VisualState.IsBusy = _isBusy;
+					if (VisualState != null)
+						VisualState.IsBusy = _isBusy;
 
 					return Task.FromResult(0);
 				};
@@ -270,25 +276,6 @@
 								var displayArgs = result.Arguments as IDisplayArgs;
 								await DisplayService.ShowDialog(displayArgs.Title ?? "Dialog", displayArgs.Message);
 								break;
-								//TODO: Look to make useful or remove
-								// Unlikely anymore uses this.
-							//case ResultType.PropertyUpdate:
-							//	var propertyArg = result.Arguments as IPropertyArgs;
-							//	if (propertyArg == null)
-							//		break;
-
-							//	try
-							//	{
-							//		var propertyInfo = this.GetType().GetRuntimeProperty(propertyArg.Name);
-							//		propertyInfo.SetValue(this, propertyArg.Value);
-							//	}
-							//	catch (Exception ex)
-							//	{
-							//		await ErrorHandlingService.HandleError(ex);
-							//		await DisplayService.ShowDialog("Error", $"Unable to update property {propertyArg.Name}");
-							//	}
-
-							//	break;
 						}
 				};
 			}

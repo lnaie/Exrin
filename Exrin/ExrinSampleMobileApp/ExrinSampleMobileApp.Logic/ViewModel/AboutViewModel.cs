@@ -32,8 +32,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 	{
 		public List<IBaseOperation> Operations => new List<IBaseOperation>()
 		{
-			new SettingsOperation(null),
-			new BackToMainOperation()
+			new SettingsOperation(null)
 		};
 
 		public int TimeoutMilliseconds => 10000;

@@ -15,6 +15,5 @@ namespace Exrin.Abstraction
         Navigation = 1,
         Display = 2,
         Error = 4
-       // PropertyUpdate = 8
     }
 }

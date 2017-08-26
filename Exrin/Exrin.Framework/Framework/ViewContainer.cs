@@ -1,6 +1,5 @@
 ﻿namespace Exrin.Framework
 {
-	using System;
 	using System.Collections.Generic;
 	using Abstraction;
 
@@ -21,5 +20,7 @@
 		public object NativeView { get; set; }
 
 		public IDictionary<object, ContainerType> RegionMapping { get; } = new Dictionary<object, ContainerType>();
+
+		public IViewContainer ParentContainer { get; set; }
 	}
 }

@@ -6,7 +6,7 @@
 	using System.Windows.Input;
 	using System.Collections.Generic;
 	using System.Threading;
-	
+	using System.Diagnostics;
 
 	public class RelayCommand<T> : RelayCommand
 	{
@@ -73,6 +73,10 @@
 			_action(parameter).ContinueWith((task) =>
 			{
 				Executing = false;
+
+				if (task.IsFaulted)
+					Debug.WriteLine($"{task.Exception.Message} {task.Exception.InnerException.StackTrace}");
+
 				FinishedCallback?.Invoke();
 			});
 		}

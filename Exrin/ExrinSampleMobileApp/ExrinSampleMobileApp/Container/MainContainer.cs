@@ -1,16 +1,17 @@
 ﻿namespace ExrinSampleMobileApp.Container
 {
 	using Exrin.Abstraction;
+	using Exrin.Framework;
 	using ExrinSampleMobileApp.Proxy;
 	using Framework.Locator;
 	using Logic.Stack;
 	using Xamarin.Forms;
 
-	public class MainContainer : Exrin.Framework.ViewContainer, IMasterDetailContainer
+	public class MainContainer : ViewContainer, IMasterDetailContainer
     {
 		private MasterDetailPage page;
-		public MainContainer(MainStack mainStack, MenuStack menuStack)
-			: base(Containers.Main.ToString(), mainStack.Proxy.NativeView)
+		public MainContainer(TabbedViewContainer mainStack, MenuStack menuStack)
+			: base(Containers.Main.ToString())
 		{
 			page = new MasterDetailPage();
 			var mdp = new MasterDetailProxy(page);
@@ -22,9 +23,11 @@
 			RegionMapping.Add(Regions.Main, ContainerType.Detail);
 		}
 
-		public IStack DetailStack { get; set; }
+		private IHolder _detailStack;
+		public IHolder DetailStack { get { return _detailStack; } set { _detailStack = value; if (_detailStack is ITabbedContainer container) ((ViewContainer)container).ParentContainer = this; } }
 
-		public IStack MasterStack { get; set; }
+		private IHolder _masterStack;
+		public IHolder MasterStack { get { return _masterStack; } set { _masterStack = value; if (_masterStack is ITabbedContainer container) ((ViewContainer)container).ParentContainer = this; } }
 
 		public IMasterDetailProxy Proxy { get; set; }
 

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IStack
+    public interface IStack : IHolder
     {
         object StackIdentifier { get; }
         bool ShowNavigationBar { get; set; }

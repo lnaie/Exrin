@@ -22,8 +22,7 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
             get
             {
                 return (parameter, token) =>
-                {
-					((AboutVisualState)_visualState).MyProperty = null;
+                {					
 					return new NavigationResult(Stacks.Main, Main.Settings);
                 };
             }

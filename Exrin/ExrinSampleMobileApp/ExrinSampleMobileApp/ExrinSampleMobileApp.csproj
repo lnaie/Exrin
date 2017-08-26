@@ -42,10 +42,12 @@
     <Compile Include="AssemblyRegister.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Container\MainContainer.cs" />
+    <Compile Include="Container\TabbedContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy\InjectionProxy.cs" />
     <Compile Include="Proxy\MasterDetailProxy.cs" />
     <Compile Include="Proxy\NavigationProxy.cs" />
+    <Compile Include="Proxy\TabbedProxy.cs" />
     <Compile Include="Stack\AuthenticationStack.cs" />
     <Compile Include="Stack\SecondStack.cs" />
     <Compile Include="Stack\MenuStack.cs" />
@@ -64,10 +66,6 @@
     <ProjectReference Include="..\..\Exrin.Framework\Exrin.csproj">
       <Project>{ff2e4654-1f48-4f8f-b9ba-fa4d8cb22f78}</Project>
       <Name>Exrin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Exrin.Inspector\Exrin.Inspector.csproj">
-      <Project>{20cb63fa-528b-4b56-8a63-74c3f5f2f11d}</Project>
-      <Name>Exrin.Inspector</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ExrinSampleMobileApp.Isolate1\ExrinSampleMobileApp.Isolate1.csproj">
       <Project>{a135958c-c18f-4385-9737-fb89b95f187c}</Project>

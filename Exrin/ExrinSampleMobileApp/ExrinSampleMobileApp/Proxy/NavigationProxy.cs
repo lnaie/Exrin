@@ -70,7 +70,7 @@ namespace ExrinSampleMobileApp.Proxy
 			if (xamarinPage == null)
 				throw new Exception("PushAsync can not push a non Xamarin Page");
 
-			await _page.PushAsync(xamarinPage);
+			await _page.PushAsync(xamarinPage, true);
 		}
 
 		public async Task ShowDialog(IDialogOptions dialogOptions)

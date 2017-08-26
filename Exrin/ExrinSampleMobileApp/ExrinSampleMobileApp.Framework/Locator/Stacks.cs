@@ -8,6 +8,7 @@ namespace ExrinSampleMobileApp.Framework.Locator
         Main = 2,
 		Menu = 4,
 		Second = 8,
-		MainTwo = 16
+		MainTwo = 16,
+		Tabbed = 32
     }
 }

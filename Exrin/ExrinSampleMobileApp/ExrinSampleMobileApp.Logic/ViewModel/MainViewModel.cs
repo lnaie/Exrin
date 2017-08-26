@@ -20,9 +20,9 @@ namespace ExrinSampleMobileApp.Logic.ViewModel
 			
 			Execution.PreCheck = async (arg) =>
 			{
-				var flags = (PreChecks)arg;
-				if (flags.HasFlag(PreChecks.Authentication))
-				await Task.Delay(1000);
+				//var flags = (PreChecks)arg;
+				//if (flags.HasFlag(PreChecks.Authentication))
+				//await Task.Delay(1000);
 
 				return true;
 			};

@@ -2,10 +2,11 @@
 
 namespace Exrin.Abstraction
 {
-    public interface IViewContainer
+    public interface IViewContainer: IHolder
     {
         string Identifier { get; }
-        object NativeView { get; }
+		object NativeView { get; }
 		IDictionary<object, ContainerType> RegionMapping { get; }
+		IViewContainer ParentContainer { get; }
     }
 }

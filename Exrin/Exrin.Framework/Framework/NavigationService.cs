@@ -118,8 +118,20 @@
 			}
 			else if (viewContainer as IMasterDetailContainer != null)
 			{
-				stacks.Add(((IMasterDetailContainer)viewContainer).MasterStack);
-				stacks.Add(((IMasterDetailContainer)viewContainer).DetailStack);
+				var mdpContainer = (IMasterDetailContainer)viewContainer;
+
+				if (mdpContainer.MasterStack is IStack masterStack)
+					stacks.Add(masterStack);
+				else if (mdpContainer.MasterStack is ITabbedContainer masterViewContainer)
+					foreach (var stack in masterViewContainer.Children)
+						stacks.Add(stack);
+
+				if (mdpContainer.DetailStack is IStack detailStack)
+					stacks.Add(detailStack);
+				else if (mdpContainer.DetailStack is ITabbedContainer detailViewContainer)
+					foreach (var stack in detailViewContainer.Children)
+						stacks.Add(stack);
+
 			}
 			else if (viewContainer as ITabbedContainer != null)
 			{
@@ -149,7 +161,7 @@
 		{
 			_stacks.Add(stack.StackIdentifier, stack);
 		}
-		
+
 		public StackResult Navigate(IStackOptions options)
 		{
 			return Navigate(containerId: null, regionId: null, options: options);
@@ -248,25 +260,16 @@
 						{
 							// Create single container
 							viewContainer = new SingleViewContainer(Guid.NewGuid().ToString(), stack);
-							
+
 							// Add to list
 							_viewContainers.Add(viewContainer.Identifier, viewContainer);
 						}
-
 					}
 
+				
 					// Tabbed View
-					if (viewContainer is ITabbedContainer)
-					{
-						var tabbedView = viewContainer as ITabbedContainer;
-
-						// Must start all stacks on the first tabbed view load
-						// because when the tab changes, I can't block while I load an individual tab
-						// I can only block moving to an entire page
-						foreach (var item in tabbedView.Children)
-							if (item.Status == StackStatus.Stopped)
-								await item.StartNavigation(options?.Args);
-					}
+					if (viewContainer is ITabbedContainer tabbedView)
+						await InitializeTabbedView(tabbedView);
 
 					var containerSwitch = viewContainer.RegionMapping.Any(x => x.Key.ToString() == Convert.ToString(regionId));
 					KeyValuePair<object, ContainerType>? containerType = viewContainer.RegionMapping.FirstOrDefault(x => x.Key.ToString() == Convert.ToString(regionId));
@@ -278,23 +281,45 @@
 
 						if (masterDetailContainer.DetailStack != null)
 						{
-							// Setup Detail Stack
-							var detailStack = _stacks[masterDetailContainer.DetailStack.StackIdentifier];
+							if (masterDetailContainer.DetailStack is IStack detailStackDefinition)
+							{
+								// Setup Detail Stack
+								var detailStack = _stacks[detailStackDefinition.StackIdentifier];
 
-							if (detailStack.Status == StackStatus.Stopped)
-								await detailStack.StartNavigation(options?.Args);
+								if (detailStack.Status == StackStatus.Stopped)
+									await detailStack.StartNavigation(options?.Args);
 
-							masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
+								masterDetailContainer.Proxy.DetailNativeView = detailStack.Proxy.NativeView;
+							}
+							else if (masterDetailContainer.DetailStack is ITabbedContainer detailTabbedDefinition)
+							{
+								await InitializeTabbedView(detailTabbedDefinition);
 
-							// Setup Master Stack
-							var masterStack = _stacks[masterDetailContainer.MasterStack.StackIdentifier];
+								masterDetailContainer.Proxy.DetailNativeView = detailTabbedDefinition.NativeView;
+							}
 
-							if (masterStack.Status == StackStatus.Stopped)
-								await masterStack.StartNavigation(options?.Args);
+							if (masterDetailContainer.MasterStack is IStack masterStackDefinition)
+							{
+								// Setup Master Stack
+								var masterStack = _stacks[masterStackDefinition.StackIdentifier];
 
-							masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
+								if (masterStack.Status == StackStatus.Stopped)
+									await masterStack.StartNavigation(options?.Args);
+
+								masterDetailContainer.Proxy.MasterNativeView = masterStack.Proxy.NativeView;
+							}
+							else if (masterDetailContainer.MasterStack is ITabbedContainer masterTabbedDefinition)
+							{
+								await InitializeTabbedView(masterTabbedDefinition);
+
+								masterDetailContainer.Proxy.MasterNativeView = masterTabbedDefinition.NativeView;
+							}
 						}
 					}
+
+					// If parent, then move switch container
+					if (viewContainer.ParentContainer != null)
+						viewContainer = viewContainer.ParentContainer;
 
 					_currentViewContainer = viewContainer;
 
@@ -312,6 +337,17 @@
 				});
 
 				return stackResult;
+			}
+
+
+			async Task InitializeTabbedView(ITabbedContainer tabbedView)
+			{
+				// Must start all stacks on the first tabbed view load
+				// because when the tab changes, I can't block while I load an individual tab
+				// I can only block moving to an entire page
+				foreach (var item in tabbedView.Children)
+					if (item.Status == StackStatus.Stopped)
+						await item.StartNavigation(options?.Args);
 			}
 		}
 

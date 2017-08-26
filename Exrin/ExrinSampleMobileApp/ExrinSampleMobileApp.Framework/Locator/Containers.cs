@@ -3,6 +3,7 @@
     public enum Containers
     {
         Authentication,
-        Main
+        Main,
+		Tabbed
     }
 }

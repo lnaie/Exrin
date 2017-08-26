@@ -278,8 +278,17 @@
                     model.OnBackNavigated(e.Parameter);
             }
 
-            // Remove CurrentView
-            _viewKeyTracking.Remove(CurrentView);
+			// Remove Last Instance of CurrentView
+			for (int i = _viewKeyTracking.Count; i > 0; i--)
+			{
+				var tracking = _viewKeyTracking[i - 1];
+				if (tracking.Key == CurrentView.Key && tracking.Platform == CurrentView.Platform)
+				{
+					_viewKeyTracking.RemoveAt(i - 1);
+					break;
+				}
+			}
+            
 
             // Changes the navigation key back to the previous page
             CurrentView = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;
