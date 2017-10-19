@@ -252,6 +252,11 @@
 						if (container.RegionMapping.Any(x => x.Key.ToString() == regionId.ToString()))
 							viewContainer = container;
 					}
+					else if (containerId != null && regionId == null)
+					{
+						var container = _viewContainers[containerId.ToString()];
+						viewContainer = container;
+					}
 					else
 					{
 						if (_stackViewContainers.ContainsKey(stack.StackIdentifier))
@@ -316,6 +321,10 @@
 							}
 						}
 					}
+
+					if (viewContainer is ITabbedContainer tabbedContainer)
+						// switch current page
+						tabbedContainer.SetCurrentPage(stack);
 
 					// If parent, then move switch container
 					if (viewContainer.ParentContainer != null)

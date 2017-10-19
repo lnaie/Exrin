@@ -60,7 +60,8 @@ namespace ExrinSampleMobileApp.Proxy
 
 		public async Task PopAsync()
 		{
-			await _page.PopAsync();
+			CloseMenu();
+			await _page.PopAsync();			
 		}
 
 		public async Task PushAsync(object page)
@@ -69,8 +70,14 @@ namespace ExrinSampleMobileApp.Proxy
 
 			if (xamarinPage == null)
 				throw new Exception("PushAsync can not push a non Xamarin Page");
-
+			CloseMenu();
 			await _page.PushAsync(xamarinPage, true);
+		}
+
+		private void CloseMenu()
+		{
+			if (Application.Current.MainPage is MasterDetailPage masterDetailPage)
+				masterDetailPage.IsPresented = false;
 		}
 
 		public async Task ShowDialog(IDialogOptions dialogOptions)

@@ -13,7 +13,7 @@ namespace ExrinSampleMobileApp.Logic.Stack
     {
 
         public MainStack(IViewService viewService)
-            : base(new NavigationProxy(), viewService, Stacks.Main)
+            : base(new NavigationProxy(new Xamarin.Forms.NavigationPage() { Title = "My Title" }), viewService, Stacks.Main, nameof(Main.Main))
         {
             ShowNavigationBar = false;
         }
@@ -26,14 +26,6 @@ namespace ExrinSampleMobileApp.Logic.Stack
 			base.NavigationMap<View.ListView, ListViewModel>(nameof(Main.List));
 			base.NavigationMap<DetailView, DetailViewModel>(nameof(Main.Detail));
 		}
-
-        public override string NavigationStartKey
-        {
-            get
-            {
-                return nameof(Main.Main);
-            }
-        }
 
     }
 }

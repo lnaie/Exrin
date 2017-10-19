@@ -13,8 +13,21 @@ namespace ExrinSampleMobileApp.Proxy
 
 			View = page;
 			Children.CollectionChanged += Children_CollectionChanged;
-			
+
 			page.CurrentPageChanged += Page_CurrentPageChanged;
+		}
+
+		public object CurrentPage
+		{
+			get
+			{
+				return ((TabbedPage)View).CurrentPage;
+			}
+			set
+			{
+				var tabbedPage = View as TabbedPage;
+				tabbedPage.CurrentPage = value as Page;
+			}
 		}
 
 		private void Page_CurrentPageChanged(object sender, System.EventArgs e)
