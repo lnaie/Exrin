@@ -10,6 +10,7 @@
 	{
 		private IDictionary<DateTime, KeyValuePair<string, object>> _propertyValueTrack = null;
 		private IDictionary<string, object> _propertyValues = null;
+        private object _setLock = new object();
 
 		public BindableModel()
 		{
@@ -43,34 +44,36 @@
 
 		public void Set(object value, [CallerMemberName] string propertyName = "")
 		{
+            lock (_setLock)
+            {
+                object oldValue = null; // Only works with value types
+                if (_propertyValues.ContainsKey(propertyName))
+                {
+                    oldValue = _propertyValues[propertyName];
+                    if (oldValue == value)
+                        return;
 
-			object oldValue = null; // Only works with value types
-			if (_propertyValues.ContainsKey(propertyName))
-			{
-				oldValue = _propertyValues[propertyName];
-				if (oldValue == value)
-					return;
+                    _propertyValues[propertyName] = value;
+                }
+                else
+                    _propertyValues.Add(propertyName, value);
 
-				_propertyValues[propertyName] = value;
-			}
-			else
-				_propertyValues.Add(propertyName, value);
+                if (App.PlatformOptions.StateTracking)
+                    _propertyValueTrack.Add(DateTime.Now, new KeyValuePair<string, object>(propertyName, value));
 
-			if (App.PlatformOptions.StateTracking)
-				_propertyValueTrack.Add(DateTime.Now, new KeyValuePair<string, object>(propertyName, value));
+                if (oldValue == null && value == null)
+                    return;
 
-			if (oldValue == null && value == null)
-				return;
+                if ((oldValue == null && value != null)
+                    || (oldValue != null && value == null))
+                {
+                    OnPropertyChanged(oldValue, value, propertyName);
+                    return;
+                }
 
-			if ((oldValue == null && value != null)
-				|| (oldValue != null && value == null))
-			{
-				OnPropertyChanged(oldValue, value, propertyName);
-				return;
-			}
-
-			if (!oldValue.Equals(value)) // Only when property changed
-				OnPropertyChanged(oldValue, value, propertyName);
+                if (!oldValue.Equals(value)) // Only when property changed
+                    OnPropertyChanged(oldValue, value, propertyName);
+            }
 		}
 
 		public IDictionary<DateTime, KeyValuePair<string, object>> GetStateHistory()

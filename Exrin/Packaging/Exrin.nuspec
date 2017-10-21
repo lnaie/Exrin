@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Exrin</id>
-    <version>2.0.2</version>
+    <version>2.0.3</version>
     <title>Exrin</title>
     <authors>Adam Pedley</authors>
     <owners>Adam Pedley</owners>
@@ -18,8 +18,7 @@
     </description>
     <tags>xamarin, xamarin.forms, enterprise, exrin</tags>
     <releaseNotes>
-			- Allows TabbedPage inside MasterDetailPage
-			- Bug Fix: NavigationService incorrectly tracked newinstance pages 
+			- Bug Fix: Possible crash if setting value of same property in different threads at the same time 
     </releaseNotes>   
     <dependencies>      
       <group targetFramework=".NETStandard1.1">
