@@ -7,36 +7,36 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
-    
+
     public static partial class Process
     {
-		public static IRelayCommand ViewModelExecute(this IExecution sender, Func<object, CancellationToken, Task<IList<IResult>>> operation, int timeout = 10000, [CallerMemberName] string name = "", object precheck = null)
-		{
-			var operationList = new List<IBaseOperation>()
-			{
-				new SingleOperation() { Function = operation }
-			};
+        public static IRelayCommand ViewModelExecute(this IExecution sender, Func<object, CancellationToken, Task<IList<IResult>>> operation, int timeout = 10000, [CallerMemberName] string name = "", object precheck = null)
+        {
+            var operationList = new List<IBaseOperation>()
+            {
+                new SingleOperation() { Function = operation }
+            };
 
-			var execute = new BaseViewModelExecute(operationList);
+            var execute = new BaseViewModelExecute(operationList);
 
-			return new RelayCommand(async (parameter) =>
-			{
-				await ViewModelExecute(sender,
-										operations: execute.Operations,
-										handleTimeout: sender.HandleTimeout,
-										handleUnhandledException: sender.HandleUnhandledException,
-										insights: sender.Insights,
-										notifyActivityFinished: sender.NotifyActivityFinished,
-										notifyOfActivity: sender.NotifyOfActivity,
-										timeoutMilliseconds: timeout,
-										name: name,
-										parameter: parameter,
-										precheck: precheck);
-			})
-			{ Timeout = timeout, Function= operation };
-		}
-		
-		public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "", object precheck = null)
+            return new RelayCommand(async (parameter) =>
+            {
+                await ViewModelExecute(sender,
+                                        operations: execute.Operations,
+                                        handleTimeout: sender.HandleTimeout,
+                                        handleUnhandledException: sender.HandleUnhandledException,
+                                        insights: sender.Insights,
+                                        notifyActivityFinished: sender.NotifyActivityFinished,
+                                        notifyOfActivity: sender.NotifyOfActivity,
+                                        timeoutMilliseconds: timeout,
+                                        name: name,
+                                        parameter: parameter,
+                                        precheck: precheck);
+            })
+            { Timeout = timeout, Function = operation };
+        }
+
+        public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
                 IList<IResult> list = result;
@@ -47,7 +47,7 @@
         public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, int timeout, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
-                IList<IResult> list = result;         
+                IList<IResult> list = result;
                 return Task.FromResult(list);
                 } } }), timeout, null, name, precheck);
         }
@@ -68,7 +68,7 @@
         {
             return ViewModelExecute(sender, execute, -1, null, name, precheck);
         }
-		
+
         public static IRelayCommand ViewModelExecute(this IExecution sender, List<IResult> result, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
             return ViewModelExecute(sender, new BaseViewModelExecute(new List<IBaseOperation>() { new SingleOperation() { Function = (p, t) => {
@@ -99,7 +99,7 @@
         {
             return ViewModelExecute(sender, execute, -1, canExecute, name, precheck);
         }
-                      
+
         public static IRelayCommand ViewModelExecute(this IExecution sender, IViewModelExecute execute, int timeout, Func<object, bool> canExecute, [CallerMemberName] string name = "", object precheck = null)
         {
             return new RelayCommand(async (param) =>
@@ -114,7 +114,7 @@
                                         timeoutMilliseconds: timeout == -1 ? execute.TimeoutMilliseconds : timeout,
                                         name: name,
                                         parameter: param,
-										precheck: precheck);
+                                        precheck: precheck);
             }, canExecute)
             { Timeout = execute.TimeoutMilliseconds };
 
@@ -132,7 +132,7 @@
                  IApplicationInsights insights = null,
                  string name = "",
                  object parameter = null,
-				 object precheck = null)
+                 object precheck = null)
         {
             // If currently executing, ignore the latest request
             lock (sender)
@@ -152,7 +152,7 @@
                 throw new Exception($"{nameof(notifyOfActivity)} is null: You must notify the user that something is happening");
 
             await notifyOfActivity();
-			
+
             // Background thread
             var insightTask = Task.Run(() =>
             {
@@ -167,16 +167,16 @@
                 }
             }).ConfigureAwait(false);
 
-			if (sender.PreCheck != null)
-			{
-				var result = await Task.Run(async () =>
-				{
-					return await sender.PreCheck(precheck);
-				}).ConfigureAwait(false);
+            if (sender.PreCheck != null)
+            {
+                var result = await Task.Run(async () =>
+                {
+                    return await sender.PreCheck(precheck);
+                }).ConfigureAwait(false);
 
-				if (result == false)
-					return; // Exit execution
-			}
+                if (result == false)
+                    return; // Exit execution
+            }
 
             await Task.Run(async () =>
             {
@@ -221,7 +221,7 @@
                             {
                                 try
                                 {
-									await op.Function(results, parameter, task.Token);
+                                    await op.Function(results, parameter, task.Token);
                                 }
                                 catch
                                 {
@@ -238,8 +238,8 @@
                             {
                                 if (op.Function != null)
                                 {
-									var resultList = await op.Function(parameter, task.Token);
-									if (resultList != null)
+                                    var resultList = await op.Function(parameter, task.Token);
+                                    if (resultList != null)
                                         foreach (var result in resultList)
                                             results.Add(result);
                                 }
@@ -302,16 +302,17 @@
                         }
                         catch (Exception e)
                         {
-							if (handleUnhandledException == null)
-								throw;
+                            if (handleUnhandledException == null)
+                                throw;
 
-							var handled = await handleUnhandledException(e);
+                            var handled = await handleUnhandledException(e);
                             if (!handled)
                                 throw;
                         }
                         finally
                         {
-                            _status.Remove(sender);
+                            lock (sender)
+                                _status.Remove(sender);
                         }
                     }
                 }
