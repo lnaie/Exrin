@@ -2,7 +2,8 @@
 {
 	using Abstraction;
 	using System;
-	using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Runtime.CompilerServices;
 	using System.Threading.Tasks;
@@ -112,7 +113,7 @@
 		}
 
 
-		private IDictionary<string, IRelayCommand> commands = new Dictionary<string, IRelayCommand>();
+		private IDictionary<string, IRelayCommand> commands = new ConcurrentDictionary<string, IRelayCommand>();
 		public IRelayCommand GetCommand(Func<IRelayCommand> create, [CallerMemberName] string name = "")
 		{
 			// Stops getting the command, if Execution is null.

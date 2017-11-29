@@ -3,6 +3,7 @@
     using Abstraction;
     using Common;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -19,7 +20,7 @@
             _injection = injection;
         }
 
-        private readonly IDictionary<Type, TypeDefinition> _viewsByType = new Dictionary<Type, TypeDefinition>();
+        private readonly IDictionary<Type, TypeDefinition> _viewsByType = new ConcurrentDictionary<Type, TypeDefinition>();
 
         private object GetBindingContext(Type viewType)
         {

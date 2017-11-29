@@ -2,13 +2,14 @@
 {
     using Abstraction;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class Processor : IInsightsProcessor
     {
-        private Dictionary<string, IInsightsProvider> _insightProviders = new Dictionary<string, IInsightsProvider>();
+        private IDictionary<string, IInsightsProvider> _insightProviders = new ConcurrentDictionary<string, IInsightsProvider>();
 
         private readonly IApplicationInsights _applicationInsights = null;
         private object _lock = new object();

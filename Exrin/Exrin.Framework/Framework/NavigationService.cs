@@ -3,7 +3,8 @@
 	using Abstraction;
 	using Common;
 	using System;
-	using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
 
@@ -11,9 +12,9 @@
 	{
 		private readonly IViewService _viewService = null;
 		private readonly INavigationState _state = null;
-		private readonly IDictionary<object, IStack> _stacks = new Dictionary<object, IStack>();
-		private readonly IDictionary<object, object> _stackViewContainers = new Dictionary<object, object>();
-		private readonly IDictionary<object, IViewContainer> _viewContainers = new Dictionary<object, IViewContainer>();
+		private readonly IDictionary<object, IStack> _stacks = new ConcurrentDictionary<object, IStack>();
+		private readonly IDictionary<object, object> _stackViewContainers = new ConcurrentDictionary<object, object>();
+		private readonly IDictionary<object, IViewContainer> _viewContainers = new ConcurrentDictionary<object, IViewContainer>();
 		private object _currentStack = null;
 		private IViewContainer _currentViewContainer = null;
 		private readonly IDisplayService _displayService;

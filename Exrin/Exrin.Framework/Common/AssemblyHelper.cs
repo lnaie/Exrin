@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,11 +11,11 @@ namespace Exrin.Common
 
 		public static IDictionary<Type, TypeInfo> GetTypes(AssemblyName name, IList<Type> interfaces)
 		{
-			var list = new Dictionary<Type, TypeInfo>();
+			var list = new ConcurrentDictionary<Type, TypeInfo>();
 
 			foreach (var @interface in interfaces)
 				foreach (var item in GetTypes(name, @interface))
-				list.Add(@interface, item);
+				list.TryAdd(@interface, item);
 
 			return list;
 		}

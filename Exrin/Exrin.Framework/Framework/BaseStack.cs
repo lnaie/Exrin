@@ -3,6 +3,7 @@
     using Abstraction;
     using Common;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -10,7 +11,7 @@
     public class BaseStack : IStack
     {
         private static AsyncLock _lock = new AsyncLock();
-        private readonly Dictionary<Abstraction.Tuple<string, string>, TypeDefinition> _viewsByKey = new Dictionary<Abstraction.Tuple<string, string>, TypeDefinition>();
+        private readonly IDictionary<Abstraction.Tuple<string, string>, TypeDefinition> _viewsByKey = new ConcurrentDictionary<Abstraction.Tuple<string, string>, TypeDefinition>();
         private readonly IList<Abstraction.Tuple<string, string>> _viewKeyTracking = new List<Abstraction.Tuple<string, string>>();
         private readonly IViewService _viewService;
 

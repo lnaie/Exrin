@@ -2,6 +2,7 @@
 {
     using Abstraction;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
@@ -120,7 +121,7 @@
 
         }
 
-        private readonly static IDictionary<object, bool> _status = new Dictionary<object, bool>();
+        private readonly static IDictionary<object, bool> _status = new ConcurrentDictionary<object, bool>();
 
         private static async Task ViewModelExecute(IExecution sender,
                  List<IBaseOperation> operations,

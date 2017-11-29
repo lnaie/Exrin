@@ -1,7 +1,8 @@
 ﻿namespace Exrin.Framework
 {
 	using System;
-	using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.Reflection;
 	using System.Runtime.CompilerServices;
@@ -14,8 +15,8 @@
 
 		public BindableModel()
 		{
-			_propertyValues = new Dictionary<string, object>();
-			_propertyValueTrack = new Dictionary<DateTime, KeyValuePair<string, object>>();
+			_propertyValues = new ConcurrentDictionary<string, object>();
+			_propertyValueTrack = new ConcurrentDictionary<DateTime, KeyValuePair<string, object>>();
 
 			if (App.PlatformOptions.StateTracking)
 				LoadDefaults();

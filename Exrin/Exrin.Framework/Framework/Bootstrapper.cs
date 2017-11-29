@@ -4,7 +4,8 @@
 	using Common;
 	using Insights;
 	using System;
-	using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
 
@@ -14,7 +15,7 @@
 		protected readonly IInjectionProxy _injection;
 		private static Action<object> _setRoot;
 		protected readonly IList<Action> _postRun = new List<Action>();
-		private readonly IDictionary<Type, AssemblyName> _typeAssembly = new Dictionary<Type, AssemblyName>();
+		private readonly IDictionary<Type, AssemblyName> _typeAssembly = new ConcurrentDictionary<Type, AssemblyName>();
 		private readonly IList<KeyValuePair<AssemblyAction, AssemblyName>> _assemblies = new List<KeyValuePair<AssemblyAction, AssemblyName>>();
 		private static bool IsInitialized { get; set; } = false;
 		private static Func<object> _getRoot;

@@ -2,8 +2,9 @@
 {
 	using System.Collections.Generic;
 	using Abstraction;
+    using System.Collections.Concurrent;
 
-	public class ViewContainer : IViewContainer
+    public class ViewContainer : IViewContainer
 	{
 		public ViewContainer(string identifier)
 		{
@@ -19,7 +20,7 @@
 
 		public object NativeView { get; set; }
 
-		public IDictionary<object, ContainerType> RegionMapping { get; } = new Dictionary<object, ContainerType>();
+		public IDictionary<object, ContainerType> RegionMapping { get; } = new ConcurrentDictionary<object, ContainerType>();
 
 		public IViewContainer ParentContainer { get; set; }
 	}
