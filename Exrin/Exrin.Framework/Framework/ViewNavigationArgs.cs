@@ -9,5 +9,7 @@
         public IView PoppedView { get; set; }
 
         public object Parameter { get; set; }
+
+        public PopType PopType { get; set; } = PopType.TopView;
     }
 }

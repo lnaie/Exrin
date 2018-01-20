@@ -23,16 +23,16 @@
         public INavigationProxy Proxy { get; private set; }
         public virtual string NavigationStartKey { get; }
 
-		public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier, string startKey)
-		{
-			Proxy = navigationProxy;
-			Proxy.OnPopped += proxy_OnPopped;
-			StackIdentifier = stackIdentifier;
-			_viewService = viewService;
-			NavigationStartKey = startKey;
-		}
+        public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier, string startKey)
+        {
+            Proxy = navigationProxy;
+            Proxy.OnPopped += proxy_OnPopped;
+            StackIdentifier = stackIdentifier;
+            _viewService = viewService;
+            NavigationStartKey = startKey;
+        }
 
-			public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
+        public BaseStack(INavigationProxy navigationProxy, IViewService viewService, object stackIdentifier)
         {
             Proxy = navigationProxy;
             Proxy.OnPopped += proxy_OnPopped;
@@ -164,13 +164,13 @@
                     if (viewKey != null)
                     {
                         var typeDefinition = viewKey;
-                        
+
                         if (Proxy == null)
                             throw new Exception($"{nameof(INavigationProxy)} is null. Did you forget to call NavigationService.Init()?");
-                                                
+
 
                         if (_viewKeyTracking.Contains(tupleKey) && !newInstance)
-                        {                           
+                        {
                             // Silent pop those in the middle, then do a pop, so its a single back animation according to the user
                             var index = 0;
                             foreach (var item in _viewKeyTracking)
@@ -183,18 +183,18 @@
                             for (int i = count - 2; i > index; i--)
                             {
                                 await Proxy.SilentPopAsync(1);
-                                _viewKeyTracking.RemoveAt(i);								
+                                _viewKeyTracking.RemoveAt(i);
                             }
 
                             // Now should be single pop to go back to the page.
                             while (key != CurrentView.Key)
                             {
-								if (args == null)
-								{
-									await Proxy.PopAsync();
-								}
-								else
-									await Proxy.PopAsync(args);
+                                if (args == null)
+                                {
+                                    await Proxy.PopAsync();
+                                }
+                                else
+                                    await Proxy.PopAsync(args);
                             }
                         }
                         else
@@ -272,6 +272,9 @@
                     disposableModel.Dispose();
             }
 
+            if (e.PopType == PopType.SilentPop)
+                return;
+
             if (e.CurrentView != null)
             {
                 var model = e.CurrentView.BindingContext as IViewModel;
@@ -279,17 +282,17 @@
                     model.OnBackNavigated(e.Parameter);
             }
 
-			// Remove Last Instance of CurrentView
-			for (int i = _viewKeyTracking.Count; i > 0; i--)
-			{
-				var tracking = _viewKeyTracking[i - 1];
-				if (tracking.Key == CurrentView.Key && tracking.Platform == CurrentView.Platform)
-				{
-					_viewKeyTracking.RemoveAt(i - 1);
-					break;
-				}
-			}
-            
+            // Remove Last Instance of CurrentView
+            for (int i = _viewKeyTracking.Count; i > 0; i--)
+            {
+                var tracking = _viewKeyTracking[i - 1];
+                if (tracking.Key == CurrentView.Key && tracking.Platform == CurrentView.Platform)
+                {
+                    _viewKeyTracking.RemoveAt(i - 1);
+                    break;
+                }
+            }
+
 
             // Changes the navigation key back to the previous page
             CurrentView = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;

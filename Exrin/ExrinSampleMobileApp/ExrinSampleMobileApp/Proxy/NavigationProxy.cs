@@ -111,7 +111,7 @@ namespace ExrinSampleMobileApp.Proxy
 			var page = _page.Navigation.NavigationStack[_page.Navigation.NavigationStack.Count - indexFromTop - 1];
 			_page.Navigation.RemovePage(page);
             // Because a remove page, doesn't issue a pop
-            OnPopped?.Invoke(this, new ViewNavigationArgs() { Parameter = null, CurrentView = _page.CurrentPage as IView, PoppedView = page as IView });
+            OnPopped?.Invoke(this, new ViewNavigationArgs() { PopType = PopType.SilentPop, Parameter = null, CurrentView = _page.CurrentPage as IView, PoppedView = page as IView });
             return Task.FromResult(true);
 		}
 	}
