@@ -1,9 +1,11 @@
 [![Build Status](https://travis-ci.org/exrin/Exrin.svg?branch=master)](https://travis-ci.org/exrin/Exrin)
 [![Nuget](https://img.shields.io/nuget/v/Exrin.svg?style=flat-square)](https://www.nuget.org/packages/Exrin) 
 
-# [NOT FOR PRODUCTION]
+# [NOT FOR PRODUCTION] - 4th March 2018
 
 Exrin is being left here as more of a playground, and to show the inner workings of MVVM frameworks. It is no longer actively being enhanced, but will still be around for bug fix support if needed. Exrin never really took off, and there are plenty of MVVM Frameworks on the market, that are being actively developed.
+
+Though I still think that Exrin has one of the best navigational frameworks compared to any currently existing MVVM framework.
 
 # Introduction
 
