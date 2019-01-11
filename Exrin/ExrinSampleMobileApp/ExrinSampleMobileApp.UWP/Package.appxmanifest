@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="fbd99c8e-1efd-4064-86b1-2db44564b6e8" Publisher="CN=adamp" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="fbd99c8e-1efd-4064-86b1-2db44564b6e8" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="d24b0f84-6c94-4611-a58c-545a6ca94775" Publisher="CN=75e264bc-b622-45d7-aa57-22a2e4c97b6d" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ExrinTemplate.UWP</DisplayName>
-    <PublisherDisplayName>adamp</PublisherDisplayName>
+    <DisplayName>ExrinSampleMobileApp.UWP</DisplayName>
+    <PublisherDisplayName>75e264bc-b622-45d7-aa57-22a2e4c97b6d</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -14,15 +14,20 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ExrinTemplate.UWP.App">
-      <uap:VisualElements DisplayName="ExrinTemplate.UWP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="ExrinTemplate.UWP" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ExrinSampleMobileApp.UWP.App">
+      <uap:VisualElements DisplayName="ExrinSampleMobileApp.UWP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="ExrinSampleMobileApp.UWP" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClientServer" />
+    <Capability Name="internetClient" />
   </Capabilities>
 </Package>

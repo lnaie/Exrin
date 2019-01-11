@@ -1,72 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3AD8ECE7-3C64-46DE-A5F9-66A8012504AB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExrinSampleMobileApp.Logic</RootNamespace>
-    <AssemblyName>ExrinSampleMobileApp.Logic</AssemblyName>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="AssemblyRegister.cs" />
-    <Compile Include="Base\BaseModel.cs" />
-    <Compile Include="Base\BaseViewModel.cs" />
-    <Compile Include="ModelState\AuthModelState.cs" />
-    <Compile Include="ModelState\MainModelState.cs" />
-    <Compile Include="Model\AuthModel.cs" />
-    <Compile Include="Model\MainModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModel\MenuOperation.cs" />
-    <Compile Include="ViewModel\AboutOperation.cs" />
-    <Compile Include="ViewModel\MenuViewModel.cs" />
-    <Compile Include="ViewModel\AboutViewModel.cs" />
-    <Compile Include="ViewModel\DetailOperation.cs" />
-    <Compile Include="ViewModel\BackToMainOperation.cs" />
-    <Compile Include="ViewModel\DetailViewModel.cs" />
-    <Compile Include="ViewModel\LoginOperation.cs">
-      <DependentUpon>LoginViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel\ListViewModel.cs" />
-    <Compile Include="ViewModel\LoginViewModel.cs" />
-    <Compile Include="ViewModel\SettingsOperation.cs" />
-    <Compile Include="ViewModel\SettingsViewModel.cs" />
-    <Compile Include="VisualState\MenuVisualState.cs" />
-    <Compile Include="VisualState\ListVisualState.cs" />
-    <Compile Include="VisualState\DetailVisualState.cs" />
-    <Compile Include="VisualState\LoginVisualState.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="VisualState\AboutVisualState.cs" />
-    <Compile Include="VisualState\SettingsVisualState.cs" />
-    <Compile Include="VisualState\MainVisualState.cs" />
-  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Exrin.Framework\Exrin.csproj">
       <Project>{ff2e4654-1f48-4f8f-b9ba-fa4d8cb22f78}</Project>
@@ -77,15 +14,8 @@
       <Name>ExrinSampleMobileApp.Framework</Name>
     </ProjectReference>
   </ItemGroup>
+  
   <ItemGroup>
-    <None Include="project.json" />
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

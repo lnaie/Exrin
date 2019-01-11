@@ -2,6 +2,7 @@
 using Exrin.Framework;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -171,7 +172,7 @@ namespace Exrin.Inspector
 			{
 				var propertyName = property.Value.Key;
 				if (!propertyList.Any(x => x.Name == propertyName))
-					propertyList.Add(new PropertyState() { Name = propertyName, ValueChanges = new ConcurrentDictionary<DateTime, object>() });
+					propertyList.Add(new PropertyState() { Name = propertyName, ValueChanges = new Dictionary<DateTime, object>() });
 
 				propertyList.Single(x => x.Name == propertyName).ValueChanges.Add(property.Key, property.Value.Value);
 
