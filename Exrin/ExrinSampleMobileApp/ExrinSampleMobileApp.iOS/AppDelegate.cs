@@ -23,9 +23,9 @@ namespace ExrinSampleMobileApp.iOS
             Forms.Init();
             Exrin.Framework.App.Init(new PlatformOptions() { Platform = Device.RuntimePlatform });
 
-            LoadApplication(new ExrinSampleMobileApp.App(null));
+            LoadApplication(new App());
 
-            return true;
+            return base.FinishedLaunching(application, launchOptions);
         }
 
         public override void OnResignActivation(UIApplication application)

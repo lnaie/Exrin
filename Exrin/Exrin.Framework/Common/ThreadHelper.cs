@@ -102,10 +102,15 @@
             {
                 try
                 {
-                    action().ContinueWith(t => {
-                        tcs.SetResult(true);
-                    });
-
+                    action()
+                        .ContinueWith(t => 
+                        {
+                            if (t.IsFaulted)
+                            {
+                                throw t.Exception;
+                            }
+                            tcs.SetResult(true);
+                        });
                 }
                 catch (Exception ex)
                 {

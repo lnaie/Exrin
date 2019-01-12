@@ -8,7 +8,7 @@ namespace ExrinSampleMobileApp
 
 	public partial class App : Application
 	{
-		public App(IPlatformBootstrapper platform)
+		public App(IPlatformBootstrapper platform = null)
 		{
 			InitializeComponent();
 			

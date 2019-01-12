@@ -70,15 +70,20 @@
 
 			Executing = true;
 
-			_action(parameter).ContinueWith((task) =>
-			{
-				Executing = false;
+			_action(parameter)
+                .ContinueWith((t) =>
+			    {
+				    Executing = false;
 
-				if (task.IsFaulted)
-					Debug.WriteLine($"{task.Exception.Message} {task.Exception.InnerException.StackTrace}");
+                    //TODO: Swallow the exception!?
+                    if (t.IsFaulted)
+                    {
+                        Debug.WriteLine($"{t.Exception.Message} {t.Exception.InnerException.StackTrace}");
+                        throw t.Exception;
+                    }
 
-				FinishedCallback?.Invoke();
-			});
+				    FinishedCallback?.Invoke();
+			    });
 		}
 	}
 }

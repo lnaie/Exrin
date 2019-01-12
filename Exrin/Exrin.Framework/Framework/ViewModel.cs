@@ -104,10 +104,12 @@
 				_visualState = value;
 
 				Task.Run(() => _visualState?.Init())
-					.ContinueWith((task) =>
+					.ContinueWith((t) =>
 					{
-						if (task.Exception != null)
-							ApplicationInsights?.TrackException(task.Exception);
+                        if (t.IsFaulted)
+                        {
+                            ApplicationInsights?.TrackException(t.Exception);
+                        }
 					});
 			}
 		}

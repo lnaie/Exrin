@@ -68,11 +68,21 @@ namespace Exrin.Common
         public Task<Releaser> LockAsync()
         {
             var wait = _semaphore.WaitAsync();
-            return wait.IsCompleted ?
-                _releaser :
-                wait.ContinueWith((_, state) => new Releaser((AsyncLock)state),
-                    this, CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+            return wait.IsCompleted 
+                ? _releaser 
+                : wait
+                    .ContinueWith((t, state) =>
+                    {
+                        if (t.IsFaulted)
+                        {
+                            throw t.Exception;
+                        }
+                        return new Releaser((AsyncLock)state);
+                    },
+                    this, 
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously, 
+                    TaskScheduler.Default);
         }
 
         public struct Releaser : IDisposable
