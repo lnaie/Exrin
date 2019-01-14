@@ -293,10 +293,12 @@
                 }
             }
 
-
             // Changes the navigation key back to the previous page
             CurrentView = _viewsByKey.First(x => x.Value.Type == e.CurrentView.GetType()).Key;
-            CurrentViewTrack.RemoveAt(CurrentViewTrack.Count - 1);
+            if (CurrentViewTrack.Any())
+            {
+                CurrentViewTrack.RemoveAt(CurrentViewTrack.Count - 1);
+            }
         }
 
         private void NoHistoryRemoval()
